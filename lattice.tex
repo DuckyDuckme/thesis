@@ -1,0 +1,10 @@
+Gentry's work was a true breakthrough. It not only presented the first, fully homomorphic encryption scheme, but also gave researchers a very powerful tool the \textit{bootstrapping} is. From now on, all we need to construct another FHE scheme, is some suitable (one requirement would be to use schemes based on ring rather than only groups) SHE method, apply appropriate "squashing" to it to obtain the bootstrapping and we are done. In the following years this is what exactly happened in the academia and the industry. This section will mostly serve as a survey of the main developments towards more efficient fully homomorphic encryption using lattices and their security based on computational hardness of the underlying problems.
+
+Toward basing fully homomorphic encryption on worst-case hardness
+\subsection{Fully Homomorphic Encryption Using Ideal Lattices}
+explain here how we can construct a really nice homomorphic encryption scheme using ideal lattices \cite{gentry}. present the 
+\subsection{On Ideal Lattices and Learning With Errors Over Rings}
+this is somewhat too difficult for me i think so ill just present main findings without proofs and details \cite{regev}, \cite{ring-lwe} \\
+First explain what lattices are. \\
+How do lattices relate to LWE? The secret key is associated with a random vector. \\
+then show how ring-lwe satisfies both of our requirements \cite{ring-lwe}, namely, the believed hardness for quantum computers (SVP or approximate SVP) and FHE. Show also the problem with ring-LWE because the lattices that are used there are ideal lattices which obviously possess more structure than "normal" lattices.

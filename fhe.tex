@@ -1,0 +1,40 @@
+Fully Homomorphic Encryption (FHE) has been referred as the "holy grail" of modern cryptography as it was one of the most sought goals for the past couple of decades. First formally introduced by Rivest, Adleman and Dertouzos in \cite{primal} (at the time called "privacy homomorphism"), shortly after the discovery of public key cryptography, it has been an open and elusive problem. Only "recently", in 2009, Craig Gentry proposed first FHE in his PhD thesis \cite{gentry_phd}. Quote from \cite{impl_gentry}:"  Gentry later proved [5] that with an appropriate key-generation procedure, the security of that scheme can be (quantumly) reduced to the worst-case hardness of some lattice problems in ideal lattices."
+
+Simply stated, in homomorphic encryption we want our data to be secure but we also want to perform calculations on it. This is useful when you need a third party (e.g. someone with more computational power) to perform operations on your data while still retaining privacy. Alice can store her data somewhere on external server (the cloud) and ask to perform computations on it. For example query searches without the engine knowing what is actually being searched for.
+
+\begin{remark} \label{algs}
+    In general, an encryption scheme $\mathcal{E}$ consists of three algorithms: $\alg{KeyGen}_{\E}$, $Encrypt_{\E}$ and $Decrypt_{\E}$ (representing the key-generation, encryption and decryption respectively), all of which we require to be \textit{efficient} - i.e. run in time poly($\lambda$), polynomial in the security parameter $\lambda$ that represents the bit-length of the keys. A homomorphic encryption scheme has a fourth algorithm - $\alg{Evaluate}_{\E}$ which we associate with some set of \textit{permitted functions}. Adopting the notation from \cite{easy_fhe} we denote by $\mathcal{F}_{\E}$, the set of such functions.
+\end{remark}
+
+Therefore we would like our encryption scheme to satisfy the following. Say the ciphertexts $c_i$'s decrypt to messages $m_i$'s. Then we want
+$$ \alg{Decrypt}_{\E}(c_1 + c_2) = m_1 + m_2, \qquad \alg{Decrypt}_{\E}(c_1*c_2) = m_1*m_2$$
+Equivalently, we want $\alg{Decrypt}$ to be a homomorphism with respect to both addition and multiplication. Fully Homomorphic Encryption (in big simplification) means that whenever $f$ is a composition of (few) additions and multiplications, then $\alg{Decrypt}_{\E}(f(c_1, \dots, c_n)) = f(m_1, \dots, m_n)$. \\
+
+\subsection{Somewhat Homomorphic Encryption}
+Before we introduce the solution presented by Gentry, we will start with something slightly simpler, introduced in \cite{int_scheme} by van Dijk et al. Their scheme works over the integers rather than lattices but relies on a similar assumption. Namely, that finding the greatest common divisor of many “noisy” multiples of a number is computationally difficult. We will come back to this problem later. To keep the exposition compact, we will avoid specifying most parameter choices. \\
+
+We begin with the \textbf{symmetric} key scheme. We take our message to be a bit $m \in \{0,1\}$. The private key is an odd integer chosen from some interval $p \in [2^{\eta - 1}, 2^{\eta})$. To encrypt our message $m$, we choose integers $q$ and $r$ at random (from some other interval and s.t. the magnitude of $2r$ is smaller than $p/2$). We obtain the ciphertext $c$ by computing: 
+$$c = pq + 2r + m.$$
+If we now want to decrypt our message, simply compute $(c \mod p) \mod 2$. \\
+Let's say we have two messages $c_1$ and $c_2$. Then we can compute:
+$$ c_1 + c_2 = m_1 + m_2 + 2(r_1 + r_2) + p(q_1 + q_2),$$
+$$ c_1 * c_2 = m_1 * m_2 + 2(m_1r_2 + m_2r_1 + 2r_1r_2) + p(m_1q_2 + m_2q_1 + 2(r_1q_2 + r_2q_1) + pq_1q_2)$$
+where we can see that the noise grows with each operation and the message becomes impossible to decrypt after we do too many of them. If we can assure that $2(m_1r_2 + m_2r_1 + 2r_1r_2)$ is small enough - i.e. smaller than $p/2$ - we can assure that $\alg{Decrypt}(c_1 * c_2)$ evaluates correctly to the starting $m_1 * m_2$. Notice that $\alg{Decrypt}$ removes all the noise. This will be useful later for bootstrapping.
+
+This simple encryption scheme is thus somewhat homomorphic as per definition by Gentry in \cite{gentry_phd} – namely, it can be used to evaluate low-degree polynomials over encrypted data. Further on in \S 6 of \cite{int_scheme}, van Dijk et al. use the techniques (called bootstrapping and squashing) to lift it to a Fully Homomorphic Scheme. \\
+
+The \textbf{public} key scheme is build very similarly. The private key $p$ stays the same. For the public key, sample $x_i = p q_i + 2r_i$ for $i = 0, 1, \dots, t$ where the $q_i$ and $r_i$ stay as before. The $x_i$ may be viewed as encryption of 0 under the symmetric key scheme. The $x_i$ are now taken s.t. $x_0$ is the largest, odd and $x_0 \mod p$ is even. To now encrypt a message $m \in \{0,1\}$, chose a random subset $S \subseteq \{1, 2, \dots, t\}$ and a random integer $r$, and output
+$$ c = (m + 2r + 2\sum_{i \in S} x_i) \mod x_0. $$
+To decrypt, we again output $m = (c \mod p) \mod 2$ \\
+
+The security of this preliminary SH scheme relies on the \textit{Approximate GCD Problem}. In the simplest case, Euclid has shown us, that given two integers $c_1$ and $c_2$, it is easy to compute their $\gcd$. However, suppose now that $c_1 = p \cdot q_1 + r_1$ and $c_2 = p \cdot q_2 + r_2$ are "near" multiples of $p$, where $r_1$ and $r_2$ is some small noise sampled at random. This turns out to be much more difficult. In fact, if we pick our values appropriately (see \cite{easy_fhe} \S 3.4 and \cite{int_scheme} \S 3 for details) we do not know any efficient (running in polynomial time) algorithm even if we are given arbitrarily many samples $c_i = r_i + p \cdot q_i$. \\
+
+\subsection{Fully Homomorphic Encryption}
+We will now present the main idea introduced in Gentry's PhD thesis \cite{gentry_phd}. Namely, the initial "bootstrapping" result, our SHE from previous section and a technique to "squash the decryption circuit" to allow bootstrapping. At the end, we will finally be left with \textit{Fully Homomorphic Encryption} scheme. As a basis, we will be using the SHE scheme from previous section.
+
+\subsubsection*{Boostrapping}
+We are faced with a problem. Because our method relies on some error being added to the message, it builds up after we perform operations on our data. The scheme $\E$ can handle functions in a limited set $\mathcal{F}_{\E}$ until the noise becomes too large.
+
+The basic idea behind bootstrapping is to use a homomorphic decryption circuit to "refresh" the ciphertext, so that it can be used for further homomorphic operations. The process involves encrypting the decryption circuit itself, evaluating it on the ciphertext, and then re-encrypting the result to obtain a new ciphertext that can be used for further homomorphic operations.
+
+To simplify our construction assume that our scheme $\E$ is "circula

@@ -1,0 +1,153 @@
+number rings (number fields), ideals, ring of integers, geometry then discriminant, why do they use cyclotomic. can we use any integer ring or do we need cyclotomic ones.
+
+\subsection{Notation}
+We denote by $\mathcal{D}$ a distribution
+\subsection{Lattices}
+
+Loosely following \cite{ring-lwe} and \cite{conrad}, we define a \textit{lattice} as a discrete additive subgroup of $\R^n$. Once we fix a basis $\B = (b_1, \dots ,b_n) \in \R^n$ we can then describe the lattice as
+$$ \Lambda = \mathcal{L}(\boldsymbol{B}) = \Bigl\{ \sum_i z_i \boldsymbol{b}_i : z \in \Z^n \Bigl\}.$$
+
+There are many bases for a lattice (actually infinitely many as can be proven using a little diagonalization argument \krzys{can it tho?}), some "better" than others. This will be the foundation for some of the problems like SVP or CVP.
+
+\begin{example}
+    The simplest example of a lattice is the $\Z^n$ itself. Taking the standard basis $\B_1 = \{e_1, \dots, e_n\}$ we obtain
+    $$\mathcal{L}(\boldsymbol{B_1}) = \Bigl\{ \sum_i z_i \boldsymbol{e}_i : z \in \Z^n \Bigl\} = \Z^n.$$
+\end{example}
+More generally, $\Lambda$ is a lattice of rank $m$ in $\R^n$ if it is a rank $m$ free abelian group. Recall that we call a group \textit{free abelian group} of rank $m$ if it can be written as $\Lambda = \Z\beta_1 \oplus \cdots \oplus\Z\beta_m$ with $\beta_1, \dots, \beta_m$ linearly independent over $\R$ where $\oplus$ represents the direct sum. In this paper we will only consider lattices of full rank. 
+
+\begin{remark}
+    We can also view the vectors $b_i$ as the rows of the matrix $B \in \R^n \cross \R^n$ in which case, our definition becomes:
+    $$\Lambda = \mathcal{L(B)} = \{zB :  z \in \Z^n \}.$$
+\end{remark}
+
+\begin{example}
+\begin{enumerate}
+    \item $\mathcal{L} = \begin{pmatrix}
+        1 & 0\\
+        0 & 1
+        \end{pmatrix}$ In this example $\beta_1 = \big(\begin{smallmatrix}
+          1\\
+          0
+        \end{smallmatrix}\big)$ and $\beta_2 = \big(\begin{smallmatrix}
+          0\\
+          1
+        \end{smallmatrix}\big)$
+    \item $\mathcal{L} = \{(z_1,z_2) : z_1 + z_2 \text{ is even \krzys{would odd work here?}}\}$
+    \item $\mathcal{L} = \begin{pmatrix}
+        13 & 21\\
+        21 & 34
+        \end{pmatrix}$
+\end{enumerate}
+\end{example}
+
+\krzys{this is useful for (ring)-lwe, not sure if i should include this at all}
+\begin{definition}[Dual]
+    For a lattice $\Lambda \subset \R^n$ its $\Z$\textit{-dual} is
+    $$ \Lambda^{\vee} = \{ y \in \R^n : y \cdot \Lambda \subset \Z \}.$$
+    Here, the $\cdot$ means the usual dot product.
+\end{definition}
+
+We simply require that the elements of the dual are precisely those vectors that yield an integer when "multiplied" with an element of our lattice. Note that this is different from our standard definition of a dual. Namely, it is not the orthogonal compliment of our starting space, i.e. not all of the elements of the dual have 0 dot product against the vectors of the lattice.
+
+\begin{example}
+    Take $\mathcal{L}= \Z 
+        \big(\begin{smallmatrix} 1\\2 \end{smallmatrix}\big) + 
+        \Z \big(\begin{smallmatrix} 0\\ 1 \end{smallmatrix}\big)$
+        To calculate the dual of $\mathcal{L}$ we need our $y = \big(\begin{smallmatrix}
+          a\\b\end{smallmatrix}\big)$ elements to satisfy $a \in \Z$ and $2a + b \in \Z$ which is equivalent to asking $a \in (1/2)\Z$ and so $\mathcal{L}^{\vee} = \big(\begin{smallmatrix}
+          1/2\\0
+        \end{smallmatrix}\big)\Z + \big(\begin{smallmatrix}
+          0\\1
+        \end{smallmatrix}\big) \Z$
+\end{example}
+
+Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
+\krzys{end of dual section}
+
+We will now present two results that give us an upper bound on the length of the shortest vector in a lattice. This will later on be useful to determine the security of our schemes. These theorems are due to Hermite (1822 - 1901) and Minkowski (1864 - 1909).
+
+\begin{theorem}[Hermite's Theorem]
+    Every lattice $\mathcal{L}$ of dimension $n$ contains a nonzero vector $v \in \mathcal{L}$ satisfying
+    $$ \norm{v} \leq \sqrt{n} \det(\mathcal{L})^{\frac{1}{n}}.$$
+\end{theorem}
+
+\begin{remark}
+    
+\end{remark}
+
+\subsection{Algebraic Number Theory}
+
+Algebraic number theory is the study of \textit{number fields}, \textit{rings of integers} and \textit{finite fields}. In this section we will provide all the necessary background needed to understand and verify the results presented in the cryptographic schemes later in the text. Most results will be stated without proof however all of them can be found in the book \textbf{Number Fields} by \textbf{Daniel A. Marcus} \cite{algebra} after which this sections is modelled.
+
+\subsubsection*{Number Fields}
+In general, a \textit{number field} is defined as a subfield of $\oQ$ having finite degree (the dimension as a vector space) over the rationals $\Q$. Throughout this section, we fix the imaginary numbers $\oQ = \C$ as an algebraic closure of the rationals.
+
+\begin{definition}[Algebraic Integer]
+    An element $\alpha \in \C$ is an \textit{algebraic integer} if it is a root of some monic polynomial with coefficients in $\Z$.
+\end{definition}
+
+In fact, the set of algebraic integers forms a ring (under the usual addition and multiplication operations in $K$). To see this, we make use of the following lemma \krzys{this seems like unnecessarily addition, can't this be proven more simply?}.
+
+\begin{lemma} \label{lemma1}
+    Any $\alpha \in \C$ is an algebraic integer if and only if, the additive group of the ring $\Z[\alpha]$ is finitely generated.
+\end{lemma}
+
+\begin{proof}
+    ($\Rightarrow$): If $\alpha$ is a root of a monic polynomial over $\Z$ of degree $n$, then the additive group $\Z[\alpha]$ is generated by $1, \alpha, \cdots, \alpha^{n-1}$. \\
+    ($\Leftarrow$): \krzys{TODO}
+\end{proof}
+
+\begin{theorem}[Ring of Integers]
+The \textit{ring of integers} (sometimes also called \textit{number ring}) $\Oo_K$ of a number field $K$
+$$
+  \Oo_K = K \cap \overline{\Z} = \{x \in K : \text{ $x$ is an algebraic integer}\}.
+$$
+forms a ring.
+\end{theorem}
+
+\begin{proof}
+    Take $\alpha, \beta \in \Oo_K$. We know by \ref{lemma1} that $\Z[\alpha]$ and $\Z[\beta]$ have finitely generated abelian groups, then so does the ring $\Z[\alpha, \beta]$. Clearly $\alpha + \beta$ and $\alpha\beta$ are in this ring, which implies that they are algebraic integers.
+\end{proof}
+\krzys{hope this is correct}
+
+\begin{example}
+    The field $K = \Q$ is a number field of degree 1. Its ring of integers $\Oo_K$ are the ordinary integers $\Z$. The field $K = \Q(i)$ of Gaussian integers has degree 2 with $\Oo_K = \Z[i]$ and for $K = \Q(\sqrt{5})$ the ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. In general, for a quadratic field $K = \Q(\sqrt{d})$ with squarefree $d \in \Z$, $\Oo_K$ is $\Z[\sqrt{d}]$ or $\Z[(1 + \sqrt{d})/2]$ depending on $d \mod 4$.
+\end{example}
+
+\subsubsection*{Cyclotomic fields}
+
+\begin{definition}[Roots of unity]
+    Given a field $K$ and a positive integer $n$, an element $\zeta \in K$ is called \textit{primitive n-th root of unity} if $\zeta$ has order $n$ in the multiplicative group $K^{\cross}$. (In other words, $\zeta^n = 1$ and $\zeta^m \neq 1$ for $1 \leq m < n$).
+\end{definition}
+
+The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial.
+
+\subsubsection*{Embeddings in $\C$}
+Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then there are exactly $n$ canonical embeddings (injective ring homomorphisms) of $K$ in $\C$. These are easily described by observing that $\alpha$ can be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $(\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates.
+
+\begin{example}
+    The quadratic field $\Q[\sqrt{d}]$, $d$ squarefree, has two embeddings in $\C$: The identity mapping, and also the one which sends $a + b\sqrt{d}$ to $a - b\sqrt{d}$ ($a$, $b$ $\in \Q$), since $\sqrt{d}$ and $-\sqrt{d}$ are the two conjugates of $\sqrt{d}$. The $n$-th cyclotomic field has $\varphi(n)$ embeddings in $\C$, the $\varphi(n)$ automorphisms where $\sigma_i(\zeta) = \zeta^i$.
+\end{example}
+
+\iffalse
+\begin{corollary}
+    Let $n = 2^r$ for some $r \in \Z$. The ideals in the ring of integers of the cyclotomic field of $2n$-th roots of unity $K = \Q[2n]$ are $n$-dimensional lattices.
+\end{corollary}
+
+\begin{proof}
+    Note that the ideals have degree $\varphi(2n) = \varphi(2^{r+1}) = 2^{r+1} - 2^r = 2^r = n$. The rest follows by the previous theorem.
+\end{proof}
+\fi
+
+\pinar{what do we want to consider as a cyclotomic poly? is $n=2^a$? is $n$ a prime? and why?}
+
+
+\pinar{Maximal orders (ring of integers) are dedekind domains, embedding of $\Q(\alpha)$ to $\C$ hence embedding of the ideals. Properties of ideals in dedekind domains, operations, unique factorization and so on. all the necessary info. }
+
+\subsection{Complexity Theory and hard problems}
+In this section we will briefly introduce what it means for a problem to be considered \textit{hard} and provide couple of examples
+
+The best know examples
+\subsubsection{Shor's Algorithm}
+I'm not sure if that is supposed to be in a section about preliminaries but I also don't want to include it in the introduction coz its a bit long
+
