@@ -1,10 +1,14 @@
 number rings (number fields), ideals, ring of integers, geometry then discriminant, why do they use cyclotomic. can we use any integer ring or do we need cyclotomic ones.
 
 \subsection{Notation}
-We denote by $\mathcal{D}$ a distribution
-\subsection{Lattices}
+Most of the notation is "standard" in the field of number theory and cryptography. Nonetheless, to avoid any misunderstandings and simplify some statements, we will present the notation used throughout the text. Anything that is not mentioned here shall be defined "on the fly" with definitions and such. \\
+Any scalars $a, t, \beta, \dots$ are represented by non-bold, latin or greek letters.\\
+Bold symbols $\bm{v}, \bm{x}, \bm{s}, \dots$ will denote vectors. \\
+$\alg{Algorithms}$ will be represented by $\alg{<name of this font idk> font}$ names such as $\alg{Encrypt}$ or $\alg{Evaluate}$.\\
+Traditionally, the symbols $\Z, \Q, \R, \C$ shall represent the sets of integers, rationals, reals and complex numbers, respectivelly.
 
-Loosely following \cite{ring-lwe} and \cite{conrad}, we define a \textit{lattice} as a discrete additive subgroup of $\R^n$. Once we fix a basis $\B = (b_1, \dots ,b_n) \in \R^n$ we can then describe the lattice as
+\subsection{Lattices}
+We define a \textit{lattice} as a discrete additive subgroup of $\R^n$. Once we fix a basis $\B = (b_1, \dots ,b_n) \in \R^n$ we can then describe the lattice as
 $$ \Lambda = \mathcal{L}(\boldsymbol{B}) = \Bigl\{ \sum_i z_i \boldsymbol{b}_i : z \in \Z^n \Bigl\}.$$
 
 There are many bases for a lattice (actually infinitely many as can be proven using a little diagonalization argument \krzys{can it tho?}), some "better" than others. This will be the foundation for some of the problems like SVP or CVP.
@@ -17,8 +21,10 @@ More generally, $\Lambda$ is a lattice of rank $m$ in $\R^n$ if it is a rank $m$
 
 \begin{remark}
     We can also view the vectors $b_i$ as the rows of the matrix $B \in \R^n \cross \R^n$ in which case, our definition becomes:
-    $$\Lambda = \mathcal{L(B)} = \{zB :  z \in \Z^n \}.$$
+$$\Lambda = \mathcal{L}(B) = \{zB :  z \in \Z^n \}.$$
 \end{remark}
+
+Reciprocally, any matrix $\bm{B} \in GL_n(\R)$ spans a lattice: the set of all integer linear combinations of its rows.
 
 \begin{example}
 \begin{enumerate}
@@ -64,7 +70,27 @@ We simply require that the elements of the dual are precisely those vectors that
 Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
 \krzys{end of dual section}
 
+\begin{definition}[Fundamental Domain] \label{fundamental}
+    Let $\mathcal{L}$ be a lattice of dimension $n$ and let $\bm{b}_1, \dots, \bm{b}_n$ be a basis for $\mathcal{L}$. The \textit{fundamental domain} (or \textit{fundamental parallelepiped}) for $\mathcal{L}$ corresponding to this basis is the set
+    $$ \mathcal{F}(\bm{b}_1, \dots, \bm{b}_n) = \{t_1\bm{b}_1 + \cdots + t_n\bm{b}_n : 0 \leq t_i < 1 \}.$$
+\end{definition}
+
+The following proposition should shine some motivation to why we should care about the fundamental domains of a lattice.
+
+\begin{proposition}
+    Let $\mathcal{L} \subset \R^n$ be a lattice of dimension $n$ and let $\mathcal{F}$ be a fundamental domain for $\mathcal{L}$. Then every vector $\bm{v} \in \R^n$ can be written in the form 
+    $$\bm{v} = \bm{f} + \bm{t}$$
+    for $\bm{f} \in \mathcal{F}$ and $\bm{t} \in \mathcal{L}$ both unique and associated to the original $\bm{v}$.
+\end{proposition}
+
+Equivalently, 
+
+\begin{remark}
+    Sometimes the \textit{fundamental domain} is refered to as a parallelepiped or parallelotope and denoted by caligraphic $\mathcal{P}$. If we take a matrix $\bm{B}$ to represent our lattice $\mathcal{L}$, then $\mathcal{P}_{1/2}(\bm{B}) = \{\bm{x}\bm{B}, \bm{x} \in [-1/2, 1/2]^n \}$ can also represent the (shifted by a half) fundamental domain of $\mathcal{L}$.
+\end{remark}
+
 We will now present two results that give us an upper bound on the length of the shortest vector in a lattice. This will later on be useful to determine the security of our schemes. These theorems are due to Hermite (1822 - 1901) and Minkowski (1864 - 1909).
+
 
 \begin{theorem}[Hermite's Theorem]
     Every lattice $\mathcal{L}$ of dimension $n$ contains a nonzero vector $v \in \mathcal{L}$ satisfying
@@ -144,7 +170,7 @@ Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then the
 
 \pinar{Maximal orders (ring of integers) are dedekind domains, embedding of $\Q(\alpha)$ to $\C$ hence embedding of the ideals. Properties of ideals in dedekind domains, operations, unique factorization and so on. all the necessary info. }
 
-\subsection{Complexity Theory and hard problems}
+\subsection{Complexity Theory and hard problems} \label{hardness}
 In this section we will briefly introduce what it means for a problem to be considered \textit{hard} and provide couple of examples
 
 The best know examples
