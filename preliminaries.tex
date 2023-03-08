@@ -8,6 +8,7 @@ $\alg{Algorithms}$ will be represented by $\alg{<name of this font idk> font}$ n
 Traditionally, the symbols $\Z, \Q, \R, \C$ shall represent the sets of integers, rationals, reals and complex numbers, respectivelly.
 
 \subsection{Lattices}
+\subsubsection*{Basic Definitions}
 We define a \textit{lattice} as a discrete additive subgroup of $\R^n$. Once we fix a basis $\B = (b_1, \dots ,b_n) \in \R^n$ we can then describe the lattice as
 $$ \Lambda = \mathcal{L}(\boldsymbol{B}) = \Bigl\{ \sum_i z_i \boldsymbol{b}_i : z \in \Z^n \Bigl\}.$$
 
@@ -70,12 +71,30 @@ We simply require that the elements of the dual are precisely those vectors that
 Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
 \krzys{end of dual section}
 
+\subsubsection*{Fundamental Domain}
 \begin{definition}[Fundamental Domain] \label{fundamental}
     Let $\mathcal{L}$ be a lattice of dimension $n$ and let $\bm{b}_1, \dots, \bm{b}_n$ be a basis for $\mathcal{L}$. The \textit{fundamental domain} (or \textit{fundamental parallelepiped}) for $\mathcal{L}$ corresponding to this basis is the set
     $$ \mathcal{F}(\bm{b}_1, \dots, \bm{b}_n) = \{t_1\bm{b}_1 + \cdots + t_n\bm{b}_n : 0 \leq t_i < 1 \}.$$
 \end{definition}
 
-The following proposition should shine some motivation to why we should care about the fundamental domains of a lattice.
+We define the \textit{volume} of $\mathcal{F}(\bm{B})$ as the volume of the corresponding parallelepiped in $\R^n$. The \textit{volume} - closely connected to the determinant - plays a very important role in our study which will become evident in later chapters. One of the advantages, of defining the fundamental domain, is that we can formalize the area (or the determinant) or any given lattice. Recall that a lattice is just a countable collection of points and therefore has no volume by itself. This, however, is resolved by introducing the following.
+
+\begin{definition}
+    Let $\mathcal{L}$ be a lattice of dimension $n$ and let $\mathcal{F}(\bm{B})$ be a fundamental domain for $\mathcal{L}$ over some basis $\bm{B}$. We define the \textit{determinant} of that lattice as
+    $$ \det (\mathcal{L}) = \VF{\bm{B}} = |\det (\bm{B}) |$$
+\end{definition}
+
+The next two propositions are \textit{de facto} foundation for lattice based cryptography. The first one states that the $\det (\mathcal{L})$ does not depend on the choice of the basis for that lattice. The second, that our whole ambient space $\R^n$ can be described using only vectors from the lattice and the fundamental domain. We will only give an outline of the proofs for the sake of keeping this section compact. Full proofs, however, can be found in \cite{book}, chapter 6.4.
+
+\begin{proposition}
+    The $\det (\mathcal{L})$ of an $n$-dimensional lattice is invariant under the choice of the basis.
+\end{proposition}
+
+\begin{proof}[Outline of the proof]
+    Let $\bm{B}_1, \bm{B}_2$ be two bases for a lattice $\mathcal{L}$. The crucial part of the proof is to note that any two bases are related by some unimodular matrix $U$ (i.e. a matrix with the determinant of $\pm 1$) s.t. $\bm{B}_1 = U \bm{B}_2$. It now easily follows to compute $| \det (\bm{B}_1) | = \det (\mathcal{L}) = | \det (U \cdot \bm{B}_2) | = | \det(U) | \cdot | \det(\bm{B}_2) | = | \det(\bm{B}_2)|$ 
+\end{proof}
+
+From now on we will write $\mathcal{F}$ to denote the fundamental domain of the lattice without specifying the basis.
 
 \begin{proposition}
     Let $\mathcal{L} \subset \R^n$ be a lattice of dimension $n$ and let $\mathcal{F}$ be a fundamental domain for $\mathcal{L}$. Then every vector $\bm{v} \in \R^n$ can be written in the form 
@@ -83,10 +102,11 @@ The following proposition should shine some motivation to why we should care abo
     for $\bm{f} \in \mathcal{F}$ and $\bm{t} \in \mathcal{L}$ both unique and associated to the original $\bm{v}$.
 \end{proposition}
 
-Equivalently, 
+Equivalently, the space $\R^n$ is spanned exactly (without overlap) by shifting the fundamental domain by the vectors from our lattice.
+$$ \R^n = \bigcup_{\bm{t} \in \mathcal{L}} \{\bm{f} : \bm{f} \in \mathcal{F} \}$$
 
 \begin{remark}
-    Sometimes the \textit{fundamental domain} is refered to as a parallelepiped or parallelotope and denoted by caligraphic $\mathcal{P}$. If we take a matrix $\bm{B}$ to represent our lattice $\mathcal{L}$, then $\mathcal{P}_{1/2}(\bm{B}) = \{\bm{x}\bm{B}, \bm{x} \in [-1/2, 1/2]^n \}$ can also represent the (shifted by a half) fundamental domain of $\mathcal{L}$.
+    Sometimes the \textit{fundamental domain} is refered to as a parallelepiped or parallelotope and denoted by caligraphic $\mathcal{P}$. If we take a matrix $\bm{B}$ to represent our lattice $\mathcal{L}$, then $\mathcal{P}_{1/2}(\bm{B}) = \{\bm{x}\bm{B}, \bm{x} \in [-1/2, 1/2]^n \}$ can also represent the (shifted by a half) fundamental domain of $\mathcal{L}$ (like for example in .
 \end{remark}
 
 We will now present two results that give us an upper bound on the length of the shortest vector in a lattice. This will later on be useful to determine the security of our schemes. These theorems are due to Hermite (1822 - 1901) and Minkowski (1864 - 1909).
