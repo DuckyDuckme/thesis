@@ -1,7 +1,8 @@
 \documentclass[11pt,a4paper]{article}
 %\usepackage[utf8x]{inputenc}
 \usepackage{fullpage}
-%\usepackage[T1]{fontenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} % font for the algorithms
 
 %Mathematical language packages
 \usepackage{amsmath, amssymb, amsthm, amsfonts, physics, mathtools, bbm}
@@ -50,14 +51,14 @@ style=draft,
 \newcommand{\Bg}{\B_{good}}
 \newcommand{\Bb}{\B_{bad}}
 \newcommand{\E}{\mathcal{E}}
-\newcommand{\alg}[1]{#1}
+\newcommand{\alg}[1]{\fontfamily{lmss}\selectfont #1}
 \newcommand{\VF}[1]{\text{Vol}(\mathcal{F(#1)})}
 %\newcommand{\b}{\mathcal{b}}
 %\renewcommand{\L}{\mathcal{L}}
 
 \newcommand{\pinar}[1]{{\textcolor{red}{[Pinar: #1]}}}
 \newcommand{\marcello}[1]{{\textcolor{red}{[Marcello: #1]}}}
-\newcommand{\krzys}[1]{\textcolor{purple}{Krzys: #1}}
+\newcommand{\krzys}[1]{\textcolor{purple}{[Krzys: #1]}}
 
 \usepackage{graphicx} % Required for including pictures
 %\usepackage{calc} % To reset the counter in the document after title page
