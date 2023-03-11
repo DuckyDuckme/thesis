@@ -1,5 +1,5 @@
 \documentclass[11pt,a4paper]{article}
-%\usepackage[utf8x]{inputenc}
+\usepackage[utf8x]{inputenc}
 \usepackage{fullpage}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern} % font for the algorithms
@@ -31,11 +31,13 @@ style=draft,
 \newtheorem{problem}[theorem]{Problem}
 
 \theoremstyle{remark}
-\newtheorem{remark}[theorem]{Remark}
+\newtheorem{remark}{Remark}[section]
 \newtheorem{remarks}[theorem]{Remarks}
-\newtheorem{example}[theorem]{Example}
+\newtheorem{example}[remark]{Example}
 \newtheorem{exercise}[theorem]{Exercise}
 
+% counter of equations resets after each section
+\counterwithin{equation}{section}
 
 % custom commands
 \newcommand{\R}{\mathbb{R}}
@@ -53,6 +55,7 @@ style=draft,
 \newcommand{\E}{\mathcal{E}}
 \newcommand{\alg}[1]{{\text{\fontfamily{lmss}\selectfont #1}}}
 \newcommand{\VF}[1]{\text{Vol}(\mathcal{F(#1)})}
+\newcommand{\prob}[1]{{\fontfamily{cmtt}\selectfont #1}}
 %\newcommand{\b}{\mathcal{b}}
 %\renewcommand{\L}{\mathcal{L}}
 
@@ -74,11 +77,10 @@ style=draft,
 
 \usepackage[pdftex, pdfborder={0 0 0}]{hyperref} % Format links for pdf
 \hypersetup{ 	
-colorlinks=false,
+colorlinks=true,
 citecolor=blue,
 pdftitle={Krzysztof Pudowski - BSc Thesis},
 pdfauthor={Krzysztof Pudowski},
-pdfpagemode=FullScreen,
 }
 
 \title{Bachelor Thesis}

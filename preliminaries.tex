@@ -20,7 +20,7 @@ $$\mathcal{L}(\bm{B}_1) = \Bigl\{ \sum_i z_i \bm{e}_i : z_i \in \Z \Bigl\} = \Z^
 More generally, $\Lambda$ is a lattice of rank $m$ in $\R^n$ if it is a rank $m$ free abelian group. Recall that we call a group \textit{free abelian group} of rank $m$ if it can be written as $\Lambda = \Z\beta_1 \oplus \cdots \oplus\Z\beta_m$ with $\beta_1, \dots, \beta_m$ linearly independent over $\R$ where $\oplus$ represents the direct sum. In this paper we will only consider lattices of full rank $n$. 
 
 \begin{remark}
-    We can also view the vectors $\bm{b}_i$ as the columns of the matrix $B \in \R^n \cross \R^n$ in which case, our definition becomes:
+    We can also view the vectors $\bm{b}_i$ as the columns of the matrix $\B \in \R^n \cross \R^n$ in which case, our definition becomes:
     $$\Lambda = \mathcal{L}(B) = \{\bm{Bz} :  \bm{z} \in \Z^n \}.$$
 \end{remark}
 
@@ -46,6 +46,8 @@ Reciprocally, any matrix $\bm{B} \in GL_n(\R)$ spans a lattice: the set of all i
 \end{enumerate}
 \end{example}
 
+As noted before, the basis of a lattice is not unique. There is one that is particularly interesting to us, namely, the \textit{Hermite Normal Form} (HNF). A basis $\B$ is in HNF if it is upper triangular, all elements on the diagonal are strictly positive and any other element $\bm{b}_{i,j}$ satisfies $0 \leq \bm{b}_{i,j} < \bm{b}_{i,i}$.
+\iffalse
 \begin{definition}[Dual]
     For a lattice $\mathcal{L} \subset \R^n$ its $\Z$\textit{-dual} is
     $$ \mathcal{L}^{\vee} = \{ y \in \R^n : y \cdot \mathcal{L} \subset \Z \}.$$
@@ -67,6 +69,7 @@ We simply require that the elements of the dual are precisely those vectors that
 \end{example}
 
 Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
+\fi
 
 \subsubsection*{Fundamental Domain}
 \begin{definition}[Fundamental Domain] \label{fundamental}
@@ -202,6 +205,7 @@ Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then the
 In this section we will briefly introduce what it means for a problem to be considered \textit{hard} and provide couple of examples
 
 The best know examples
+\prob{FACTORIZE}
 \subsubsection{Shor's Algorithm}
 I'm not sure if that is supposed to be in a section about preliminaries but I also don't want to include it in the introduction coz its a bit long
 
