@@ -1,29 +1,27 @@
-number rings (number fields), ideals, ring of integers, geometry then discriminant, why do they use cyclotomic. can we use any integer ring or do we need cyclotomic ones.
-
 \subsection{Notation}
 Most of the notation is "standard" in the field of number theory and cryptography. Nonetheless, to avoid any misunderstandings and simplify some statements, we will present the notation used throughout the text. Anything that is not mentioned here shall be defined "on the go" with definitions and such. \\
 
 \noindent Any scalars $a, t, \beta, \dots$ are represented by non-bold, latin or greek letters.\\
 Bold symbols $\bm{v}, \bm{x}, \bm{s}, \dots$ will denote vectors. \\
-$\alg{Algorithms}$ will be represented by $\alg{<name of this font idk> font}$ names such as $\alg{Encrypt}$ or $\alg{Evaluate}$.\\
-Traditionally, the symbols $\Z, \Q, \R, \C$ shall represent the sets of integers, rationals, reals and complex numbers, respectivelly.
+$\alg{Algorithms}$ will be represented by $\alg{lmodern font}$ names such as $\alg{Encrypt}$ or ${\fontfamily{lmss}\selectfont Evaluate}$.\\
+Traditionally, the symbols $\Z, \Q, \R, \C$ shall represent the sets of integer, rational, real and complex numbers, respectivelly.
 
 \subsection{Lattices}
 \subsubsection*{Basic Definitions}
-We define a \textit{lattice} as a discrete additive subgroup of $\R^n$. Once we fix a basis $\B = (b_1, \dots ,b_n) \in \R^n$ we can then describe the lattice as
-$$ \Lambda = \mathcal{L}(\boldsymbol{B}) = \Bigl\{ \sum_i z_i \boldsymbol{b}_i : z \in \Z^n \Bigl\}.$$
+We define a \textit{lattice} as a discrete additive subgroup of $\R^n$. Once we fix a basis $\B = (\bm{b}_1, \dots ,\bm{b}_n) \in \R^n$ we can then describe the lattice as
+$$ \Lambda = \mathcal{L}(\bm{B}) = \Bigl\{ \sum_i z_i \bm{b}_i : z_i \in \Z \Bigl\}.$$
 
-There are many bases for a lattice (actually infinitely many as can be proven using a little diagonalization argument \krzys{can it tho?}), some "better" than others. This will be the foundation for some of the problems like SVP or CVP.
+There are many bases for a lattice (actually, for $n \geq 2$i, there are infinitely many as can be proven using a diagonalization argument), some "better" than others. This will be the foundation for some of the problems like SVP or CVP.
 
 \begin{example}
-    The simplest example of a lattice is the $\Z^n$ itself. Taking the standard basis $\B_1 = \{\bm{e}_1, \dots, \bm{e}_n\}$ we obtain
-$$\mathcal{L}(\bm{B}_1) = \Bigl\{ \sum_i z_i \bm{e}_i : z \in \Z^n \Bigl\} = \Z^n.$$
+    The simplest example of a lattice is the $\Z^n$ itself. Taking the standard basis $\B_1 = (\bm{e}_1, \dots, \bm{e}_n)$ we obtain
+$$\mathcal{L}(\bm{B}_1) = \Bigl\{ \sum_i z_i \bm{e}_i : z_i \in \Z \Bigl\} = \Z^n.$$
 \end{example}
-More generally, $\Lambda$ is a lattice of rank $m$ in $\R^n$ if it is a rank $m$ free abelian group. Recall that we call a group \textit{free abelian group} of rank $m$ if it can be written as $\Lambda = \Z\beta_1 \oplus \cdots \oplus\Z\beta_m$ with $\beta_1, \dots, \beta_m$ linearly independent over $\R$ where $\oplus$ represents the direct sum. In this paper we will only consider lattices of full rank. 
+More generally, $\Lambda$ is a lattice of rank $m$ in $\R^n$ if it is a rank $m$ free abelian group. Recall that we call a group \textit{free abelian group} of rank $m$ if it can be written as $\Lambda = \Z\beta_1 \oplus \cdots \oplus\Z\beta_m$ with $\beta_1, \dots, \beta_m$ linearly independent over $\R$ where $\oplus$ represents the direct sum. In this paper we will only consider lattices of full rank $n$. 
 
 \begin{remark}
-    We can also view the vectors $\bm{b}_i$ as the rows of the matrix $B \in \R^n \cross \R^n$ in which case, our definition becomes:
-    $$\Lambda = \mathcal{L}(B) = \{\bm{zB} :  \bm{z} \in \Z^n \}.$$
+    We can also view the vectors $\bm{b}_i$ as the columns of the matrix $B \in \R^n \cross \R^n$ in which case, our definition becomes:
+    $$\Lambda = \mathcal{L}(B) = \{\bm{Bz} :  \bm{z} \in \Z^n \}.$$
 \end{remark}
 
 Reciprocally, any matrix $\bm{B} \in GL_n(\R)$ spans a lattice: the set of all integer linear combinations of its rows.
@@ -33,10 +31,10 @@ Reciprocally, any matrix $\bm{B} \in GL_n(\R)$ spans a lattice: the set of all i
     \item $\mathcal{L} = \begin{pmatrix}
         1 & 0\\
         0 & 1
-        \end{pmatrix}$ In this example $\beta_1 = \big(\begin{smallmatrix}
+	\end{pmatrix}$ in which case $\bm{b}_1 = \big(\begin{smallmatrix}
           1\\
           0
-        \end{smallmatrix}\big)$ and $\beta_2 = \big(\begin{smallmatrix}
+	\end{smallmatrix}\big)$ and $\bm{b}_2 = \big(\begin{smallmatrix}
           0\\
           1
         \end{smallmatrix}\big)$
@@ -48,10 +46,9 @@ Reciprocally, any matrix $\bm{B} \in GL_n(\R)$ spans a lattice: the set of all i
 \end{enumerate}
 \end{example}
 
-\krzys{this is useful for (ring)-lwe, not sure if i should include this at all}
 \begin{definition}[Dual]
-    For a lattice $\Lambda \subset \R^n$ its $\Z$\textit{-dual} is
-    $$ \Lambda^{\vee} = \{ y \in \R^n : y \cdot \Lambda \subset \Z \}.$$
+    For a lattice $\mathcal{L} \subset \R^n$ its $\Z$\textit{-dual} is
+    $$ \mathcal{L}^{\vee} = \{ y \in \R^n : y \cdot \mathcal{L} \subset \Z \}.$$
     Here, the $\cdot$ means the usual dot product.
 \end{definition}
 
@@ -70,11 +67,10 @@ We simply require that the elements of the dual are precisely those vectors that
 \end{example}
 
 Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
-\krzys{end of dual section}
 
 \subsubsection*{Fundamental Domain}
 \begin{definition}[Fundamental Domain] \label{fundamental}
-    Let $\mathcal{L}$ be a lattice of dimension $n$ and let $\bm{b}_1, \dots, \bm{b}_n$ be a basis for $\mathcal{L}$. The \textit{fundamental domain} (or \textit{fundamental parallelepiped}) for $\mathcal{L}$ corresponding to this basis is the set
+    Let $\mathcal{L}$ be a lattice of dimension $n$ and let $(\bm{b}_1, \dots, \bm{b}_n)$ be a basis for $\mathcal{L}$. The \textit{fundamental domain} (or \textit{fundamental parallelepiped}) for $\mathcal{L}$ corresponding to this basis is the set
     $$ \mathcal{F}(\bm{b}_1, \dots, \bm{b}_n) = \{t_1\bm{b}_1 + \cdots + t_n\bm{b}_n : 0 \leq t_i < 1 \}.$$
 \end{definition}
 
@@ -128,7 +124,9 @@ Algebraic number theory is the study of \textit{number fields}, \textit{rings of
 \subsubsection*{Number Fields}
 In general, a \textit{number field} is defined as a subfield of $\oQ$ having finite degree (the dimension as a vector space) over the rationals $\Q$. Throughout this section, we fix the imaginary numbers $\oQ = \C$ as an algebraic closure of the rationals.
 
-\begin{definition}[Algebraic Integer]
+\pinar{Degree of a field over $\Q$. Define the monic minimal polynomial.}
+
+\begin{definition}[Algebraic integer]
     An element $\alpha \in \C$ is an \textit{algebraic integer} if it is a root of some monic polynomial with coefficients in $\Z$.
 \end{definition}
 
@@ -137,27 +135,35 @@ In fact, the set of algebraic integers forms a ring (under the usual addition an
 \begin{lemma} \label{lemma1}
     Any $\alpha \in \C$ is an algebraic integer if and only if, the additive group of the ring $\Z[\alpha]$ is finitely generated.
 \end{lemma}
-
 \begin{proof}
     ($\Rightarrow$): If $\alpha$ is a root of a monic polynomial over $\Z$ of degree $n$, then the additive group $\Z[\alpha]$ is generated by $1, \alpha, \cdots, \alpha^{n-1}$. \\
     ($\Leftarrow$): \krzys{TODO}
 \end{proof}
 
-\begin{theorem}[Ring of Integers]
-The \textit{ring of integers} (sometimes also called \textit{number ring}) $\Oo_K$ of a number field $K$
+\begin{definition}[Ring of Integers]
+We define the \textit{ring of integers} (sometimes also called \textit{number ring}) $\Oo_K$ of a number field $K$ as the largest ring in the intersection:
 $$
   \Oo_K = K \cap \overline{\Z} = \{x \in K : \text{ $x$ is an algebraic integer}\}.
 $$
-forms a ring.
-\end{theorem}
-
-\begin{proof}
-    Take $\alpha, \beta \in \Oo_K$. We know by \ref{lemma1} that $\Z[\alpha]$ and $\Z[\beta]$ have finitely generated abelian groups, then so does the ring $\Z[\alpha, \beta]$. Clearly $\alpha + \beta$ and $\alpha\beta$ are in this ring, which implies that they are algebraic integers.
-\end{proof}
-\krzys{hope this is correct}
+The \textit{degree} of the number field is defined as the degree of the 
+\end{definition}
 
 \begin{example}
-    The field $K = \Q$ is a number field of degree 1. Its ring of integers $\Oo_K$ are the ordinary integers $\Z$. The field $K = \Q(i)$ of Gaussian integers has degree 2 with $\Oo_K = \Z[i]$ and for $K = \Q(\sqrt{5})$ the ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. In general, for a quadratic field $K = \Q(\sqrt{d})$ with squarefree $d \in \Z$, $\Oo_K$ is $\Z[\sqrt{d}]$ or $\Z[(1 + \sqrt{d})/2]$ depending on $d \mod 4$.
+    The field $K = \Q$ is a number field of degree 1.   
+\end{example}
+
+\begin{theorem}
+     In general, for a quadratic field $K = \Q(\sqrt{d})$ with square-free $d \in \Z$, $\Oo_K$ is $\Z[\sqrt{d}]$ or $\Z[(1 + \sqrt{d})/2]$ depending on $d \mod 4$.
+\end{theorem}
+
+\begin{example}
+     Its ring of integers $\Oo_K$ are the ordinary integers $\Z$. The field 
+    $$
+    K = \Q(\sqrt{-1}) = \{a + b\sqrt{-1}\, \mid\, a,b\in \Q\}
+    $$ 
+    has degree 2 since $x^2+1$ is the minimal polynomial of $\sqrt{-1}$ over $\Q$ and with $\Oo_K = \Z[\sqrt{-1}]$. 
+    
+    for $K = \Q(\sqrt{5})$ the ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. 
 \end{example}
 
 \subsubsection*{Cyclotomic fields}
@@ -169,7 +175,7 @@ forms a ring.
 The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial.
 
 \subsubsection*{Embeddings in $\C$}
-Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then there are exactly $n$ canonical embeddings (injective ring homomorphisms) of $K$ in $\C$. These are easily described by observing that $\alpha$ can be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $(\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates.
+Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then there are exactly $n$ canonical embeddings (injective ring homomorphisms) of $K$ in $\C$. These are easily described by observing that $\alpha$ can be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $(\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates).
 
 \begin{example}
     The quadratic field $\Q[\sqrt{d}]$, $d$ squarefree, has two embeddings in $\C$: The identity mapping, and also the one which sends $a + b\sqrt{d}$ to $a - b\sqrt{d}$ ($a$, $b$ $\in \Q$), since $\sqrt{d}$ and $-\sqrt{d}$ are the two conjugates of $\sqrt{d}$. The $n$-th cyclotomic field has $\varphi(n)$ embeddings in $\C$, the $\varphi(n)$ automorphisms where $\sigma_i(\zeta) = \zeta^i$.
@@ -190,7 +196,9 @@ Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then the
 
 \pinar{Maximal orders (ring of integers) are dedekind domains, embedding of $\Q(\alpha)$ to $\C$ hence embedding of the ideals. Properties of ideals in dedekind domains, operations, unique factorization and so on. all the necessary info. }
 
-\subsection{Complexity Theory and hard problems} \label{hardness}
+\subsection{Complexity Theory and hard problems} 
+\label{hardness}
+\pinar{will wait}
 In this section we will briefly introduce what it means for a problem to be considered \textit{hard} and provide couple of examples
 
 The best know examples
