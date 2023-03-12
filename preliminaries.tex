@@ -47,29 +47,6 @@ Reciprocally, any matrix $\bm{B} \in GL_n(\R)$ spans a lattice: the set of all i
 \end{example}
 
 As noted before, the basis of a lattice is not unique. There is one that is particularly interesting to us, namely, the \textit{Hermite Normal Form} (HNF). A basis $\B$ is in HNF if it is upper triangular, all elements on the diagonal are strictly positive and any other element $\bm{b}_{i,j}$ satisfies $0 \leq \bm{b}_{i,j} < \bm{b}_{i,i}$.
-\iffalse
-\begin{definition}[Dual]
-    For a lattice $\mathcal{L} \subset \R^n$ its $\Z$\textit{-dual} is
-    $$ \mathcal{L}^{\vee} = \{ y \in \R^n : y \cdot \mathcal{L} \subset \Z \}.$$
-    Here, the $\cdot$ means the usual dot product.
-\end{definition}
-
-We simply require that the elements of the dual are precisely those vectors that yield an integer when "multiplied" with an element of our lattice. Note that this is different from our standard definition of a dual. Namely, it is not the orthogonal compliment of our starting space, i.e. not all of the elements of the dual have 0 dot product against the vectors of the lattice.
-
-\begin{example}
-    Take $\mathcal{L}= \Z 
-        \big(\begin{smallmatrix} 1\\2 \end{smallmatrix}\big) + 
-        \Z \big(\begin{smallmatrix} 0\\ 1 \end{smallmatrix}\big)$
-        To calculate the dual of $\mathcal{L}$ we need our $y = \big(\begin{smallmatrix}
-          a\\b\end{smallmatrix}\big)$ elements to satisfy $a \in \Z$ and $2a + b \in \Z$ which is equivalent to asking $a \in (1/2)\Z$ and so $\mathcal{L}^{\vee} = \big(\begin{smallmatrix}
-          1/2\\0
-        \end{smallmatrix}\big)\Z + \big(\begin{smallmatrix}
-          0\\1
-        \end{smallmatrix}\big) \Z$
-\end{example}
-
-Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
-\fi
 
 \subsubsection*{Fundamental Domain}
 \begin{definition}[Fundamental Domain] \label{fundamental}
