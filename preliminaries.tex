@@ -11,7 +11,7 @@ Traditionally, the symbols $\Z, \Q, \R, \C$ shall represent the sets of integer,
 We define a \textit{lattice} as a discrete additive subgroup of $\R^n$. Once we fix a basis $\B = (\bm{b}_1, \dots ,\bm{b}_n) \in \R^n$ we can then describe the lattice as
 $$ \Lambda = \mathcal{L}(\bm{B}) = \Bigl\{ \sum_i z_i \bm{b}_i : z_i \in \Z \Bigl\}.$$
 
-There are many bases for a lattice (actually, for $n \geq 2$i, there are infinitely many as can be proven using a diagonalization argument), some "better" than others. This will be the foundation for some of the problems like SVP or CVP.
+There are many bases for a lattice (actually, for $n \geq 2$i, there are infinitely many as can be proven using a diagonalization argument), some "better" than others. This will be the foundation for some of the problems like \prob{SVP} or \prob{CVP}.
 
 \begin{example}
     The simplest example of a lattice is the $\Z^n$ itself. Taking the standard basis $\B_1 = (\bm{e}_1, \dots, \bm{e}_n)$ we obtain
@@ -38,7 +38,7 @@ Reciprocally, any matrix $\bm{B} \in GL_n(\R)$ spans a lattice: the set of all i
           0\\
           1
         \end{smallmatrix}\big)$
-    \item $\mathcal{L} = \{(z_1,z_2) : z_1 + z_2 \text{ is even \krzys{would odd work here?}}\}$
+    \item $\mathcal{L} = \{(z_1,z_2) : z_1 + z_2 \text{ is even}\}$
     \item $\mathcal{L} = \begin{pmatrix}
         13 & 21\\
         21 & 34
@@ -46,7 +46,7 @@ Reciprocally, any matrix $\bm{B} \in GL_n(\R)$ spans a lattice: the set of all i
 \end{enumerate}
 \end{example}
 
-As noted before, the basis of a lattice is not unique. There is one that is particularly interesting to us, namely, the \textit{Hermite Normal Form} (HNF). A basis $\B$ is in HNF if it is upper triangular, all elements on the diagonal are strictly positive and any other element $\bm{b}_{i,j}$ satisfies $0 \leq \bm{b}_{i,j} < \bm{b}_{i,i}$.
+As noted before, the basis of a lattice is not unique. There is one that is particularly interesting to us, namely, the \textit{Hermite Normal Form} (HNF). A basis $\B$ is in HNF if it is upper triangular (or lower triangular - does not matter as long as one is consistent), all elements on the diagonal are strictly positive and any other element $\bm{b}_{i,j}$ satisfies $0 \leq \bm{b}_{i,j} < \bm{b}_{i,i}$.
 
 \subsubsection*{Fundamental Domain}
 \begin{definition}[Fundamental Domain] \label{fundamental}
@@ -54,7 +54,7 @@ As noted before, the basis of a lattice is not unique. There is one that is part
     $$ \mathcal{F}(\bm{b}_1, \dots, \bm{b}_n) = \{t_1\bm{b}_1 + \cdots + t_n\bm{b}_n : 0 \leq t_i < 1 \}.$$
 \end{definition}
 
-We define the \textit{volume} of $\mathcal{F}(\bm{B})$ as the volume of the corresponding parallelepiped in $\R^n$. The \textit{volume} - closely connected to the determinant - plays a very important role in our study which will become evident in later chapters. One of the advantages, of defining the fundamental domain, is that we can formalize the area (or the determinant) or any given lattice. Recall that a lattice is just a countable collection of points and therefore has no volume by itself. This, however, is resolved by introducing the following.
+We define the \textit{volume} of $\mathcal{F}(\bm{B})$ as the volume of the corresponding parallelepiped in $\R^n$. The \textit{volume} - closely connected to the determinant - plays a very important role in our study which will become evident in later chapters. One of the advantages, of defining the fundamental domain, is that we can formalize the notion of area (or the determinant) of any given lattice. Recall that a lattice is just a countable collection of points and therefore has no volume by itself. This, however, is resolved by introducing the following.
 
 \begin{definition}
     Let $\mathcal{L}$ be a lattice of dimension $n$ and let $\mathcal{F}(\bm{B})$ be a fundamental domain for $\mathcal{L}$ over some basis $\bm{B}$. We define the \textit{determinant} of that lattice as
@@ -86,38 +86,27 @@ $$ \R^n = \bigcup_{\bm{t} \in \mathcal{L}} \{\bm{f} : \bm{f} \in \mathcal{F} \}$
     Sometimes the \textit{fundamental domain} is refered to as a parallelepiped or parallelotope and denoted by caligraphic $\mathcal{P}$. If we take a matrix $\bm{B}$ to represent our lattice $\mathcal{L}$, then $\mathcal{P}_{1/2}(\bm{B}) = \{\bm{x}\bm{B}, \bm{x} \in [-1/2, 1/2]^n \}$ can also represent the (shifted by a half) fundamental domain of $\mathcal{L}$ (like for example in \cite{gentry}).
 \end{remark}
 
-\iffalse
-We will now present two results that give us an upper bound on the length of the shortest vector in a lattice. This will later on be useful to determine the security of our schemes. These theorems are due to Hermite (1822 - 1901) and Minkowski (1864 - 1909).
+We will now present two results that give us an upper bound on the length of the shortest vector in a lattice. This will later on be useful to determine the security and/or correctness of our schemes. These theorems are due to Hermite (1822 - 1901) and Minkowski (1864 - 1909).
 
 \begin{theorem}[Hermite's Theorem]
     Every lattice $\mathcal{L}$ of dimension $n$ contains a nonzero vector $v \in \mathcal{L}$ satisfying
     $$ \norm{v} \leq \sqrt{n} \det(\mathcal{L})^{\frac{1}{n}}.$$
 \end{theorem}
-
-\begin{remark}
-    
-\end{remark}
-\fi
+\krzys{add minkowski's theorem}
 
 \subsection{Algebraic Number Theory}
 
 Algebraic number theory is the study of \textit{number fields}, \textit{rings of integers} and \textit{finite fields}. In this section we will provide all the necessary background needed to understand and verify the results presented in the cryptographic schemes later in the text. Most results will be stated without proof however all of them can be found in the book \textbf{Number Fields} by \textbf{Daniel A. Marcus} \cite{algebra} after which this sections is modelled.
 
 \subsubsection*{Number Fields}
-In general, a \textit{number field} is defined as a subfield of $\oQ$ having finite degree (the dimension as a vector space) over the rationals $\Q$. The \textit{degree} of a number field is defined as the degree of the monic minimal polynomial of the adjoint root. Formally:
-
-\begin{definition}
-    A \textit{number field} is
-\end{definition}
-
-Throughout this section, we fix the imaginary numbers $\oQ = \C$ as an algebraic closure of the rationals.
+In general, a \textit{number field} is defined as a subfield of $\oQ$ having finite degree (the dimension as a vector space) over the rationals $\Q$. The \textit{degree} of a number field is defined as the degree of the monic minimal polynomial\footnote{Recall that we call polynomial monic if its leading coefficient is 1. It is the minimal polynomial for some element $\alpha$ if it is a polynomial of the lowest degree such that $\alpha$ is its root.} of the adjoint root. Throughout this section, we fix the imaginary numbers $\oQ = \C$ as an algebraic closure of the rationals.
 
 \pinar{Degree of a field over $\Q$. Define the monic minimal polynomial.}
 
 \begin{definition}[Algebraic integer]
     An element $\alpha \in \C$ is an \textit{algebraic integer} if it is a root of some monic polynomial with coefficients in $\Z$.
 \end{definition}
-Where the monic polynomial is a one, such that its leading coefficient is 1.
+In fact, \textit{algebraic integers} form a ring.
 
 \begin{definition}[Ring of Integers]
 We define the \textit{ring of integers} (sometimes also called \textit{number ring}) $\Oo_K$ of a number field $K$ as the largest ring in the intersection:
@@ -131,12 +120,12 @@ $$
 \end{example}
 
 \begin{example}
-    The ring of Gaussian integers, defined as $K = \Q(\sqrt{-1}) = \{a + b\sqrt{-1}\, \mid\, a,b\in \Q\}$
-    has degree 2 since $x^2+1$ is the minimal polynomial of $\sqrt{-1}$ over $\Q$ and with $\Oo_K = \Z[\sqrt{-1}]$. For $K = \Q(\sqrt{5})$ the ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. 
+    The ring of Gaussian integers, defined as $K = \Q(\sqrt{-1}) = \{a + b\sqrt{-1}\, :\, a,b\in \Q\}$
+    has degree 2 since $x^2+1$ is the minimal polynomial of $\sqrt{-1}$ over $\Q$ and $\Oo_K = \Z[\sqrt{-1}]$. 
 \end{example}
 
-In general, we can make a following statement about the ring of integers of a quadratic extension of rationals (real quadratic field).
-\begin{theorem}
+As another example, in generality, we can make a following statement about the ring of integers of a quadratic extension of rationals (real quadratic field).
+\begin{lemma}
      Let $d \in \Z$ be a positive and square-free. For the field $K = \Q(\sqrt{d})$, its ring of integers is 
      \[ \Oo_K = 
 	 \begin{cases} 
@@ -144,11 +133,17 @@ In general, we can make a following statement about the ring of integers of a qu
 	     \Z[(1 + \sqrt{d})/2] & \text{otherwise}.
      	 \end{cases}
      \]
-\end{theorem}
+\end{lemma}
 
 \begin{proof}
 	Take $d \equiv 1 \mod 4$ square-free.
 \end{proof}
+
+\begin{example}
+	For $K = \Q(\sqrt{5})$ the ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. 
+\end{example}
+
+What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\alpha \in \C$, the ring of integers is not necessarily the $\Z[\alpha]$. However, $\Z[\alpha]$ is what's called an \textit{order} in $\Oo_K$. We will not consider them here because they are not relevant for our study. Namely, for a cyclotomic field, we have that its ring of integers is actually just $\Z[\zeta]$. For more details on orders, one might look at Chapter 5 of \cite{stein}. \krzys{i still need to find an actual place this is stated}
 \subsubsection*{Cyclotomic fields}
 
 \begin{definition}[Roots of unity]
@@ -156,6 +151,10 @@ In general, we can make a following statement about the ring of integers of a qu
 \end{definition}
 
 The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial.
+
+\begin{proposition}
+    The ring of integers of a
+\end{proposition}
 
 \subsubsection*{Embeddings in $\C$}
 Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then there are exactly $n$ canonical embeddings (injective ring homomorphisms) of $K$ in $\C$. These are easily described by observing that $\alpha$ can be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $(\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates).
