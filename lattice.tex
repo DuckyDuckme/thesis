@@ -1,14 +1,13 @@
 Gentry's work was a true breakthrough. It not only presented the first, fully homomorphic encryption scheme, but also gave researchers a very powerful tool, the \textit{bootstrapping}. From now on, all we need to construct another FHE scheme, is some suitable (one requirement would be to use a scheme based on ring rather than a group) SHE method, apply appropriate "squashing" to obtain the bootstrapping and we are done. In the following years this is exactly what happened in academia and the industry.
 
-This section will mostly serve as a survey of the main developments towards more efficient fully homomorphic encryption using lattices and their security based on computational hardness of the underlying problems. We adopt chronological narrative of the sections, starting with the oldest, the GGH algorithm, progressing through works on (ring-)LWE and eventually arriving at the work of Gentry \cite{gentry_phd} on ideal lattices and FHE. For a good survey on the lattice based cryptography, see for example \cite{two_faces}, \cite{book} chapter 6 or \cite{lattice-survey}.
+This section will mostly serve as a survey of the main developments towards more efficient fully homomorphic encryption using (ideal) lattices and their security based on computational hardness of the underlying problems. We adopt chronological narrative of the sections, starting with the oldest, the GGH algorithm, progressing through works on (ring-)LWE and eventually arriving at the work of Gentry \cite{gentry_phd} on ideal lattices and FHE. For a good survey on the lattice based cryptography, see for example \cite{two_faces}, \cite{book} chapter 6 or \cite{lattice-survey}.
 
-\krzys{Optional: Add results about hardness to make the section more concrete on how cryptography research really looks like}
 \subsection{The GGH public key cryptosystem}
 We will start this section with a somewhat simpler cryptosystem that was developed by Goldreich, Goldwasser and Halevi and presented in 1997 \cite{ggh}, called the GGH cryptosystem. This scheme, rather than using ideal lattices (i.e. lattices that are also ideals in the ring of integers), relies on general properties of lattices. Namely, the hardness of the SVP and CVP (see section \ref{hardness}).
 
 \subsubsection*{Idea behind the scheme}
 The basic GGH cryptosystem, as mentioned before, is based on the problem of finding the closest vector in the lattice $\mathcal{L}$ to a given point in the ambient space $\R^n$. We are given two bases, call them $\Bg$ and $\Bb$. The $\Bb$ will be our public key and $\Bg$ the secret key. The $\Bb$ consists of long and highly non-orthogonal vectors, as opposed to $\Bg$. Our secret message $\bm{m}$ is represented as a binary vector which we will use to form a linear combination $\bm{s} = \sum m_i \bm{v}_i^{bad} \in \mathcal{L}$ of the vectors in $\Bb$. We now add some small and random\footnote{some small note about the "randomness" of this e} error $\bm{e} \in \R^n$ to obtain the ciphertext $\bm{c} = \bm{s} + \bm{e} = \sum m_i \bm{v}_i^{bad} + \bm{e} \in \R^n$ - some point that is not in the lattice, but rather, very close to a point in it.\\
-To decrypt, we can use our good basis $\Bg$ to represent $\bm{c}$ and, for example Babai's algorithm\footnote{Simply stated, if the vectors of the basis are sufficiently orthogonal to one another, then this algorithm solves CVP. However, if the Hadamard ratio is too small, the algorithm fails to find the closest vector \cite{book}.} to find $\bm{v}$ and represent it in terms of the basis $\Bg$ to recover $\bm{m}$. On the other hand, any eavesdropping adversary that is trying to learn our secret, is left with some bad basis that will be of no help in solving the CVP.
+To decrypt, we can use our good basis $\Bg$ to represent $\bm{c}$ and, for example Babai's algorithm\footnote{Simply stated, if the vectors of the basis are sufficiently orthogonal to one another, then this algorithm solves CVP. However, if the Hadamard ratio is too small, the algorithm fails to find the closest vector - \cite{book}.} to find $\bm{v}$ and represent it in terms of the basis $\Bg$ to recover $\bm{m}$. On the other hand, any eavesdropping adversary that is trying to learn our secret, is left with some bad basis that will be of no help in solving the CVP.
 
 \subsubsection*{GGH construction - concretely}
 \noindent\fbox{%
@@ -24,7 +23,7 @@ $\alg{Decrypt}$:
 
 The greatest drawback of GGH is that there were no proofs of security presented along the algorithm, only heuristic assumptions. This motivated researchers to look for possible exploits beased on the choice of parameters. Indeed, this scheme turned out to be insecure for most practical choices of the security parameter only 2 years later, in \cite{break1} and broken completely in \cite{break2}. Nonetheless, the ideas presented there have served as a basis for many schemes that are proven to be secure, like for example LWE, and has led to a plethora of applications.
 \subsection{Learning With Errors}
-Let us now begin with what went wrong in GGH. Namely, first prove the hardness of a problem, then use it to construct a secure and efficient cryptosystem. In this section we introduce \textit{Learning With Errors} (LWE) problem and the cryptosystem introduced by Oded Regev in \cite{regev} (he won the 2018 Gödel Prize for this work). This very important work in the field of lattice based cryptography is, up to the date \krzys{im not sure if this statement is true, i need to look more into it}, one of the most efficient schemes with an actual proof of security.
+Let us now begin with what went wrong in GGH. Namely, first prove the hardness of a problem, then use it to construct a secure and efficient cryptosystem. In this section we introduce \textit{Learning With Errors} (LWE) problem and the cryptosystem introduced by Oded Regev in \cite{regev} (he won the \href{https://eatcs.org/index.php/component/content/article/1-news/2670-2018-godel-prize}{2018 Gödel Prize} for this work). This very important work in the field of lattice based cryptography is, up to the date \krzys{im not sure if this statement is true, i need to look more into it}, one of the most efficient schemes with an actual proof of security. It has served as a foundation for countless subsequent works in the field.
 
 \iffalse
 \subsubsection*{Lattices - Part II}
@@ -53,26 +52,28 @@ Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
 \fi
 
 \subsubsection*{LWE problem}
-There are multiple equivalent definitions of this problem. We adopt the notation and approach introduced in the original paper \cite{regev} by Regev. \\
-The problem is parametrized by positive integers $n$, $m$ and prime $q$, as well as an error distibution $\chi$ over $\Z_q$. It is now defined as follows. We are given $m$ equations of the form $(\bm{a}_i, b_i = \langle \bm{a}_i, \bm{s} \rangle + e_i)$ and are asked to find the vector $\bm{s} \in \Z_q^n$. Here, $\bm{a}_i$ are chosen uniformly and independently from $\Z_q^n$, $b_i \in \Z_q$ and $\langle \cdot, \cdot \rangle$ denotes the usual dot product. The errors $e_i$ are obtained by sampling independently from the probability distribution $\chi : \Z_q \rightarrow \R_{+}$ on $\Z_q$. To now denote the problem of recovering $\bm{s}$ from such equations, by $\text{LWE}_{q, \chi}$ (learning with error). \\
-The central part of \cite{regev} revolves around proving conjured hardness of LWE. Specifically, that for appropriately chosen $q$ and $\chi$, a \textit{quantum} reduction algorithm exists that approximates worst-case lattice problems. A still open problem is to find a \textit{classical} reduction algorithm that proves the hardness. The result is loosely stated as follows.
+There are multiple equivalent definitions of this problem. We adopt the notation and approach introduced in the original paper by Regev. \\
+The problem is parametrized by positive integers $n$, $m$ and prime $q$, as well as an error distibution $\chi$ over $\Z_q$. It is now defined as follows. We are given $m$ equations of the form $(\bm{a}_i, b_i = \langle \bm{a}_i, \bm{s} \rangle + e_i)$ and are asked to find the vector $\bm{s} \in \Z_q^n$. Here, $\bm{a}_i$ are chosen uniformly and independently from $\Z_q^n$, $b_i \in \Z_q$ and $\langle \cdot, \cdot \rangle$ denotes the usual dot product. The errors $e_i$ are obtained by sampling independently from the probability distribution $\chi : \Z_q \rightarrow \R^{+}$ (\krzys{im not sure if he means the positive reals or something else}) on $\Z_q$. To will denote the problem of recovering $\bm{s}$ from such equations, by $\text{LWE}_{q, \chi}$ (learning with errors).
+
+The central part of \cite{regev} revolves around proving conjured hardness of LWE. Specifically, that for appropriately chosen $q$ and $\chi$, a \textit{quantum} reduction algorithm exists that approximates worst-case lattice problems. At some point as well, we would like to find a \textit{classical} reduction algorithm that proves the hardness as well. This was done in \cite{} but \krzys{TODO} The result is loosely stated as follows.
 
 \begin{theorem}[Theorem 1.1 in \cite{regev}]
     Let $n$, $q$ be integers and $\alpha \in (0, 1)$ be such that $\alpha q > 2 \sqrt{n}$. If there exists an efficient algorithm that solves $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$, then there exists an efficient quantum algorithm that approximates the decision version of the shortest vector problem (\prob{GapSVP}) and the shortest independent vectors problem (\prob{SIVP}) to within $\tilde{O}(n/\alpha)$ in the worst case.	
 \end{theorem}
 
-Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{2}/q$ is one of those choices (and requirements). It specifies the shape of the $\bar{\Psi}_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$\footnote{A slightly rephrased comment from \cite{lattice-survey}: Originally, Regev considered the continuous Gaussian and rounded the result to the nearest integer. This does not exactly yield the discrete distribution but thanks to \cite{discr} we know how the problem can be fixed.}. The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}.
+Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{2}/q$ is one of those choices (and requirements). It specifies the shape of the $\bar{\Psi}_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$\footnote{A comment from \cite{lattice-survey}: Originally, Regev considered the continuous Gaussian and rounded the result to the nearest integer. This does not exactly yield the discrete distribution but thanks to \cite{discr} we know how the problem can be fixed.}. The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}.
 
-Since we strongly belive \krzys{isnt there any better word???} that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}) we are left with a difficult, yet efficient way to share secrets. \\
+Since we strongly belive \krzys{isnt there any better word???} that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}) we are left with a difficult, yet efficient way to share secrets.
+
 Oded Regev proceeds to prove this using various lemmas and results from few areas of mathematics like probability, lattice theory and quantum mechanics. We will now present an outline of the approach.\\
 \krzys{im not sure if i wanna include this at all} \\
 \begin{remark}
-    We are still faced with a problem that is inherit to all of modern-day cryptography. That is, we are assuming the hardness of the problem based on our inability to efficiently solve it. It might so happen that tomorrow someone finds an efficient (polynomial time) algorithm to find the shortest vector in a given lattice and our secrets are compromised. This is exactly what happened in the case of RSA cryptosystem when Shor found such efficient algorithm for integer factorization. There is not much we can do about it at least with our current approach to cryptography which is based on very precise complex-theoretic assumptions.
+    We are still faced with a problem that is inherent to all of modern-day cryptography. That is, we are assuming the hardness of the problem based on our inability to efficiently solve it. It might so happen that tomorrow someone finds an efficient (polynomial time) algorithm to find the shortest vector in a given lattice and our secrets are compromised. This is exactly what happened in the case of RSA cryptosystem when Shor found such efficient algorithm for integer factorization. There is not much we can do about it at least with our current approach to cryptography which is based on very precise complex-theoretic assumptions.
 \end{remark}
 \subsubsection*{LWE cryptosystem}
-Now that we have a solid (keep in mind the discussion from the end of previous subsection) hardness assumptions, we can attempt to construct a cryptosystem that employs those results. The following public key cryptosystem was presented in the same paper. To keep the notation consistent with previous section, we will slightly deviate from the original.
+Now that we have a solid hardness assumptions, we can attempt to construct a cryptosystem that employs those results. The following public key cryptosystem was presented in the same paper. To keep the notation consistent with previous section, we will slightly deviate from the original.
 
-We begin by specifying our parameters. Let us denote by $n$ our security parameter. As before, the scheme is characterized by two integers $m$ and $q$ and a probability distribution $\chi$ over $\Z_q$. To now make the scheme secure and correct, we should choose $q$ prime between $n^2$ and $2n^2$, $m = (1 + \epsilon)(n + 1) \log q$ for some arbitrary constant $\epsilon > 0$. We define the distribution $\chi$ to be $\bar{\Psi}_{\alpha (n)}$ where $\alpha (n) = o(1/(\sqrt{n} \log n))$ (recall from \ref{hardness} that it means that $\lim_{n\to\infty} \alpha (n) \cdot \sqrt{n} \log n = 0$).\\
+We begin by specifying our parameters. Let us denote by $n$ our security parameter. As before, the scheme is characterized by two integers $m$ and $q$ and a probability distribution $\chi$ over $\Z_q$. To now make the scheme secure and correct, we should choose $q$ prime between $n^2$ and $2n^2$, $m = (1 + \epsilon)(n + 1) \log q$ for some arbitrary constant $\epsilon > 0$. We define the distribution $\chi$ to be $\bar{\Psi}_{\alpha (n)}$ where $\alpha (n) = o(1/(\sqrt{n} \log n))$ (recall from \ref{hardness} that it means $\lim_{n\to\infty} \alpha (n) \cdot \sqrt{n} \log n = 0$).\\
 
 \begin{mdframed}
 $\alg{KeyGen:}$
@@ -86,7 +87,11 @@ $\alg{Decrypt:}$\\
 The decryption of a pair $(\bm{a}, b)$ is 0 if $b - \langle \bm{a}, \bm{s} \rangle$ is closer to 0 than to $\lfloor q/2 \rfloor$ modulo $q$.
 \end{mdframed}
 
-The two remaining questions we now have are: firstly, is this scheme correct? That is, does the decryption algorithm correctly evaluates back to the original message? This is much more difficult to see compared to the scheme over the integers presented in \ref{int_she}. The following is a somewhat simpler version of Claim 5.2.
+\begin{example}
+    \krzys{include some small and fixed values computations}
+\end{example}
+
+Now, that we have finally defined a cryptographic scheme we need to verify it. The two remaining questions we now have are first, is this scheme correct? That is, does the decryption algorithm correctly evaluates back to the original message? This is much more difficult to prove compared to the scheme over the integers presented in \ref{int_she}. The following is a somewhat simpler version of Claim 5.2.
 \begin{claim}[Correctness]
     For the above choice of parameters and $e$ following the $\chi$ distribution we have
     \begin{equation} \Pr \Big[ |e| < \Bigl \lfloor \frac{q}{2} \Bigr \rfloor /2 \Big] > 1 - \delta(n) \end{equation}
@@ -94,24 +99,31 @@ The two remaining questions we now have are: firstly, is this scheme correct? Th
 \end{claim}
 This, in turn, implies that (this is Lemma 5.1)
 \begin{theorem}
-    The decryption is correct with probability $1 - \delta$ where the $\delta > 0$ is some very small positive constant.
+    The decryption is correct with probability $1 - \delta(n)$ where the $\delta(n)$ is some $\alg{negligible}$ function.
 \end{theorem}
 
 \begin{proof}
-    Consider first the encryption of 0. It is given by $(\bm{a}, b)$ with $\bm{a} = \sum_{i \in S}\bm{a}_i$ and $b = \sum_{i \in S} b_i = \sum_{i \in S} \langle \bm{a}_i, \bm{s} \rangle + e_i$. Then the decryption gives us precisely $b - \langle \bm{a}, \bm{s} \rangle = \sum_{i \in S} e_i$. Since by our assumption, $\big| \sum_{i \in S} e_i \big| < \bigl \lfloor \frac{q}{2} \bigr \rfloor /2$ with probability at least $1 - \delta(n)$. In that case, it is closer to 0 than $\bigl \lfloor \frac{q}{2} \bigr \rfloor$ and thus correctly decrypts to 0. The case for the encryption of 1 is similar.
+    Consider first the encryption of 0. It is given by $(\bm{a}, b)$ with $\bm{a} = \sum_{i \in S}\bm{a}_i$ and $b = \sum_{i \in S} b_i = \sum_{i \in S} \langle \bm{a}_i, \bm{s} \rangle + e_i$. Then the decryption gives us precisely $b - \langle \bm{a}, \bm{s} \rangle = \sum_{i \in S} e_i$. By our assumption, $\big| \sum_{i \in S} e_i \big| < \bigl \lfloor \frac{q}{2} \bigr \rfloor /2$ with probability at least $1 - \delta(n)$. In that case, it is closer to 0 than $\bigl \lfloor \frac{q}{2} \bigr \rfloor$ and thus correctly decrypts to 0. The case for the encryption of 1 is similar.
 \end{proof}
 
-Note that it seems almost trivial that we decrypt correctly, the scheme was designed in that way. This is only the case when we know the secret key $\bm{s}$ that is definitely not know to the public. This ties closely to the second and last question, that is, how secure the scheme is? Say
-Second and last question we are left are is the security of the scheme.
+Note that it seems almost trivial that we decrypt correctly, the scheme was designed in that way. This is only the case when we know the secret key $\bm{s}$ that is definitely not know to the public. This ties closely to the second and last question, that is, how secure the scheme is? We have established hardness based on average and worst-case lattice problems. However, it might be the case that our choice of parameters required for correctness, hinders on the security. This is resolved with the following theorem:
+\begin{theorem}[Lemma 5.4 - Security]
+    For any $\epsilon > 0$ and $m \geq (1 + \epsilon)(n + 1) \log q$, if there exists a polynomial time algorithm $\alg{W}$ that distinguishes between encryptions of 0 and 1 then there exists a distinguisher $\alg{Z}$ that distinguishes between $A_{\bm{s}, \chi}$ and $U$ for a non-negligible fraction of all possible $\bm{s}$.
+\end{theorem}
+\krzys{TODO: finish security}
 
-\subsubsection*{Ring-LWE}
-\cite{ring-lwe} 
+\subsection{Ring-LWE}
+One of the recurring problems in lattice-based cryptography is the key-size. In the GGH cryptosystem, the key-size is $\tilde{O}(n^4)$. In the system based on the hardness of LWE presented in the previous section, the size is in the range of $\tilde{O}(n^2)$\footnote{There are $m$ samples of length $n$. Turns out that for $m > n$, the problem can become only easier, but the same holds for $m \ll n$. Therefore, in most applications, $m$ is chosen to be roughly the size of $n$.}. As we will also see later, there is some minimal efficiency needed for the scheme in order to enable the boostrapping. Unfortunately, none of the schemes mentioned before do not satisfy those criterions and so, we need to look for something better.
+
+In the year 2013, V.Lyubashevski, C.Peikert and O.Regev presented their paper ``On Ideal Lattices and Learning With Errors Over Rings'' \cite{ring-lwe}. \\
+For instance, they have unique factorization of ideals, and their fractional ideals form a multiplicative group; in general, neither property holds in $\Z[x]/\langle f (x) \rangle$ for monic irreducible $f (x)$, as demonstrated by the ring $\Z[x]/\langle x^2+3 \rangle = \Z[\sqrt{-3}]$. (For example, in this ring $4 = 22 = (1+\sqrt{-3})(1 - \sqrt{-3})$, but 2, $1 + \sqrt{-3}$, and $1 - \sqrt{-3}$ are all irreducible.)
 Toward basing fully homomorphic encryption on worst-case hardness \\
 One of the applications is \cite{qTESLA} signature scheme.
 
 \subsection{Fully Homomorphic Encryption Using Ideal Lattices}
+three ``generations'' of fhe schemes, first original gentry, smart and
 explain here how we can construct a really nice homomorphic encryption scheme using ideal lattices \cite{gentry}. present the 
-\subsection{On Ideal Lattices and Learning With Errors Over Rings}
+\subsubsection*{On Ideal Lattices and Learning With Errors Over Rings}
 this is somewhat too difficult for me i think so ill just present main findings without proofs and details \cite{regev}, \\
 First explain what lattices are. \\
 How do lattices relate to LWE? The secret key is associated with a random vector. \\
