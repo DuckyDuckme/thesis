@@ -8,6 +8,7 @@
 \usepackage{amsmath, amssymb, amsthm, amsfonts, physics, mathtools, bbm}
 \usepackage{xcolor, color}
 \usepackage{pdfpages} % to include the front page
+\usepackage{mdframed} % to draw boxes around algorithms
 % bibliography
 \usepackage[
 backend=biber,
@@ -77,7 +78,7 @@ style=draft,
 
 \usepackage[pdftex, pdfborder={0 0 0}]{hyperref} % Format links for pdf
 \hypersetup{ 	
-colorlinks=true,
+colorlinks=false,
 citecolor=blue,
 pdftitle={Krzysztof Pudowski - BSc Thesis},
 pdfauthor={Krzysztof Pudowski},
@@ -93,34 +94,6 @@ pdfauthor={Krzysztof Pudowski},
 %\maketitle
 
 \tableofcontents
-
-The plan:
-\begin{itemize}
-    \item introduction
-    \begin{itemize}
-        \item why should we care about encryption schemes
-        \item introduce the classical ones
-        \item introduction of a problem caused by Shor
-        \item solution by lattices
-    \end{itemize}
-    \item preliminaries
-    \begin{itemize}
-        \item lattices
-        \item alg nt
-        \item complexity theory and reductions
-        \item shor's alg
-    \end{itemize}
-    \item she \& fhe
-    \item explain how lbc fits into all of those categories
-    \item explain some of the specific ones (like lwe, ring-lwe) and why we think they are secure (reductions)
-    \item show couple of implementations
-    \begin{itemize}
-        \item present the fhe from ring-lwe (r-lwe), lwe
-        \item compare all of them somehow
-    \end{itemize}
-
-    \item show your own C/OCaml implementations (if enough time)
-\end{itemize}
 
 \section{Introduction}
 \input{intro}
