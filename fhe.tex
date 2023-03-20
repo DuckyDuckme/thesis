@@ -1,4 +1,4 @@
-Fully Homomorphic Encryption (FHE) has been referred as the "holy grail" of modern cryptography as it was one of the most sought goals for the past couple of decades. First formally introduced by Rivest, Adleman and Dertouzos in \cite{primal} (at the time called "privacy homomorphism"), shortly after the discovery of public key cryptography, it has been an open and elusive problem. Only "recently", in 2009, Craig Gentry proposed first FHE in his PhD thesis \cite{gentry_phd}. Quote from \cite{impl_gentry}:"  Gentry later proved [5] that with an appropriate key-generation procedure, the security of that scheme can be (quantumly) reduced to the worst-case hardness of some lattice problems in ideal lattices."
+Fully Homomorphic Encryption (FHE) has been referred as the ``holy grail'' of modern cryptography as it was one of the most sought goals for the past couple of decades. First formally introduced by Rivest, Adleman and Dertouzos in \cite{primal} (at the time called ``privacy homomorphism''), shortly after the discovery of public key cryptography, it has been an open and elusive problem. Only ``recently'', in~2009, Craig Gentry proposed first FHE in his PhD thesis \cite{gentry_phd}. Since then, there has been a lot of development in the area like for example \krzys{TODO: finish developments of fhe}.
 
 Simply stated, in homomorphic encryption we want our data to be secure but we also want to perform calculations on it. This is useful when you need a third party (e.g. someone with more computational power) to perform operations on your data while still retaining privacy. Alice can store her data somewhere on external server (the cloud) and ask to perform computations on it. For example query searches without the engine knowing what is actually being searched for.
 
@@ -41,4 +41,7 @@ We are faced with a problem. Because our method relies on some error being added
 
 The basic idea behind bootstrapping is to use a homomorphic decryption circuit to "refresh" the ciphertext, so that it can be used for further homomorphic operations. The process involves encrypting the decryption circuit itself, evaluating it on the ciphertext, and then re-encrypting the result to obtain a new ciphertext that can be used for further homomorphic operations.
 
+\begin{remark}
+	In cryptography, instead of general functions, one often considers a \textit{circuit} instead. 
+\end{remark}
 To simplify our construction assume that our scheme $\E$ is "circularly secure". This means that we can encrypt the secret key using itself under the same scheme and no information is leaked to third parties. This is in practice very difficult to prove and has to be explicitly assumed. 
