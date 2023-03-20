@@ -126,8 +126,8 @@ As another example, in generality, we can make a following statement about the r
      Let $d \in \Z$ be a square-free integer. For the field $K = \Q(\sqrt{d})$, its ring of integers is 
      \[ \Oo_K = 
 	 \begin{cases} 
-	     \Z[\sqrt{d}] & \text{otherwise}, \\
-	     \Z[(1 + \sqrt{d})/2] &\text{if $d \equiv 1 \mod 4$}.
+	     \Z[\sqrt{d}] & \text{if $d \equiv 2, 3 \mod 4$}, \\
+	     \Z[(1 + \sqrt{d})/2] & \text{otherwise}.
      	 \end{cases}
      \]
 \end{lemma}
@@ -140,13 +140,16 @@ As another example, in generality, we can make a following statement about the r
 	For $K = \Q(\sqrt{5})$ the ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. 
 \end{example}
 
-What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\alpha \in \C$, the ring of integers is not necessarily the $\Z[\alpha]$. However, $\Z[\alpha]$ is what's called an \textit{order} in $\Oo_K$. We will not consider them here because they are not relevant for our study. Namely, for a cyclotomic field, we have that its ring of integers is actually just $\Z[\zeta]$. For more details on orders, one might look at Chapter 5 of \cite{stein}. \krzys{i still need to find an actual place this is stated}
 \subsubsection*{Cyclotomic fields}
 
 \begin{definition}[Roots of unity]
-    Given a field $K$ and a positive integer $n$, an element $\zeta \in K$ is called \textit{primitive n-th root of unity} if $\zeta$ has order $n$ in the multiplicative group $K^{\cross}$. (In other words, $\zeta^n = 1$ and $\zeta^m \neq 1$ for $1 \leq m < n$).
+    Given a field $K$ and a positive integer $n$, an element $\zeta \in K$ is called \textit{primitive $n$-th root of unity} if $\zeta$ has order $n$ in the multiplicative group $K^{\cross}$. (In other words, $\zeta^n = 1$ and $\zeta^m \neq 1$ for $1 \leq m < n$).
 \end{definition}
 The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial. It can be shown that every such $\zeta$ is equal to precisely $e^{2\pi \sqrt{-1}/n}$ and $\zeta^i = \zeta^j$ iff $i = j$.
+
+\begin{remark}
+    What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\alpha \in \C$, the ring of integers is not necessarily the $\Z[\alpha]$. Instead, $\Z[\alpha]$ is what's called an \textit{order} in $\Oo_K$. We will not consider them in general here because they are not relevant for our study. However, one very useful feature of cyclotomic fields is that their ring of integers is actually just $\Z[\zeta]$. That is - $\Oo_K = \Z[\zeta]$ for $K = \Q(\zeta)$ and $\zeta$ is some $n$-th root of unity. This greately simplifies the approach in proving some of the results later in this paper. In general, a field $K = \Q(\alpha)$ such that $\Oo_K = \Z[\alpha]$ is called a \textit{monogenic} field. For more details on orders, look at for example Chapter 5 of \cite{stein}. \krzys{I need more good resources}
+\end{remark}
 
 \begin{proposition}
     The ring of integers of a
@@ -159,6 +162,7 @@ Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then the
     The quadratic field $\Q[\sqrt{d}]$, $d$ squarefree, has two embeddings in $\C$: The identity mapping, and also the one which sends $a + b\sqrt{d}$ to $a - b\sqrt{d}$ ($a$, $b$ $\in \Q$), since $\sqrt{d}$ and $-\sqrt{d}$ are the two conjugates of $\sqrt{d}$. The $n$-th cyclotomic field has $\varphi(n)$ embeddings in $\C$, the $\varphi(n)$ automorphisms where $\sigma_i(\zeta) = \zeta^i$.
 \end{example}
 
+Consider now 
 \iffalse
 \begin{corollary}
     Let $n = 2^r$ for some $r \in \Z$. The ideals in the ring of integers of the cyclotomic field of $2n$-th roots of unity $K = \Q[2n]$ are $n$-dimensional lattices.
