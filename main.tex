@@ -57,6 +57,8 @@ style=draft,
 \newcommand{\alg}[1]{{\text{\fontfamily{lmss}\selectfont #1}}}
 \newcommand{\VF}[1]{\text{Vol}(\mathcal{F(#1)})}
 \newcommand{\prob}[1]{{\fontfamily{cmtt}\selectfont #1}}
+\newcommand{\flo}[1]{\lfloor #1 \rfloor}
+\newcommand{\round}[1]{\lfloor #1 \rceil}
 %\newcommand{\b}{\mathcal{b}}
 %\renewcommand{\L}{\mathcal{L}}
 
@@ -78,7 +80,7 @@ style=draft,
 
 \usepackage[pdftex, pdfborder={0 0 0}]{hyperref} % Format links for pdf
 \hypersetup{ 	
-colorlinks=false,
+colorlinks=true,
 citecolor=blue,
 pdftitle={Krzysztof Pudowski - BSc Thesis},
 pdfauthor={Krzysztof Pudowski},
@@ -93,7 +95,7 @@ pdfauthor={Krzysztof Pudowski},
 
 %\maketitle
 
-\tableofcontents
+{\hypersetup{hidelinks} \tableofcontents}
 
 \section{Introduction}
 \input{intro}
