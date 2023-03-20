@@ -7,7 +7,7 @@ We will start this section with a somewhat simpler cryptosystem that was develop
 
 \subsubsection*{Idea behind the scheme}
 The basic GGH cryptosystem, as mentioned before, is based on the problem of finding the closest vector in the lattice $\mathcal{L}$ to a given point in the ambient space $\R^n$. We are given two bases, call them $\Bg$ and $\Bb$. The $\Bb$ will be our public key and $\Bg$ the secret key. The $\Bb$ consists of long and highly non-orthogonal vectors, as opposed to $\Bg$. Our secret message $\bm{m}$ is represented as a binary vector which we will use to form a linear combination $\bm{s} = \sum m_i \bm{v}_i^{bad} \in \mathcal{L}$ of the vectors in $\Bb$. We now add some small and random\footnote{some small note about the "randomness" of this e} error $\bm{e} \in \R^n$ to obtain the ciphertext $\bm{c} = \bm{s} + \bm{e} = \sum m_i \bm{v}_i^{bad} + \bm{e} \in \R^n$ - some point that is not in the lattice, but rather, very close to a point in it.\\
-To decrypt, we can use our good basis $\Bg$ to represent $\bm{c}$ and, for example Babai's algorithm\footnote{Simply stated, if the vectors of the basis are sufficiently orthogonal to one another, then this algorithm solves CVP. However, if the Hadamard ratio is too small, the algorithm fails to find the closest vector - \cite{book}.} to find $\bm{v}$ and represent it in terms of the basis $\Bg$ to recover $\bm{m}$. On the other hand, any eavesdropping adversary that is trying to learn our secret, is left with some bad basis that will be of no help in solving the CVP.
+To decrypt, we can use our good basis $\Bg$ to represent $\bm{c}$ and, for example Babai's algorithm\footnote{Simply stated, if the vectors of the basis are sufficiently orthogonal to one another, then this algorithm solves \prob{approxCVP}. However, if the Hadamard ratio is too small, the algorithm fails to find the closest vector - \cite{book}.} to find $\bm{v}$ and represent it in terms of the basis $\Bg$ to recover $\bm{m}$. On the other hand, any eavesdropping adversary that is trying to learn our secret, is left with some bad basis that will be of no help in solving the CVP.
 
 \subsubsection*{GGH construction - concretely}
 \noindent\fbox{%
@@ -53,19 +53,37 @@ Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
 
 \subsubsection*{LWE problem}
 There are multiple equivalent definitions of this problem. We adopt the notation and approach introduced in the original paper by Regev. \\
-The problem is parametrized by positive integers $n$, $m$ and prime $q$, as well as an error distibution $\chi$ over $\Z_q$. It is now defined as follows. We are given $m$ equations of the form $(\bm{a}_i, b_i = \langle \bm{a}_i, \bm{s} \rangle + e_i)$ and are asked to find the vector $\bm{s} \in \Z_q^n$. Here, $\bm{a}_i$ are chosen uniformly and independently from $\Z_q^n$, $b_i \in \Z_q$ and $\langle \cdot, \cdot \rangle$ denotes the usual dot product. The errors $e_i$ are obtained by sampling independently from the probability distribution $\chi : \Z_q \rightarrow \R^{+}$ (\krzys{im not sure if he means the positive reals or something else}) on $\Z_q$. To will denote the problem of recovering $\bm{s}$ from such equations, by $\text{LWE}_{q, \chi}$ (learning with errors).
+The problem is parametrized by positive integers $n$, $m$\footnote{As it turns out, $m$ is of secondary importance here and is usually taken to be equal to $n$ itself.} and prime $q$, as well as an error distibution $\chi$ over $\Z_q$. It is now defined as follows. We are given $m$ equations of the form $(\bm{a}_i, b_i = \langle \bm{a}_i, \bm{s} \rangle + e_i)$ and are asked to find the vector $\bm{s} \in \Z_q^n$. Here, $\bm{a}_i$ are chosen uniformly and independently from $\Z_q^n$, $b_i \in \Z_q$ and $\langle \cdot, \cdot \rangle$ denotes the usual dot product. The errors $e_i$ are obtained by sampling independently from the probability distribution $\chi : \Z_q \rightarrow \R^{+}$ (\krzys{im not sure if he means the positive reals or something else}) on $\Z_q$. We will denote the problem of recovering $\bm{s}$ from such equations, by $\text{LWE}_{q, \chi}$ (learning with errors).
 
-The central part of \cite{regev} revolves around proving conjured hardness of LWE. Specifically, that for appropriately chosen $q$ and $\chi$, a \textit{quantum} reduction algorithm exists that approximates worst-case lattice problems. At some point as well, we would like to find a \textit{classical} reduction algorithm that proves the hardness as well. This was done in \cite{} but \krzys{TODO} The result is loosely stated as follows.
+\begin{example}[From the introduction to \cite{survey_regev}]\label{lwe_ex}
+    Given as input this set of equations, LWE asks us to find the vector $\bm{s} = (s_1, s_2, s_3, s_4) \in \Z_{17}^4$. In this case $n = 4$, $q=17$ and the error distribution is giving us $e_i = \{-1, 1\}$ with equal probability. 
+\begin{align*}
+    14s_1 + 15s_2 +5s_3 + 2s_4 & \approx 8 \, (\mod 17)\\
+    13s_1 + 14s_2 + 14s_3 + 6s_4 & \approx 16\, (\mod 17) \\
+    6s_1 + 10s_2 + 13s_3 + 1s_4 & \approx 3\, (\mod 17) \\
+    10s_1 + 4s_2 + 12s_3 + 16s_4 & \approx 12\, (\mod 17) \\
+    9s_1 + 5s_2 + 9s_3 +6s_4 & \approx 9\, (\mod 17) \\
+    3s_1 + 6s_2 +4s_3 +5s_4 & \approx 16\, (\mod 17) \\
+    \vdots & \\
+    6s_1 + 7s_2 + 16s_3 + 2s_4 & \approx 3\, (\mod 17)
+\end{align*}
+In this case, $\bm{s} = (0, 13, 9, 11)$. Note that if not for the error, the secret would be very easy to find. Given about $n$ equations, we could recover $\bm{s}$ in an efficient way using Gaussian elimination. Inducing the error is what seems to render the problem untraceable for modern day algorithms.
+\end{example}
+
+The central part of \cite{regev} revolves around proving conjured hardness of LWE. Specifically, that for appropriately chosen $q$ and $\chi$, a \textit{quantum} reduction algorithm exists that approximates worst-case lattice problems. 
+\begin{remark}
+    At some point as well, we would like to find a \textit{classical} reduction algorithm that proves the hardness of the problem. This is because we understand classical computation in much more detail than its quantum equivalent. Using classical computers we have cracked Enigma and landed on the moon. In the meantime, only recently a factorization of the integer 15 was achieved on a quantum computer using Shor's algorithm - see \krzys{find source of that statement}. Returning to the reduction problem, Chris Peikert in his paper \cite{peikert_classical} from 2009 has done exactly this. However, it was done in a somewhat ``inefficient'' way. I.e. exponential many samples are needed in the classical reduction compared to polynomial amount in the quantum version. For more details see the paper by Peikert and compare it with the original approach from Regev. It remains still an open question \krzys{also not sure about that} if the reduction can be made efficiently fully classical.
+\end{remark}
+The result is loosely stated as follows.
 
 \begin{theorem}[Theorem 1.1 in \cite{regev}]
-    Let $n$, $q$ be integers and $\alpha \in (0, 1)$ be such that $\alpha q > 2 \sqrt{n}$. If there exists an efficient algorithm that solves $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$, then there exists an efficient quantum algorithm that approximates the decision version of the shortest vector problem (\prob{GapSVP}) and the shortest independent vectors problem (\prob{SIVP}) to within $\tilde{O}(n/\alpha)$ in the worst case.	
+    Let $n$, $q$ be positive integers and $\alpha \in (0, 1)$ be such that $\alpha q > 2 \sqrt{n}$. If there exists an efficient algorithm that solves $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$, then there exists an efficient quantum algorithm that approximates the decision version of the shortest vector problem (\prob{GapSVP}) and the shortest independent vectors problem (\prob{SIVP}) to within $\tilde{O}(n/\alpha)$ in the worst case on any lattice of dimension $n$.	
 \end{theorem}
 
-Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{2}/q$ is one of those choices (and requirements). It specifies the shape of the $\bar{\Psi}_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$\footnote{A comment from \cite{lattice-survey}: Originally, Regev considered the continuous Gaussian and rounded the result to the nearest integer. This does not exactly yield the discrete distribution but thanks to \cite{discr} we know how the problem can be fixed.}. The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}.
+Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{n}/q$ is one of those choices (and requirements). It specifies the shape of the $\bar{\Psi}_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$\footnote{A comment from \cite{lattice-survey}: Originally, Regev considered the continuous Gaussian and rounded the result to the nearest integer. This does not exactly yield the discrete distribution but thanks to \cite{discr} we know how the problem can be fixed.}. The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}. Since we strongly believe that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}) we are left with a difficult, yet efficient way to share secrets.
 
-Since we strongly belive \krzys{isnt there any better word???} that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}) we are left with a difficult, yet efficient way to share secrets.
-
-Oded Regev proceeds to prove this using various lemmas and results from few areas of mathematics like probability, lattice theory and quantum mechanics. We will now present an outline of the approach.\\
+Oded Regev proceeds to prove this using various lemmas and results from few areas of mathematics like probability, lattice theory and quantum computing. We will now present an outline of the approach.\\
+Recall that we want to prove, that being able to solve $\text{LWE}_{q, \chi}$ implies that we are able to solve standard worst-case lattice problems like \prob{GapSVP}.
 \krzys{im not sure if i wanna include this at all} \\
 \begin{remark}
     We are still faced with a problem that is inherent to all of modern-day cryptography. That is, we are assuming the hardness of the problem based on our inability to efficiently solve it. It might so happen that tomorrow someone finds an efficient (polynomial time) algorithm to find the shortest vector in a given lattice and our secrets are compromised. This is exactly what happened in the case of RSA cryptosystem when Shor found such efficient algorithm for integer factorization. There is not much we can do about it at least with our current approach to cryptography which is based on very precise complex-theoretic assumptions.
@@ -73,7 +91,7 @@ Oded Regev proceeds to prove this using various lemmas and results from few area
 \subsubsection*{LWE cryptosystem}
 Now that we have a solid hardness assumptions, we can attempt to construct a cryptosystem that employs those results. The following public key cryptosystem was presented in the same paper. To keep the notation consistent with previous section, we will slightly deviate from the original.
 
-We begin by specifying our parameters. Let us denote by $n$ our security parameter. As before, the scheme is characterized by two integers $m$ and $q$ and a probability distribution $\chi$ over $\Z_q$. To now make the scheme secure and correct, we should choose $q$ prime between $n^2$ and $2n^2$, $m = (1 + \epsilon)(n + 1) \log q$ for some arbitrary constant $\epsilon > 0$. We define the distribution $\chi$ to be $\bar{\Psi}_{\alpha (n)}$ where $\alpha (n) = o(1/(\sqrt{n} \log n))$ (recall from \ref{hardness} that it means $\lim_{n\to\infty} \alpha (n) \cdot \sqrt{n} \log n = 0$).\\
+We begin by specifying our parameters. Let us denote by $n$ our security parameter. As before, the scheme is characterized by two integers $m$ and $q$ and a probability distribution $\chi$ over $\Z_q$. To now make the scheme secure and correct, we should choose $q$ prime between $n^2$ and $2n^2$, $m = (1 + \epsilon)(n + 1) \log q$ for some arbitrary constant $\epsilon > 0$. We define the distribution $\chi$ to be $\bar{\Psi}_{\alpha (n)}$ where $\alpha (n) = o(1/(\sqrt{n} \log n))$ (recall from Section \ref{hardness} that it means $\lim_{n\to\infty} \alpha (n) \cdot \sqrt{n} \log n = 0$).\\
 
 \begin{mdframed}
 $\alg{KeyGen:}$
@@ -82,16 +100,42 @@ $\alg{KeyGen:}$
     \item For $i = 1, \dots, m$ choose $m$ vectors $\bm{a}_i \in \Z^n_q$ independent from the uniform distribution. Additionally choose $m$ elements $e_i \in \Z_q$ independently according to $\chi$. The \textbf{public key} is the array of $m$ vectors of the form $(\bm{a}_i, b_i)$ where each $b_i$ is given by $b_i = \langle \bm{a}_i, \bm{s} \rangle + e_i$.
 \end{itemize}
 $\alg{Encrypt:}$\\
-To encrypt a single bit we choose a random set $S$ uniformly among all $2^m$ subsets of $[m]$. The encryption is $(\sum_{i \in S} \bm{a}_i, \sum_{i \in S} b_i)$ if the bit is 0, and $(\sum_{i \in S} \bm{a}_i, \lfloor q/2 \rfloor + \sum_{i \in S} b_i)$ otherwise. \\
+To encrypt a single bit we choose a random set $S$ uniformly among all $2^m$ subsets of $\{1, \dots, m\}$. The encryption is $(\sum_{i \in S} \bm{a}_i, \sum_{i \in S} b_i)$ if the bit is 0, and $(\sum_{i \in S} \bm{a}_i, \lfloor q/2 \rfloor + \sum_{i \in S} b_i)$ otherwise. \\
 $\alg{Decrypt:}$\\
-The decryption of a pair $(\bm{a}, b)$ is 0 if $b - \langle \bm{a}, \bm{s} \rangle$ is closer to 0 than to $\lfloor q/2 \rfloor$ modulo $q$.
+The decryption of a pair $(\bm{a}, b)$ is 0 if $b - \langle \bm{a}, \bm{s} \rangle$ is closer to 0 than to $\lfloor q/2 \rfloor$ modulo~$q$.
 \end{mdframed}
 
 \begin{example}
-    \krzys{include some small and fixed values computations}
+    Almost exactly like in the Example \ref{lwe_ex}, set $n = 4$, $q=17$, $m=4$ and $\chi = \bar{\Psi}_{1/2}$. We pick our \textbf{secret key} $\bm{s} = (2,1,3,7)$ and artificially (i.e. by design and not uniformly at random) pick
+    \[ \bm{A} = (a_1, a_2, a_3, a_4) = 
+	\begin{pmatrix}1 & 16 & 4 & 5\\
+	    		16 & 4 & 5 & 1 \\
+			4 & 5 & 1 & 16 \\
+			5 & 1 & 16 & 4
+	\end{pmatrix}. \]
+	Take $e_1 = e_2 = 1$ and $e_3 = e_4 = -1$. Now we can compute the \textbf{public key} 
+	\[ \bar{\bm{A}} = \begin{bmatrix} \bm{A} \\ \bm{b} \end{bmatrix} = 
+	\begin{bmatrix} \bm{A} \\ \langle \bm{a}_i, \bm{s} \rangle + e_i \end{bmatrix}  = 
+	\begin{pmatrix} 1 & 16 & 4 & 5 \\
+	    16 & 4 & 5 & 1 \\
+	    4 & 5 & 1 & 16 \\
+	    5 & 1 & 16 & 4 \\
+	    15 & 8 & 8 & 11
+	\end{pmatrix}.
+	\]
+    To now encrypt a bit 1, we can take as our $S$ the set $\{1,2,4\}$ and output the encryption as
+	    \begin{align*} \begin{pmatrix} 1 + 16 + 5 & (\lfloor 17/2 \rfloor =) 8 + 15\\
+		16 + 4 + 1 & 8 + 8 \\
+		4 + 5 + 16 & 8 + 8 \\
+		5 + 1 + 4 & 8 + 11
+		\end{pmatrix} & = \begin{pmatrix} 5 & 6 \\ 4 & 16 \\ 8 & 16 \\ 10 & 2 \end{pmatrix}
+	    \end{align*}
+
+
 \end{example}
 
-Now, that we have finally defined a cryptographic scheme we need to verify it. The two remaining questions we now have are first, is this scheme correct? That is, does the decryption algorithm correctly evaluates back to the original message? This is much more difficult to prove compared to the scheme over the integers presented in \ref{int_she}. The following is a somewhat simpler version of Claim 5.2.
+\subsubsection*{Analysis}
+Now, that we have finally defined a cryptographic scheme we need to verify it. The two remaining questions we now have are first, is this scheme correct? That is, does the decryption algorithm correctly evaluate back to the original message? This is much more difficult to prove compared to the scheme over the integers presented in \ref{int_she}. The following is a somewhat simpler version of Claim 5.2 in \cite{regev}.
 \begin{claim}[Correctness]
     For the above choice of parameters and $e$ following the $\chi$ distribution we have
     \begin{equation} \Pr \Big[ |e| < \Bigl \lfloor \frac{q}{2} \Bigr \rfloor /2 \Big] > 1 - \delta(n) \end{equation}
@@ -107,15 +151,26 @@ This, in turn, implies that (this is Lemma 5.1)
 \end{proof}
 
 Note that it seems almost trivial that we decrypt correctly, the scheme was designed in that way. This is only the case when we know the secret key $\bm{s}$ that is definitely not know to the public. This ties closely to the second and last question, that is, how secure the scheme is? We have established hardness based on average and worst-case lattice problems. However, it might be the case that our choice of parameters required for correctness, hinders on the security. This is resolved with the following theorem:
-\begin{theorem}[Lemma 5.4 - Security]
+\begin{theorem}[Lemma 5.4 - Security]\label{pseudo-lwe}
     For any $\epsilon > 0$ and $m \geq (1 + \epsilon)(n + 1) \log q$, if there exists a polynomial time algorithm $\alg{W}$ that distinguishes between encryptions of 0 and 1 then there exists a distinguisher $\alg{Z}$ that distinguishes between $A_{\bm{s}, \chi}$ and $U$ for a non-negligible fraction of all possible $\bm{s}$.
 \end{theorem}
 \krzys{TODO: finish security}
-
+"It turns out that when the modulus q is prime and polynomial in n, the search and decision variants are equivalent via an elementary reduction (but no such equivalence is known for larger q)." - quote from Peikert
+For a thorough and less technical analysis than the one given in the original paper, the reader is encouraged to look into section 5.4 in \cite{Micci2009}.
 \subsection{Ring-LWE}
-One of the recurring problems in lattice-based cryptography is the key-size. In the GGH cryptosystem, the key-size is $\tilde{O}(n^4)$. In the system based on the hardness of LWE presented in the previous section, the size is in the range of $\tilde{O}(n^2)$\footnote{There are $m$ samples of length $n$. Turns out that for $m > n$, the problem can become only easier, but the same holds for $m \ll n$. Therefore, in most applications, $m$ is chosen to be roughly the size of $n$.}. As we will also see later, there is some minimal efficiency needed for the scheme in order to enable the boostrapping. Unfortunately, none of the schemes mentioned before do not satisfy those criterions and so, we need to look for something better.
+One of the recurring problems in lattice-based cryptography is the key-size and general efficiency. In the GGH cryptosystem, the key-size is $\tilde{O}(n^4)$. In the system based on the hardness of LWE presented in the previous section, the size is in the range of $\tilde{O}(n^2)$\footnote{There are $m$ samples of length $n$. Turns out that for $m > n$, the problem can become only easier, but the same holds for $m \ll n$. Therefore, in most applications, $m$ is chosen to be roughly the size of $n$.}. As we will also see later, there is some minimal efficiency needed for the scheme in order to enable the boostrapping. Unfortunately, none of the schemes presented so far satisfy those criterions and so, we need to look for something better.
 
-In the year 2013, V.Lyubashevski, C.Peikert and O.Regev presented their paper ``On Ideal Lattices and Learning With Errors Over Rings'' \cite{ring-lwe}. \\
+One idea to improve the inefficiency, is to assume some underlying structure of the space we are performing computations in. More precisely, assume that the $\bm{a}$ vectors from previous section are given to us in block of $n$ samples $\bm{a}_1, \bm{a}_2, \dots, \bm{a}_n \in \Z_q^n$ where all of the elements are related. Namely, $\bm{a}_1 = (a_1, \dots, a_n)$ is again chosen uniformly but each $\bm{a}_i = (a_i, \dots, a_n, -a_1, \dots, -a_{i - 1})$ is a ``skewed-rotation'' \krzys{there must be better word for this} of the initial $\bm{a}_1$. For example if $n = 4$ and $q = 17$ as before and $\bm{a}_1 = (1, 16, 4, 5)$ then $\bm{a}_3$ has the form $(4, 5, -1, -16) = (4, 5, 16, 1)$. Note that representing $n$ vectors now takes only $O(n)$ elements from $\Z_q$ rather than $O(n^2)$. The underlying structure is a ring, hence the name ring-LWE (or R-LWE), namely we replace the group $\Z_q^n$ by picking some ring $R$ of degree $n$ over $\Z$ and a positive modulus $q$ defining the quotient ring $R_q := R/qR$. In most of the cases (as well as in this exposition), $R$ is taken to be a \textit{cyclotomic} ring - i.e. $R_q = \Z_q[x]/\langle x^n + 1 \rangle$ for $n = 2^k$ which turns out to yield much simpler proofs for the desired results.
+
+In the year 2010, V.Lyubashevski, C.Peikert and O.Regev presented their paper ``On Ideal Lattices and Learning With Errors Over Rings'' \cite{ring-lwe}. The main purpose of the paper was to ``translate'' the LWE problem onto a ring as was done with the SIS problem (by Micciancio \cite{ring-sis} but it is not presented in this paper) and followed the heuristic approach behind the NTRU\footnote{As mentioned by Peikert in his survey: ``The meaning of the acronym NTRU is somewhat mysterious; plausible candidates include "N th degree truncated polynomial ring" and "Number Theorists ’R’ Us."'' - \cite{lattice-survey}} cryptosystem \cite{ntru}. This in particular means first, defining the ring-LWE and later proving the hardness based on some difficult lattice problems like \prob{SVP} along with pseudorandomness of the ring-LWE distribution (analogous to \ref{pseudo-lwe} which we define later).
+
+\subsubsection*{Definitions}
+
+
+
+
+
+Chinese remainder theorem for rings --> Thm II.4.12 in Top's lecture notes. \\
 For instance, they have unique factorization of ideals, and their fractional ideals form a multiplicative group; in general, neither property holds in $\Z[x]/\langle f (x) \rangle$ for monic irreducible $f (x)$, as demonstrated by the ring $\Z[x]/\langle x^2+3 \rangle = \Z[\sqrt{-3}]$. (For example, in this ring $4 = 22 = (1+\sqrt{-3})(1 - \sqrt{-3})$, but 2, $1 + \sqrt{-3}$, and $1 - \sqrt{-3}$ are all irreducible.)
 Toward basing fully homomorphic encryption on worst-case hardness \\
 One of the applications is \cite{qTESLA} signature scheme.
