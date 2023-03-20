@@ -3,9 +3,9 @@ Most of the notation is "standard" in the field of number theory and cryptograph
 
 \noindent Any scalars $a, t, \beta, \dots$ are represented by non-bold, latin or greek letters.\\
 Bold symbols $\bm{v}, \bm{x}, \bm{s}, \dots$ will denote vectors. \\
-$\alg{Algorithms}$ will be represented by $\alg{lmodern font}$ names such as $\alg{Encrypt}$ or ${\fontfamily{lmss}\selectfont Evaluate}$.\\
-Traditionally, the symbols $\Z, \Q, \R, \C$ shall represent the sets of integer, rational, real and complex numbers, respectivelly.
-
+$\alg{Algorithms}$ will be represented by $\alg{lmodern font}$ names such as $\alg{Encrypt}$ or $\alg{Evaluate}$.\\
+Traditionally, the symbols $\Z, \Q, \R, \C$ shall represent the sets of integer, rational, real and complex numbers, respectivelly.\\
+Additionally, for any real $m \geq 0$, $\flo{m}$ shall denote greatest integer not exceeding $m$, $\round{m} = \flo{m + \frac{1}{2}}$ and $[m]$ is the set $\{1, 2, \dots, \flo{m}\}$.
 \subsection{Lattices}
 \subsubsection*{Basic Definitions}
 We define a \textit{lattice} as a discrete additive subgroup of $\R^n$. Once we fix a basis $\B = (\bm{b}_1, \dots ,\bm{b}_n) \in \R^n$ we can then describe the lattice as
@@ -99,38 +99,35 @@ We will now present two results that give us an upper bound on the length of the
 Algebraic number theory is the study of \textit{number fields}, \textit{rings of integers} and \textit{finite fields}. In this section we will provide all the necessary background needed to understand and verify the results presented in the cryptographic schemes later in the text. Most results will be stated without proof however all of them can be found in the book \textbf{Number Fields} by \textbf{Daniel A. Marcus} \cite{algebra} after which this sections is modelled.
 
 \subsubsection*{Number Fields}
-In general, a \textit{number field} is defined as a subfield of $\oQ$ having finite degree (the dimension as a vector space) over the rationals $\Q$. The \textit{degree} of a number field is defined as the degree of the monic minimal polynomial\footnote{Recall that we call polynomial monic if its leading coefficient is 1. It is the minimal polynomial for some element $\alpha$ if it is a polynomial of the lowest degree such that $\alpha$ is its root.} of the adjoint root. Throughout this section, we fix the imaginary numbers $\oQ = \C$ as an algebraic closure of the rationals.
-
-\pinar{Degree of a field over $\Q$. Define the monic minimal polynomial.}
+A \textit{number field} is defined as a subfield of $\oQ$ having finite dimension as a vector space over the rationals $\Q$. The \textit{degree} of a number field $K$ is defined as the dimension of $K$ over $\Q$. There exists a monic irreducible polynomial\footnote{Recall that we call polynomial monic if its leading coefficient is 1. It is an irreducible polynomial if it is irreducible as an element of the polynomial ring $\Q[x]$.} $f \in \Q[x]$ such that $K \cong \Q[x]/\langle f \rangle$. In fact, every monic and irreducible polynomial in $\Q[x]$ defines a number field via such isomorphism.
 
 \begin{definition}[Algebraic integer]
-    An element $\alpha \in \C$ is an \textit{algebraic integer} if it is a root of some monic polynomial with coefficients in $\Z$.
+    An element $\alpha \in \C$ is an \textit{algebraic integer} iff it is a root of some monic polynomial in $\Z[x]$.
 \end{definition}
-In fact, \textit{algebraic integers} form a ring.
+In fact, the set of \textit{algebraic integers} forms a ring.
 
 \begin{definition}[Ring of Integers]
-We define the \textit{ring of integers} (sometimes also called \textit{number ring}) $\Oo_K$ of a number field $K$ as the largest ring in the intersection:
+We define the \textit{ring of integers} (sometimes also called \textit{maximal order}) $\Oo_K$ of a number field $K$ as the intersection:
 $$
   \Oo_K = K \cap \overline{\Z} = \{x \in K : \text{ $x$ is an algebraic integer}\}.
 $$
 \end{definition}
 
 \begin{example}
-    The field $K = \Q$ is a number field of degree 1. Its ring of integers is, as one can guess, the ordinary integers.
+    The field $K = \Q$ is a number field of degree 1. Its ring of integers is, as one can guess, the ordinary integers $\Z$.
 \end{example}
 
 \begin{example}
-    The ring of Gaussian integers, defined as $K = \Q(\sqrt{-1}) = \{a + b\sqrt{-1}\, :\, a,b\in \Q\}$
-    has degree 2 since $x^2+1$ is the minimal polynomial of $\sqrt{-1}$ over $\Q$ and $\Oo_K = \Z[\sqrt{-1}]$. 
+    The ring of Gaussian integers $\Z[\sqrt{-1}]$ is the ring of integers of $K = \Q(\sqrt{-1}) = \{a + b\sqrt{-1}\, :\, a,b\in \Q\}$ which has degree 2 since $x^2+1$ is the minimal (and irreducible) polynomial of $\sqrt{-1}$ over $\Q$.
 \end{example}
 
 As another example, in generality, we can make a following statement about the ring of integers of a quadratic extension of rationals (real quadratic field).
 \begin{lemma}
-     Let $d \in \Z$ be a positive and square-free. For the field $K = \Q(\sqrt{d})$, its ring of integers is 
+     Let $d \in \Z$ be a square-free integer. For the field $K = \Q(\sqrt{d})$, its ring of integers is 
      \[ \Oo_K = 
 	 \begin{cases} 
-	     \Z[\sqrt{d}] & \text{if $d \equiv 1 \mod 4$}, \\
-	     \Z[(1 + \sqrt{d})/2] & \text{otherwise}.
+	     \Z[\sqrt{d}] & \text{otherwise}, \\
+	     \Z[(1 + \sqrt{d})/2] &\text{if $d \equiv 1 \mod 4$}.
      	 \end{cases}
      \]
 \end{lemma}
@@ -149,8 +146,7 @@ What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\al
 \begin{definition}[Roots of unity]
     Given a field $K$ and a positive integer $n$, an element $\zeta \in K$ is called \textit{primitive n-th root of unity} if $\zeta$ has order $n$ in the multiplicative group $K^{\cross}$. (In other words, $\zeta^n = 1$ and $\zeta^m \neq 1$ for $1 \leq m < n$).
 \end{definition}
-
-The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial.
+The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial. It can be shown that every such $\zeta$ is equal to precisely $e^{2\pi \sqrt{-1}/n}$ and $\zeta^i = \zeta^j$ iff $i = j$.
 
 \begin{proposition}
     The ring of integers of a
@@ -181,10 +177,12 @@ Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then the
 \subsection{Complexity Theory and hard problems} 
 \label{hardness}
 \pinar{will wait}
+mention "efficient", "negligible", "hard" and define reductions. show some problems like svp, cvp, bdd
 In this section we will briefly introduce what it means for a problem to be considered \textit{hard} and provide couple of examples
 
 The best know examples
 \prob{FACTORIZE}
-\subsubsection{Shor's Algorithm}
+\subsubsection*{Quantum computations}
+
 I'm not sure if that is supposed to be in a section about preliminaries but I also don't want to include it in the introduction coz its a bit long
 
