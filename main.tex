@@ -8,7 +8,8 @@
 \usepackage{amsmath, amssymb, amsthm, amsfonts, physics, mathtools, bbm}
 \usepackage{xcolor, color}
 \usepackage{pdfpages} % to include the front page
-\usepackage{mdframed} % to draw boxes around algorithms
+\usepackage{mdframed}[framemethod=TikZ] % to draw boxes around algorithms
+\usepackage{tikz}
 % bibliography
 \usepackage[
 backend=biber,
@@ -108,12 +109,6 @@ pdfauthor={Krzysztof Pudowski},
 
 \section{Lattice based cryptography}
 \input{lattice}
-
-\section{Implementations}
-\input{implementations}
-
-\section{Comparison}
-\input{comparison}
 
 \section{Conclusions}
 \input{conclusions}
