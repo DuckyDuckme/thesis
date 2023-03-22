@@ -92,8 +92,10 @@ We will now present two results that give us an upper bound on the length of the
     Every lattice $\mathcal{L}$ of dimension $n$ contains a nonzero vector $v \in \mathcal{L}$ satisfying
     $$ \norm{v} \leq \sqrt{n} \det(\mathcal{L})^{\frac{1}{n}}.$$
 \end{theorem}
-\krzys{add minkowski's theorem}
-
+\krzys{add minkowski's theorem}\\
+\krzys{add shortest vector $\lambda_1(n)$}\\
+\krzys{add dual}\\
+\krzys{add smoothing parameter}\\
 \subsection{Algebraic Number Theory}
 
 Algebraic number theory is the study of \textit{number fields}, \textit{rings of integers} and \textit{finite fields}. In this section we will provide all the necessary background needed to understand and verify the results presented in the cryptographic schemes later in the text. Most results will be stated without proof however all of them can be found in the book \textbf{Number Fields} by \textbf{Daniel A. Marcus} \cite{algebra} after which this sections is modelled.
@@ -183,7 +185,10 @@ Consider now
 \pinar{will wait}
 mention "efficient", "negligible", "hard" and define reductions. show some problems like svp, cvp, bdd
 In this section we will briefly introduce what it means for a problem to be considered \textit{hard} and provide couple of examples
-
+We define a \prob{negligible} amount in $n$ as an amount that is asymptotically smaller than $n^{-c}$ for any constant $c > 0$. More precisely, 
+\begin{definition}\label{negl}
+    $f (n)$ is a \prob{negligible} function in $n$ if $\lim_{n \to \infty}n^{-c} f (n) = 0$ for any $c > 0$.
+\end{definition}
 The best know examples
 \prob{FACTORIZE}
 \subsubsection*{Quantum computations}
