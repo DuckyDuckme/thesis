@@ -4,4 +4,8 @@ main.*
 token.txt
 *.swp
 *.fls
-POC/
+*.o
+POC/plot.py
+POC/main
+!POC/main.c
+POC/lib/gsl*
