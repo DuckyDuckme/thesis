@@ -10,8 +10,8 @@ int main(int argc, char **argv){
 	int p = argv[3] - '0';
 	*/
 
-	int n = 4;
-	int m = 4;
+	int n = 10;
+	int m = 10;
 	unsigned long int p=17;
 	keyPair key = keyInit(n, m);
 	keyGen(n, m, p, &key);
