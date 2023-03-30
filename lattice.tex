@@ -70,35 +70,38 @@ The problem is parametrized by positive integers $n$, $m$\footnote{As will be se
 \end{align*}
 In this case, $\bm{s} = (0, 13, 9, 11)$. Note that if not for the error, the secret would be very easy to find. Given about $n$ equations, we could recover $\bm{s}$ in an efficient way using Gaussian elimination. Inducing the error is what seems to render the problem untraceable for modern day algorithms.
 \end{example}
-
-The central part of \cite{regev} revolves around proving the hardness of LWE. Specifically, that for appropriately chosen $q$ and $\chi$, a \textit{quantum}\footnote{In fact, quantum reduction is used only in the small part of the whole proof.} reduction algorithm exists that approximates worst-case lattice problems. 
-\\ \krzys{maybe put this remark in Open Problems or sth}
-\begin{remark}
-    At some point as well, we would like to find entirely \textit{classical} reduction algorithm that proves the hardness of the problem. This is because we understand classical computation in much more detail than its quantum equivalent. Using classical computers we have cracked Enigma and landed on the moon. In the meantime, only recently a factorization of the integer 15 was achieved on a quantum computer using Shor's algorithm - see \krzys{find source of that statement}. Returning to the reduction problem, Chris Peikert in his paper \cite{peikert_classical} from 2009 has done exactly this. However, it was done in a somewhat ``inefficient'' way. That is, exponentially many samples are needed in the classical reduction compared to polynomial amount in the quantum version. For more details see the paper by Peikert and compare it with the original approach from Regev. It remains an important open question \krzys{also not sure about that} till this day, if the reduction can be made efficiently fully classical.
-\end{remark}
-This result is stated as follows (with small changes).
+The central part of \cite{regev} revolves around proving the hardness of LWE. Specifically, that for appropriately chosen $q$ and $\chi$, a \textit{quantum}\footnote{In fact, quantum reduction is used only in the small part of the whole proof.} reduction algorithm exists that approximates worst-case lattice problems. The following is the main result presented in the paper. 
 
 \begin{theorem}[\cite{regev}, Theorem 1.1]\label{main}
-	Let $n$, $q$ be positive integers and $\alpha \in (0, 1)$ be such that $\alpha q > 2 \sqrt{n}$. If there exists an efficient algorithm that solves $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$, then there exists an efficient quantum algorithm that approximates the decision version of the shortest vector problem (\prob{GapSVP}$_{\gamma}$) and the shortest independent vectors problem (\prob{SIVP}$_{\gamma}$) to within $\gamma = \tilde{O}(n/\alpha)$ in the worst case on any lattice of dimension $n$.	
+	Let $n$, $q$ be positive integers and $\alpha \in (0, 1)$ be such that $\alpha q > 2 \sqrt{n}$. If there exists an efficient algorithm that solves $\text{LWE}_{q, \Psi_{\alpha}}$, then there exists an efficient quantum algorithm that approximates the decision version of the shortest vector problem (\prob{GapSVP}$_{\gamma}$) and the shortest independent vectors problem (\prob{SIVP}$_{\gamma}$) to within $\gamma = \tilde{O}(n/\alpha)$ in the worst case on any lattice of dimension $n$.	
 \end{theorem}
 
-Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{n}/q$ is one of those choices (and requirements). It specifies the shape of the $\bar{\Psi}_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$\footnote{A comment from \cite{lattice-survey}: Originally, Regev considered the continuous Gaussian and rounded the result to the nearest integer. This does not exactly yield the discrete distribution but thanks to \cite{discr} we know how the problem can be fixed.}. The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}. Since we strongly believe that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}) we are left with a difficult, yet efficient way to share secrets. Oded Regev proceeds to prove this using various lemmas and results from few areas of mathematics like probability, lattice theory and quantum computing. We will now present selected proofs and outline of whole the approach.
+Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{n}/q$ is one of those choices (and requirements). It specifies the shape of the $\Psi_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$\footnote{A comment from \cite{lattice-survey}: Originally, Regev considered the continuous Gaussian and rounded the result to the nearest integer. This does not exactly yield the discrete distribution but thanks to \cite{discr} we know how the problem can be fixed.}. The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}. Since we strongly believe that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}) we are left with a difficult, yet efficient way to share secrets. Oded Regev proceeds to prove this using various lemmas and results from few areas of mathematics like probability, lattice theory and quantum computing. We will now present selected proofs and outline of whole the approach.
 
 \subsubsection{Background on Lattices II}
 \paragraph{Gaussians}
+\begin{definition}[Statistical distance]
+\end{definition}
 \paragraph{Problems}
+\begin{definition}[Search-LWE]
+\end{definition}
+\begin{definition}[Decision-LWE]
+\end{definition}
 \begin{definition}[LWE distribution]\label{lwe-distr}
     Let $q \geq 2$ be some integer, and let $\chi : \Z_q \rightarrow \R^+$ be some probability distribution on $\Z_q$. Let $n$ be an integer and let $\bm{s} \in \Z_n^q$ be a vector. We define $A_{\bm{s},\chi}$ as the distribution on $\Z_n^q \cross \Z_q$ obtained by choosing a vector $\bm{a} \in \Z_q^n$ uniformly at random, choosing $e \in \Z_q$ according to $\chi$, and outputting $(\bm{a}, \langle \bm{a}, \bm{s} \rangle + e)$, where additions are performed in $\Z_q$, i.e., modulo $q$. In parallel, we define $U$ as the uniform distribution on $\Z_q^n \cross \Z_q$.
 \end{definition}
+\begin{definition}\label{dgs}
+\end{definition}
 \paragraph{Smoothing parameter}
 
-\subsubsection{Proof of Theorem \ref{main}}
-Recall that we want to prove, that being able to solve $\text{LWE}_{q, \chi}$ implies that we are able to solve standard worst-case lattice problems like \prob{GapSVP}. To achieve this, we need to proceed in steps, in other words, we perform reductions from one problem to another. Before we proceed any further, let us define some terminology first.
+\subsubsection*{Proof of Theorem \ref{main}}
+In this section we will focus on proving the main statement of \cite{regev} following the steps presented in the paper. We will put an emphasis on the parts that require the most adjustment when trying to prove the same results for ring-LWE in the next section.
 
-From this point on, a probabilistic algorithm which solves a given $\text{LWE}_{q, \chi}$ instance, will be called an LWE-\textit{oracle} (or, when there is no confusion, simply an oracle). We define $A_{\bm{s},\chi}$ as the LWE-distribution, i.e. distribution outputting $(\bm{a}, \langle \bm{a}, \bm{s} \rangle + e)$, where $\bm{s}$ is the secret, $\bm{a}$ is drawn uniformly and the error $e \leftarrow \chi$ is sampled according to our distribution. In parallel, we denote $U$ as the uniform distribution.
+Recall that we want to prove, that being able to solve $\text{LWE}_{q, \chi}$ implies that we are able to solve standard worst-case lattice problems like \prob{SIVP}. To achieve this, we need to proceed in steps, in other words, we perform reductions from one problem to another. From this point on, a probabilistic algorithm which solves a given $\text{LWE}_{q, \chi}$ instance, will be called an LWE-\textit{oracle} (or, when there is no confusion, simply an oracle).
 
-Hence, let us assume that we have such an oracle that solves $\text{LWE}_{q, \chi}$. The main idea presented by Regev is the so called \textit{iterative step} (IS). As we will show later, it turns out that it is sufficient to solve the \textit{discrete Gaussian sampling} problem (\prob{DGS}$_{\Ll, r}$ - given $n$-dimensional lattice $\Ll$ and $r>0$ output a sample from the discrete Gaussian D$_{\Ll, r}$). 
-On each of the iterations, it is using the oracle to produce discrete Gaussian samples of smaller and smaller radius around our desired \textit{closest vector}. Once we have a sample with radius small enough, we can use that to solve \prob{DGS} and use one more step which is the reduction from \prob{DGS} to the \prob{GapSVP} and \prob{SIVP} as required in Theorem \ref{main}.
+The high-level version of the proof is as follows. Let us assume that we have such an oracle that solves $\text{LWE}_{q, \chi}$ on a lattice $\Ll$ just like in the assumption. The procedure is based on the so called \textit{iterative step} (IS). It is repeatedly used to reduce our LWE problem to the problem of sampling from the  discrete Gaussian distribution on $\Ll$. As it turns out, it is indeed sufficient to solve the \prob{DGS} problem (Definition \ref{dgs}). Intuitively, if we have enough samples from the Gaussian distribution of some small radius $r$ around our lattice, we can use it to obtain short lattice vectors. Indeed, if we call the \prob{DGS} oracle enough times we can prove, that with very high probability, there are $n$ linearly independent vectors among the samples returned by oracle - thus, a solution to \prob{SIVP}.
+
+On each of the iterations, the IS is using the oracle to produce discrete Gaussian samples of smaller and smaller radius around our desired \textit{closest vector}. Once we have a sample with radius small enough, we can use that to solve \prob{DGS} and use one more step which is the reduction from \prob{DGS} to the \prob{GapSVP} and \prob{SIVP} as required in Theorem \ref{main}.
 
 \begin{center}
 \begin{tikzpicture}
@@ -115,7 +118,7 @@ On each of the iterations, it is using the oracle to produce discrete Gaussian s
 \end{tikzpicture}
 \end{center}
 
-The algorithm can be divided into two basic steps, the \textit{classical} step and the \textit{quantum} step. First, given some polynomial number $n^c$ of samples from a discrete Gaussian on $\Ll$ with some (large enough) parameter $r$, we us the first step to obtain a solution to a CVP on the dual lattice $\Lld$ to within some (smaller than the initial $r$) distance. We then use this solution along with the second step - the quantum algorithm - to obtain $n^c$ samples from a dicrete Gaussian with parameter $r' < r$. Iterating these steps polynomial amount of times, we finally get $n^c$ samples from D$_{\Ll, r''}$ where $r'' \ll r$. We simply pick one of those samples to solve the DGS$_{\Ll, r}$ and we are done.
+The algorithm can be divided into two basic steps, the \textit{classical} step and the \textit{quantum} step. First, given some polynomial number $n^c$ (where $c$ is some positive integer) of samples from a discrete Gaussian on $\Ll$ with some (large enough) parameter $r$, we us the first step to obtain a solution to a \prob{CVP} on the dual lattice $\Lld$ to within some (smaller than the initial $r$) distance. We then use this solution along with the second step - the quantum algorithm - to obtain $n^c$ samples from a dicrete Gaussian with parameter $r' < r$. Iterating these steps polynomial amount of times, we finally get $n^c$ samples from D$_{\Ll, r''}$ where $r'' \ll r$. We simply pick one of those samples to solve the DGS$_{\Ll, r}$ and we are done.
 \krzys{input a schematic as nice as the one in regev}\\
 The full picture now stands as follows. We begin with a assumed solution to LWE and we end up with a solution to some (conjured) hard lattice problems like SIVP to within some tolerance $\gamma$.
 \begin{center}
@@ -135,40 +138,92 @@ The full picture now stands as follows. We begin with a assumed solution to LWE 
 
 \end{tikzpicture}
 \end{center}
-As mentioned in the introduction, we will focus on the first step of the reduction from LWE to \prob{DGS} as it is what is altered the most in the ring-LWE hardness proof. This, however, will follow in the next section. \\
+We will now focus on the first step of the reduction from LWE to \prob{DGS} as it is what is altered the most in the ring-LWE hardness proof. This, however, will follow in the next section.
 
-The following statement (Theorem 3.1 in \cite{regev}) is the core of the hardness results of (search) LWE. Given an oracle form LWE, there exists an algorithm that gives us samples from discrete Gaussian distribution which in turn can yield us a solution to the \prob{CVP}. For example, later we will show the equivalence between search-LWE and decision-LWE \ref{s-to-d}. This is an important result as it is usually much easier to construct cryptographic schemes based on some \textit{decision} version of a problem rather than the \textit{search}.
+The following statement (Theorem 3.1 in \cite{regev}) is the core of the hardness results of (search) LWE. Given an oracle form LWE, there exists an algorithm that gives us samples from discrete Gaussian distribution which in turn can yield us a solution to the \prob{CVP}. For example, later we will show the equivalence between search-LWE and decision-LWE (Theorem \ref{s-to-d}). This is an important result as it is usually much easier to construct cryptographic schemes based on some \textit{decision} version of a problem rather than the \textit{search}.
 
 \begin{theorem}\label{heart}
 	Let $\epsilon = \epsilon(n)$ be some negligible function of $n$. Also, let $q = q(n)$ be some integer and $\alpha = \alpha(n) \in (0, 1)$ be such that $\alpha q > 2\sqrt{n}$. Assume that we have access to an oracle W that solves $\text{LWE}_{q,\Psi_{\alpha}}$ given a polynomial number of samples. Then there exists an efficient quantum algorithm for $\text{DGS}_{\sqrt{2}n \cdot \eta_{\epsilon}(L)/\alpha}$.
 \end{theorem}
 \begin{proof}
-	The proof follows in a straight-forward manner by the Lemma \ref{is}. We sample a polynomial amount of elements from the D$_{\Ll, r}$ for $r$ large enough\footnote{By Claim 2.13 and Lemma 3.2 of \cite{regev}, we efficiently draw samples that are exponentially close to D$_{\Ll, r}$ if $r > 2^{2n} \lambda_n(\Ll)$.}. We then apply the IS to obtain D$_{\Ll, r'}$ for $r' = r/2$. Applying this procedure enough times (turns out only about $3n$ iterations are needed). At the end of the loop, we are left with the same amount of samples but each within sufficient distance $d \leq \sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha$ and we complete the algorithm by simply outputting the first one
+	The proof follows in a straight-forward manner by the Lemma \ref{is}. We sample a polynomial amount of elements from the D$_{\Ll, r}$ for $r$ large enough\footnote{By Claim 2.13 and Lemma 3.2 of \cite{regev}, we can efficiently draw samples that are exponentially close to D$_{\Ll, r}$ if $r > 2^{2n} \lambda_n(\Ll)$.}. We then apply the IS to obtain D$_{\Ll, r'}$ for $r' \leq r/2$. Applying this procedure enough times (turns out only about $3n$ iterations are needed). At the end of the loop, we are left with the same amount of samples but each within sufficient distance $d \leq \sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha$ and we complete the algorithm by simply outputting the first one.
 \end{proof}
 
 \paragraph{The iterative step}
-\begin{lemma}[\cite{regev}, 3.3]\label{is}
+The proof of Theorem \ref{heart} relies heavily on the following algorithm. 
+\begin{lemma}[\cite{regev}, 3.3 - IS]\label{is}
 	Let $\epsilon = \epsilon(n)$ be a negligible function, $\alpha = \alpha(n) \in (0, 1)$ be a real number, and $q = q(n) \geq 2$ be an integer. Assume that we have access to an oracle W that solves $LWE_{q,\Psi_{\alpha}}$ given a polynomial number of samples. Then, there exists a constant $c > 0$ and an efficient quantum algorithm that, given any $n$-dimensional lattice $L$, a number $r > \sqrt{2}q \eta_{\epsilon}(L)$, and $n^c$ samples from $\text{D}_{L,r}$, produces a sample from $\text{D}_{L,r\sqrt{n}/(\alpha q)}$.
 \end{lemma}
 \begin{proof}
-	As mentioned before, the algorithm consists of two parts. The first part is presented in \ref{classical}, where, given an oracle W and samples from $\text{D}_{L,r}$, solves $\text{CVP}_{L^{\vee}, \alpha q / (\sqrt{2} r)}$. The second part - the quantum algorithm \ref{quantum} proof of which we omit for the sake of compacness - when given an oracle that solves $\text{CVP}_{L^{\vee}, \alpha q / (\sqrt{2} r)}$, yields us a sample from $\text{D}_{L, r\sqrt{n}/\alpha q)}$.
+	As mentioned before, the algorithm consists of two parts. The first part is presented in \ref{classical}, where, given an oracle W and samples from $\text{D}_{L,r}$, solves \prob{CVP}$_{L^{\vee}, \alpha q / (\sqrt{2} r)}$. The second part - the quantum algorithm \ref{quantum} - when given an oracle that solves \prob{CVP}$_{L^{\vee}, \alpha q / (\sqrt{2} r)}$, yields us a sample from $\text{D}_{L, r\sqrt{n}/\alpha q)}$.
 \end{proof}
-Note that, by our assumptions, $r' := r\sqrt{n}/(\alpha q) < r$ as \krzys{ye i acc dont know why}.
 
-\krzys{lemma 3.11 from regev}
-\begin{lemma}[Classical step]\label{classical}
-	Let $\epsilon > 0$ be some small constant (possibly depending on $n$), $q \geq 2$ be an integer, and $\alpha \in (0, 1)$ be a real number. Assume that we have access to an oracle W that finds $\bm{s}$ given a polynomial number of samples from $A_{\bm{s},\Psi_{\alpha}}$. Then, there exists an efficient algorithm that given an $n$-dimensional lattice $L$, a number $r > \sqrt{2}q \eta_{\epsilon}(\Ll)$, and a polynomial number of samples from $\text{D}_{\Ll,r}$, solves $\text{CVP}_{\Ll^{\vee},\alpha q/(\sqrt{2}r)}$.
-\end{lemma}
-Our goal is, given a point $x$ close enough (precisely within $\alpha q/(\sqrt{2}r)$) to $\Lld$, construct an instance of a LWE problem of finding the secret $\bm{s}$ which will depend on the initial $x$. We can then use our oracle to recover $\bm{s}$ and consecutively $x$. \\
-The procedure
+Pictographically, here are two iterations of the algorithm:
+\krzys{include pictoraphic like in Regev page 8}
 
-\begin{lemma}[Quantum step]\label{quantum}
+We now present heavily simplified version of the algorithm that, when given a polynomial amount of samples from the discrete Gaussian, gives us a solution to the \prob{CVP} to within error of $\alpha q /(\sqrt{2} r)$ to the dual lattice $\Lld$.
+\begin{lemma}[Step 1 - classical]\label{classical}
+	Let $\epsilon > 0$ be some small constant (possibly depending on $n$), $q \geq 2$ be an integer, and $\alpha \in (0, 1)$ be a real number. Assume that we have access to an oracle W that finds $\bm{s}$ given a polynomial number of samples from $A_{\bm{s},\Psi_{\alpha}}$. Then, there exists an efficient algorithm that given an $n$-dimensional lattice $\Ll$, a number $r > \sqrt{2}q \eta_{\epsilon}(\Ll)$, and a polynomial number of samples from $\text{D}_{\Ll,r}$, solves \prob{CVP}$_{\Ll^{\vee},\alpha q/(\sqrt{2}r)}$.
 \end{lemma}
-\begin{lemma}[\cite{regev}, 4.2 - Decision to Search]\label{s-to-d}
-	Let i$n \geq 1$ be some integer, $2 \leq q \leq \alg{poly}(n)$ be a prime, and $\chi$ be some distribution on $\Z_q$. Assume that we have access to procedure W that for all $\bm{s}$ accepts with probability exponentially close to 1 on inputs from $A_{\bm{s},\chi}$ and rejects with probability exponentially close to 1 on inputs from U. Then, there exists an efficient algorithm W' that, given samples from $A_{\bm{s},\chi}$ for some $s$, outputs $\bm{s}$ with probability exponentially close to 1.
-\end{lemma}
+Our goal is, given a point $\bm{x}$ close enough (precisely within $\alpha q/(\sqrt{2}r)$) to $\Lld$, construct an instance of a $A_{\bm{s}, \Psi_{\beta}}$ (for some $\beta \leq \alpha$) where the $\bm{s}$ will depend on $\bm{x}$. After polynomial amount of such samples, we can then use our oracle to recover $\bm{s}$ and consecutively $x$. We say an algorithm solves \prob{CVP}$_{\Ll, d}$ if, given any point $\bm{x} \in \R^n$ within distance $d$ of $\Ll$ it gives $\bm{y} \mod q \in \Z_q^n$, the coefficient vector of the closest vector to $\bm{x}$ reduced modulo $q$\footnote{This is technically solution to \prob{CVP}$^{(q)}_{\Ll, d}$, however as we will see later in the proof, there is a reduction from one to another.}.
 
-Roughly speaking, this result shows that in fact, the search version is equally hard as the decision version of LWE.  
+The following proof is a simplified version of the proof of Lemma 3.11 from \cite{regev} where we skip few technical details. For all of them, the reader is redirected to the original.
+\begin{proof}
+	We start with a sample vector $\bm{v} \in \Ll$ from D$_{\Ll, r}$ and set $\bm{a} = \Ll^{-1} \bm{v} \mod q$ - its coefficient vector (notice that we are slightly abusing the notation here using $\Ll$ as the matrix representing the lattice). We note at this point that it is in fact enough to find solution modulo $q$ as there exists an algorithm iterating over the coefficients along with (for example) Babai's nearest plane algorithm (see \cite{babai}) to obtain the full, unreduced solution. For the details, see \cite{regev} Lemma 3.5. We now output
+	\begin{equation} (\bm{a}, \langle \bm{x}, \bm{v} \rangle + e \mod q) \end{equation}
+	where the $e \in \R^n$ is chosen from a normal distribution with deviation $\alpha/(\sqrt{2} \pi)$. We claim now that our output is within negligible statistical distance of $A_{\bm{s}, \Psi_{\beta}}$ for some $\beta \leq \alpha$ and $\bm{s} = (\Lld)^{-1}\bm{y} \mod q$.
+
+	To see this, first note that $\bm{a}$ is a uniform sample (\cite{regev}, Claim 3.8). Let us now fix $\bm{a}$ and consider $\bm{y} = \bm{x} - \epsilon$. Then
+	\[ \langle \bm{x}, \bm{v} \rangle + e \mod q = \langle \epsilon, \bm{v} \rangle + \langle \bm{y}, \bm{v} \rangle + e \mod q. \]
+Focusing now on the second term, we observe that
+\[ \langle \bm{y}, \bm{v} \rangle = (\Lld)^{-1} \langle \bm{y}, \bm{v} \rangle \Lld =  \langle (\Lld)^{-1}\bm{y}, \Ll^{-1} \bm{v} \rangle = \langle \bm{s}, \bm{a} \rangle \]
+since $\Ll^{-1} = (\Lld)^T$.
+
+To finish the proof we need to show that the remaining term $\langle \epsilon, \bm{v} \rangle + e$ is distributed within negligible statistical distance of $\Psi_{\beta}$. This is obtained by noting that summing two normal distributions with the standard deviation within some bound, gives us a distribution that is indeed close enough to $\Psi_{\beta}$ as desired. This is Claim 3.10 in the original paper by Regev.
+\end{proof}
+\begin{proposition}[Step 2 - quantum]\label{quantum}
+	There exists an efficient quantum algorithm that, given any $n$-dimensional lattice $\Ll$, a number $d < \lambda_n (\Lld)/2$, and an oracle that solves \prob{CVP}$_{\Lld,d}$, outputs a sample from D$_{\Ll,\sqrt{n}/(\sqrt{2}d)}$.
+\end{proposition}
+
+Lastly, we can finish the proof of Theorem \ref{main} by presenting the following proposition that provides reduction from \prob{SIVP} and \prob{GapSVP} to \prob{DGS}.
+
+\begin{proposition}
+	Let $\Ll$ be an $n$-dimensional lattice and let $r$ be such that $r \geq \sqrt{2}\eta_{\epsilon}(\Ll)$ where $\epsilon \leq \frac{1}{10}$. Then, the probability that a set of $n^2$ vectors chosen independently from D$_{\Ll,r}$ contains no $n$ linearly independent vectors is exponentially small.
+\end{proposition}
+
+\subsubsection{Pseudorandomness of LWE}
+In this section we will prove that the search version of the LWE (given sample from the LWE distribution, find the secret $\bm{s}$) to the decision version - given a sample from $\Z_q^n \cross Z_q$ decide weather it is a LWE sample or a uniform one. More precisely, if our sample is of the form $(\bm{a}, b)$, there is no way for us to tell if $b$ is uniform or actually $b = \langle \bm{a}, \bm{s} \rangle + e$ for some secret $\bm{s}$ and small error $e$.
+
+In general, the decision version is considered more suitable for cryptographic purposes because it is often easier to analyze and prove security guarantees for. For many cryptographic problems, it is computationally infeasible to find the solution to the search version, but it is possible to determine the correct answer to the decision version with high probability. Thus, cryptographic schemes are often designed based on decision versions of hard computational problems
+
+The statement can be phrased as follows.
+\begin{theorem}[\cite{regev}, 4.2 - Decision to Search]\label{s-to-d}
+	Let $n \geq 1$ be some integer, $2 \leq q\leq \alg{poly}(n)$ be a prime, and $\chi$ be some distribution on $\Z_q$. Assume that we have access to procedure \prob{W} that for all $\bm{s}$ accepts with probability exponentially close to 1 on inputs from $A_{\bm{s},\chi}$ and rejects with probability exponentially close to 1 on inputs from U. Then, there exists an efficient algorithm \prob{W'} that, given samples from $A_{\bm{s},\chi}$ for some $s$, outputs $\bm{s}$ with probability exponentially close to 1.
+\end{theorem}
+
+In other words, if we have an oracle (called procedure in this theorem) that solves the decision-LWE, then there is an efficient (running in polynomial time) algorithm that outputs us the secret $\bm{s}$ used for the generation of the sample (if the sample was indeed taken from $A_{\bm{s}, \chi}$).
+
+\begin{proof}
+	We are given a sample $(\bm{a}, b)$ and an oracle that tells us whether this element was chosen uniformly at random, or whether $b$ is related to $\bm{a}$ via $b = \langle \bm{a}, \bm{s} + e$. Note that by definition in both cases $\bm{a}$ is chosen uniformly from $\Z_q^n$. The idea to obtain the secret $\bm{s}$ is relatively simple. We pick some element $k \in \Z_q^n$ and check coordinate by coordinate if this is the respective coordinate of our key $\bm{s}$. The procedure is identical for each coordinate hence we will only consider the case of the first one. Pick any $k$ as before and consider the transformation $(\bm{a} + (l, 0, \cdots, 0), b +k \cdot l)$ for $l\in Z_q^n$ chosen uniformly at random. We have now three cases to consider.
+	\begin{enumerate}
+		\item Our original sample was in fact taken from uniform distribution. Then it is easy to see that the transformation maps it again to uniform and nothing is changed. In this case, there is no $\bm{s}$ to be found and we terminate.
+		\item The sample was taken from the $A_{\bm{s}, \chi}$ distribution. Then either:
+			\begin{enumerate}
+				\item $k = s_1$. In this case, the sample is mapped back to $A_{\bm{s}, \chi}$ because \[ \langle (a_1 + l, a_2, \cdots, a_n), \bm{s} \rangle + e = \langle \bm{a}, \bm{s} \rangle + l \cdot s_1 + e = b + k \cdot l.\] We can now proceed with $s_2$ in a similar manner.
+				\item Or $k \neq s_1$ in which case the sample is mapped to a uniform distribution and oracle tells us we picked wrong. Note that this requires our $q$ to be prime because otherwise it might happen that $a_1 \cdot k = a_1 \cdot s_1$ as either of the three could be a zero divisor. We have therefore picked wrong $k$ and we need to pick another one.
+			\end{enumerate}
+	\end{enumerate}
+	Note that by the choice of our $q \leq \alg{poly}(n)$, we can try all of them.
+\end{proof}
+
+%There are two other results that, when combined with the previous lemma, give us hardness of decision LWE based on \textit{worst-case} lattice problems like \prob{SIVP} and the \prob{GapSVP}. These results are:
+%\begin{enumerate}
+%	\item \textit{Continuous} $\iff$ \textit{Discrete}. We used distributions that are discrete over the integers modulo some integer. However it does not matter if we were to pick a continuous one and never discretize it.
+%	\item \textit{Average-case} $\iff$ \textit{Worst-case}. All the results proved in previous section didn't assume anything about problems and the running time of the algorithms used for solving them. As proved in Lemma 4.1 in \cite{regev}, the LWE problem is as hard as solving those problems in the worst-case.
+	%\item \textit{LWE} and \textit{DGS} $\iff$ Hard lattice problems like \textit{SIVP} and the decision version of shortest vector problem \textit{GapSVP}.
+%\end{enumerate}
+
+%All those results combined, give us the following lemma
 
 \subsubsection{LWE cryptosystem}
 Now that we have a solid hardness assumptions, we can attempt to construct a cryptosystem that employs those results. The following public key cryptosystem was presented in the same paper. To keep the notation consistent with previous section, we will slightly deviate from the original.
@@ -206,7 +261,7 @@ The decryption of a pair $(\bm{a}, b)$ is 0 if $b - \langle \bm{a}, \bm{s} \rang
 	\end{pmatrix}.
 	\]
     To now encrypt a bit 1, we can take as our $S$ the set $\{1,2,4\}$ and output the encryption as
-     \[(\bm{a}, b) = \begin{pmatrix} 1 + 16 + 5\\ 
+     \[(\bm{a}, b)^T = \begin{pmatrix} 1 + 16 + 5\\ 
 		16 + 4 + 1\\
 		4 + 5 + 16 \\
 		5 + 1 + 4 \\
@@ -237,28 +292,31 @@ This, in turn, implies that (this is Lemma 5.1)
 
 Note that it seems almost trivial that we decrypt correctly, the scheme was designed in that way. This is only the case when we know the secret key $\bm{s}$ that is definitely not know to the public. This ties closely to the second and last question, that is, how secure the scheme is? We have established hardness based on average and worst-case lattice problems. However, it might be the case that our choice of parameters required for correctness, hinders on the security. This is resolved with the following theorem. Let us first define some required terminology.
 
-\begin{lemma}[\cite{regev}, 5.4 - Security]\label{pseudo-lwe}
+\begin{proposition}[\cite{regev}, Lemma 5.4]
     For any $\epsilon > 0$ and $m \geq (1 + \epsilon)(n + 1) \log q$, if there exists a polynomial time algorithm $\alg{W}$ that distinguishes between encryptions of 0 and 1 then there exists a distinguisher $\alg{Z}$ that distinguishes between $A_{\bm{s}, \chi}$ and $U$ for a non-negligible fraction of all possible $\bm{s}$.
-\end{lemma}
-\krzys{TODO: finish security}
-"It turns out that when the modulus q is prime and polynomial in n, the search and decision variants are equivalent via an elementary reduction (but no such equivalence is known for larger q)." - quote from Peikert
-For a thorough and less technical analysis than the one given in the original paper, the reader is encouraged to look into section 5.4 in \cite{Micci2009}.
+\end{proposition}
+Note that this closely relates to the last lemma from the previous section on the hardness of LWE. For a thorough and less technical analysis than the one given in the original paper, the reader is encouraged to look into section 5.4 in \cite{Micci2009}.
+
+\subsubsection*{Epilogue}
+Until the day of writing this paper, LWE is one of the most influential schemes that can be used for post-quantum cryptographic schemes. We will now present few alternatives to the results and proofs presented here.\\
+
+Let us begin with the proof of the main theorem, namely, the quantum part. At some point, we would like to find entirely \textit{classical} and efficient reduction algorithm that proves the hardness of the problem. This is because we understand classical computation in much more detail than its quantum equivalent. Using classical computers we have cracked Enigma and landed on the moon. In the meantime, only recently a factorization of the integer 15 was achieved on a quantum computer using Shor's algorithm - see \krzys{find source of that statement}. Returning to the reduction problem, Chris Peikert in his paper \cite{peikert_classical} from 2009 has done exactly this. However, it was done in a somewhat ``inefficient'' way. That is, exponentially many samples are needed in the classical reduction compared to polynomial amount in the quantum version. For more details see the paper by Peikert and compare it with the original approach from Regev. It remains an important open question \krzys{also not sure about that} till this day, if the reduction can be made efficiently fully classical.
+
 \subsection{Ring-LWE}
 One of the recurring problems in lattice-based cryptography is the key-size and general efficiency. In the GGH cryptosystem, the key-size is $\tilde{O}(n^4)$. In the system based on the hardness of LWE presented in the previous section, the size is in the range of $\tilde{O}(n^2)$\footnote{There are $m$ samples of length $n$. Turns out that for $m > n$, the problem can become only easier, but the same holds for $m \ll n$. Therefore, in most applications, $m$ is chosen to be roughly the size of $n$.}. As we will also see later, there is some minimal efficiency needed for the scheme in order to enable the boostrapping (for FHE). Unfortunately, none of the schemes presented so far satisfy those criterions and so, we need to look for something better.
 
 One idea to improve the efficiency, is to assume some underlying structure of the space we are performing computations in. For example, we can assume that the $\bm{a}$ vectors from previous section are given to us in block of $n$ samples $\bm{a}_1, \bm{a}_2, \dots, \bm{a}_n \in \Z_q^n$ where all of the elements are related. Namely, $\bm{a}_1 = (a_1, \dots, a_n)$ is again chosen uniformly but each $\bm{a}_i = (a_i, \dots, a_n, -a_1, \dots, -a_{i - 1})$ is a ``anti-cyclic'' of the initial $\bm{a}_1$. This choice seems rather arbitrary however we will show how it is a natural consequence of everything we did so far and yields arguably the best results. For example if $n = 4$ and $q = 17$ and $\bm{a}_1 = (1, 16, 4, 5)$ as before, then $\bm{a}_3$ has the form $(4, 5, -1, -16) = (4, 5, 16, 1)$. Note that representing $n$ vectors now takes only $O(n)$ elements from $\Z_q$ rather than $O(n^2)$. The underlying structure is a ring, hence the name ring-LWE (or R-LWE), that is, we replace the group $\Z_q^n$ by picking some ring $R$ of degree $n$ over $\Z$ and a positive modulus $q$ defining the quotient ring $R_q := R/qR$. In most of the cases (as well as in this exposition), $R$ is taken to be a \textit{cyclotomic} ring - i.e. $R_q = \Z_q[x]/\langle x^n + 1 \rangle$ for $n = 2^k$ which turns out to yield much simpler proofs for the somewhat weaker results.
 
-In the year 2010, Vadim Lyubashevski, Chris Peikert and Oded Regev presented their paper ``On Ideal Lattices and Learning With Errors Over Rings'' \cite{ring-lwe}. The main purpose of the paper was to ``translate'' the LWE problem onto a ring as was done with the SIS problem (mainly by Micciancio \cite{ring-sis} that was followed up by other works but these results are not presented in this paper) and followed the heuristic approach behind the NTRU\footnote{As mentioned by Peikert in his survey: ``The meaning of the acronym NTRU is somewhat mysterious; plausible candidates include "$N$th degree \textit{tru}ncated polynomial ring" and "Number Theorists ’R’ Us."'' - \cite{lattice-survey}} cryptosystem \cite{ntru}. This in particular means first, defining the ring-LWE and later proving the hardness based on some difficult lattice problems like \prob{SVP} along with pseudorandomness of the ring-LWE distribution (analogous to \ref{pseudo-lwe} which we define later). The second issue turned out to be quite nontrivial and required good insight in the algebraic number theory as well as Gaussian measures and distributions.
+In the year 2010, Vadim Lyubashevski, Chris Peikert and Oded Regev presented their paper ``On Ideal Lattices and Learning With Errors Over Rings'' \cite{ring-lwe}. The main purpose of the paper was to ``translate'' the LWE problem onto a ring as was done with the SIS problem (mainly by Micciancio \cite{ring-sis} that was followed up by other works but these results are not presented in this paper) and followed the heuristic approach behind the NTRU\footnote{As mentioned by Peikert in his survey: ``The meaning of the acronym NTRU is somewhat mysterious; plausible candidates include "$N$th degree \textit{tru}ncated polynomial ring" and "Number Theorists ’R’ Us."'' - \cite{lattice-survey}} cryptosystem \cite{ntru}. This in particular means first, defining the ring-LWE and later proving the hardness based on some difficult lattice problems like \prob{SVP} along with pseudorandomness of the ring-LWE distribution (analogous to \ref{s-to-d} which we define later). The second issue turned out to be quite nontrivial and required good insight in the algebraic number theory as well as Gaussian measures and distributions.
 
 \subsubsection{Background on Lattices II}
 \subsubsection{Hardness of RLWE}
-The following is an equivalent of \ref{heart} for the classical LWE. Statement is almost identical however the proof turns out to be much more difficult to achieve than it may look at the first glimpse.
+The following is an equivalent of Theorem \ref{heart} of the classical LWE. Statement is almost identical however the proof turns out to be much more difficult to achieve than it may look at the first glimpse.
 \begin{theorem}
 \end{theorem}
 
-
-
-
+\subsubsection{Pseudorandomness of Ring-LWE}
+Just like in the case of classical LWE
 
 Chinese remainder theorem for rings --> Thm II.4.12 in Top's lecture notes. \\
 For instance, they have unique factorization of ideals, and their fractional ideals form a multiplicative group; in general, neither property holds in $\Z[x]/\langle f (x) \rangle$ for monic irreducible $f (x)$, as demonstrated by the ring $\Z[x]/\langle x^2+3 \rangle = \Z[\sqrt{-3}]$. (For example, in this ring $4 = 22 = (1+\sqrt{-3})(1 - \sqrt{-3})$, but 2, $1 + \sqrt{-3}$, and $1 - \sqrt{-3}$ are all irreducible.)
