@@ -8,6 +8,11 @@ int main(int argc, char **argv){
 	int m = argv[2] - '0';
 	// the third argument is the modulus p
 	int p = argv[3] - '0';
+	int n, m, p;
+	scanf("%d,%d,%d", &n, &m, &p);
+	//scanf("%d", &m);
+	//scanf("%d", &p);
+	//printf("%d, %d, %d", n,m,p);
 	*/
 
 	int n = 10;
