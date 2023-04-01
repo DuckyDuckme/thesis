@@ -6,14 +6,17 @@
 
 %Mathematical language packages
 \usepackage{amsmath, amssymb, amsthm, amsfonts, physics, mathtools, bbm}
+
+\usepackage{enumitem}
 \usepackage{xcolor, color}
 \usepackage{pdfpages} % to include the front page
 \usepackage{mdframed}[framemethod=TikZ] % to draw boxes around algorithms
 \usepackage{tikz}
+
 % bibliography
 \usepackage[
 backend=biber,
-style=draft,
+style=alphabetic,
 ]{biblatex}
 \addbibresource{bib.bib}
 
@@ -50,11 +53,14 @@ style=draft,
 \newcommand{\oZ}{\overline{\mathbb{Z}}}
 \newcommand{\Oo}{\mathcal{O}}
 \newcommand{\B}{\mathcal{B}}
+\newcommand{\T}{\mathbb{T}}
 \newcommand{\bm}[1]{\boldsymbol{#1}}
 \renewcommand{\B}{\bm{B}}
 \newcommand{\Bg}{\B_{good}}
 \newcommand{\Bb}{\B_{bad}}
 \newcommand{\E}{\mathcal{E}}
+\newcommand{\p}{\mathfrak{p}}
+\newcommand{\q}{\mathfrak{q}}
 \newcommand{\alg}[1]{{\text{\fontfamily{lmss}\selectfont #1}}}
 \newcommand{\VF}[1]{\text{Vol}(\mathcal{F(#1)})}
 \newcommand{\prob}[1]{{\fontfamily{cmtt}\selectfont #1}}
@@ -63,6 +69,10 @@ style=draft,
 %\newcommand{\b}{\mathcal{b}}
 \newcommand{\Ll}{\mathcal{L}}
 \newcommand{\Lld}{\mathcal{L}^{\vee}}
+\newcommand{\Rd}{R^{\vee}}
+\renewcommand{\mod}{\text{ mod }}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\Id}{\mathcal{I}^{\vee}}
 
 \newcommand{\pinar}[1]{{\textcolor{red}{[Pinar: #1]}}}
 \newcommand{\marcello}[1]{{\textcolor{red}{[Marcello: #1]}}}
@@ -103,7 +113,7 @@ pdfauthor={Krzysztof Pudowski},
 \input{intro}
 
 \section{Background}
-\input{preliminaries.tex}
+\input{preliminaries}
 
 \section{Homomorphic Encryption}
 \input{fhe}
