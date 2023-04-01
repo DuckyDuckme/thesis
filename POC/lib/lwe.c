@@ -1,6 +1,6 @@
 #include"lwe.h"
 
-keyPair keyInit(int n, int m){
+keyPair keyInit(size_t n, size_t m){
 	keyPair key;
 
 	key.secretKey = gsl_vector_ulong_alloc(n);
@@ -11,17 +11,17 @@ keyPair keyInit(int n, int m){
 }
 
 
-void keyGen(int n, int m, ulong q, keyPair *key){
+void keyGen(size_t n, size_t m, size_t q, keyPair *key){
 	// setup the gsl rng
 	gsl_rng_env_setup();
 	gsl_rng *r;
 	r = gsl_rng_alloc(gsl_rng_default);
 	gsl_rng_set(r, time(NULL));
 
-    for (int i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 		// this is our secret key, just uniformly random elements modulo q
 		gsl_vector_ulong_set(key->secretKey, i, gsl_rng_uniform_int(r, q));
-            for (int j = 0; j < m; j++){
+            for (size_t j = 0; j < m; j++){
 				gsl_matrix_ulong_set(key->A, i, j, gsl_rng_uniform_int(r, q));
 		}
     }
@@ -35,13 +35,12 @@ void keyGen(int n, int m, ulong q, keyPair *key){
 	double alpha = 1.0 / (sqrt(n) * log2(log2(n)));
 	double e = 0.0;
 	int error = 0;
-	ulong b_i = 0;
-
-	for (int i = 0; i < m; i++) {
+	size_t b_i = 0;
+for (size_t i = 0; i < m; i++) {
 		// this is our error reduced modulo 1
 		e = fmod(gsl_ran_gaussian(r, alpha / sqrt(2 * PI)), 1.0);
 		// we now discretize e, i.e. multiply by q, round to the nearest integer and reduce mod q
-		error = (ulong) lround(e * q) % q;
+		error = (size_t) lround(e * q) % q;
 		b_i = gsl_vector_ulong_get(b, i);
 		// finally, store the result in the b vector of public key matrix
 		gsl_vector_ulong_set(key->b, i, (b_i + error) % q);
@@ -67,12 +66,14 @@ void multiply(const gsl_matrix_ulong* A, const gsl_vector_ulong* x, gsl_vector_u
     size_t n = A->size2;
 
     for (size_t i = 0; i < m; i++) {
-        ulong sum = 0;
+        size_t sum = 0;
         for (size_t j = 0; j < n; j++) {
             sum += gsl_matrix_ulong_get(A, i, j) * gsl_vector_ulong_get(x, j);
         }
         gsl_vector_ulong_set(y, i, sum);
     }
+
+	return;
 }
 
 void printKey(keyPair *key){

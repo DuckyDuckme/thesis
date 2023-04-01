@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -std=c99
 LDFLAGS = -lgsl -lgslcblas -lm
 
 SRC_DIR = ./lib
-BUILD_DIR = ./
+BUILD_DIR = .
 
 SRC = $(wildcard $(SRC_DIR)/*.c)
 OBJ = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRC))

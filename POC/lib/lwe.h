@@ -18,10 +18,8 @@ typedef struct keyPair{
 	gsl_vector_ulong *b;
 } keyPair;
 
-typedef unsigned long int ulong;
-
-keyPair keyInit(int n, int m);
-void keyGen(int n, int m, unsigned long int q, keyPair *key);
+keyPair keyInit(size_t n, size_t m);
+void keyGen(size_t n, size_t m, size_t q, keyPair *key);
 void freeKey(keyPair *key);
 //int encrypt();
 //int decrypt();
