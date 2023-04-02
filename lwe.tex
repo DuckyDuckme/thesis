@@ -25,7 +25,15 @@ Let us unwrap this statement. As said before, we need an appropriate choice of p
 \paragraph{Gaussians}
 \begin{definition}[Statistical distance]
 \end{definition}
-\paragraph{Problems}
+\begin{definition}[Smoothing parameter]\label{smoothing}
+\end{definition}
+\begin{proposition}[Sum of Gaussians]\label{gauss_sum}
+If $X_1, X_2, \cdots, X_n$ are mutually independent normal random variables with means $\mu_1, \mu_2, \cdots, \mu_n$ and variances $\sigma_1, \sigma_2, \cdots, \sigma_n$, then the linear combination:
+\[ Y = \sum_{i \in [n]} c_i X_i \]
+follows the normal distribution
+\[ \mathcal{N}\biggl(\sum_{i \in [n]} c_i \mu_i, \sum_{i \in [n]} c^2_i \sigma^2_i\biggr)  \]
+\end{proposition}
+\paragraph{Hard Problems}
 \begin{definition}[Search-LWE]
 \end{definition}
 \begin{definition}[Decision-LWE]
@@ -62,8 +70,9 @@ On each of the iterations, the IS is using the oracle to produce discrete Gaussi
 \end{center}
 
 The algorithm can be divided into two basic steps, the \textit{classical} step and the \textit{quantum} step. First, given some polynomial number $n^c$ (where $c$ is some positive integer) of samples from a discrete Gaussian on $\Ll$ with some (large enough) parameter $r$, we us the first step to obtain a solution to a \prob{CVP} on the dual lattice $\Lld$ to within some (smaller than the initial $r$) distance. We then use this solution along with the second step - the quantum algorithm - to obtain $n^c$ samples from a dicrete Gaussian with parameter $r' < r$. Iterating these steps polynomial amount of times, we finally get $n^c$ samples from D$_{\Ll, r''}$ where $r'' \ll r$. We simply pick one of those samples to solve the DGS$_{\Ll, r}$ and we are done.
-\krzys{input a schematic as nice as the one in regev}\\
-The full picture now stands as follows. We begin with a assumed solution to LWE and we end up with a solution to some (conjured) hard lattice problems like SIVP to within some tolerance $\gamma$.
+
+The full picture now stands as follows. We begin with a assumed solution to LWE and we end up with a solution to some (conjured) hard lattice problems like SIVP to within some tolerance $\gamma = \tilde{O}(n/\alpha)$.
+
 \begin{center}
 \begin{tikzpicture}
 \draw[rounded corners=1mm] (0,0) rectangle (3,2);
@@ -74,7 +83,7 @@ The full picture now stands as follows. We begin with a assumed solution to LWE 
 \draw[rounded corners=1mm] (5,0) rectangle (8,2);
 \node at (6.5,1) {$\text{DGS}_{\Ll, r}$};
 
-\draw[->, very thick] (8.5,1) --  (9.5,1);
+\draw[->, very thick] (8.5,1) -- node[above] {\footnotesize $n^2$ samples} (9.5,1);
 
 \draw[rounded corners=1mm] (10,0) rectangle (13,2);
 \node at (11.5, 1) {$\text{SIVP}_{\gamma}$};
@@ -101,12 +110,42 @@ The proof of Theorem \ref{heart} relies mainly on the following algorithm. This 
 	As mentioned before, the algorithm consists of two parts. The first part is presented in \ref{classical}, where, given an oracle W and samples from $\text{D}_{L,r}$, solves \prob{CVP}$_{L^{\vee}, \alpha q / (\sqrt{2} r)}$. The second part - the quantum algorithm \ref{quantum} - when given an oracle that solves \prob{CVP}$_{L^{\vee}, \alpha q / (\sqrt{2} r)}$, yields us a sample from $\text{D}_{L, r\sqrt{n}/\alpha q)}$.
 \end{proof}
 
-Pictographically, here are two iterations of the algorithm:
-\krzys{include pictoraphic like in Regev page 8}
+Pictographically, here are two iterations of the algorithm:\\
+
+\begin{center}
+	{\small
+\begin{tikzpicture}
+% Define the first block
+\node[draw, minimum width=3cm, minimum height=1cm, text width=3cm, align=center] at (-1,0) {$n^c$ samples \\ from $\D_{\Ll, r}$};
+
+% Define the second block
+\node[draw, minimum width=3cm, minimum height=1cm, text width=3cm, align=center] at (5,-3) {solve \\ \prob{CVP}$_{\Lld, (\alpha q)^2/(r \sqrt{n})}$};
+
+% Define the third block
+\node[draw, minimum width=3cm, minimum height=1cm, text width=3cm, align=center] at (-1,-2) {$n^c$ samples \\ from $\D_{\Ll, r \sqrt{n}/(\alpha q)}$};
+
+% Define the fourth block
+\node[draw, minimum width=3cm, minimum height=1cm, text width=3cm, align=center] at (5,-1) {solve \\ \prob{CVP}$_{\Lld, \alpha q/r}$};
+
+% Define the fifth block
+\node[draw, minimum width=3cm, minimum height=1cm, text width=3cm, align=center] at (-1,-4) {$n^c$ samples \\ from $\D_{\Ll, r n/(\alpha q)^2}$};
+
+% Draw the lines between the blocks
+\draw[->] (0.7, 0) -- node[sloped, above] {classical} (3.3, -0.9);
+\draw[->] (3.3, -1.1) -- node[sloped, above] {quantum} (0.7, -1.9);
+\draw[->] (0.7, -2.1) -- node[sloped, above] {classical} (3.3, -2.9);
+\draw[->] (3.3, -3.1) -- node[sloped, above] {quantum} (0.7, -3.9);
+
+% Add dots
+\node[above=0.5cm] at (2, -0.5) {\Huge $\vdots$};
+\node[above=0.5cm] at (2, -5) {\Huge $\vdots$};
+\end{tikzpicture}
+}
+\end{center}
 
 We now present heavily simplified version of the algorithm that, when given a polynomial amount of samples from the discrete Gaussian, gives us a solution to the \prob{CVP} to within error of $\alpha q /(\sqrt{2} r)$ to the dual lattice $\Lld$.
 \begin{lemma}[Step 1 - classical]\label{classical}
-	Let $\epsilon = \epsilon(n)$ be a negligible function, $\alpha > 0$ real, and $q \geq 2$ be an integer. Assume that we have access to an oracle that solvesLWE$_{q, \Psi_{\leq \alpha}}$ given a polynomial number of samples. Then, there exists an efficient algorithm that given an $n$-dimensional lattice $\Ll$, a number $r > \sqrt{2}q \eta_{\epsilon}(\Ll)$, and a polynomial list of samples from $\text{D}_{\Ll,r}$, solves \prob{CVP}$_{\Ll^{\vee},\alpha q/(\sqrt{2}r)}$.
+	Let $\epsilon = \epsilon(n)$ be a negligible function, $\alpha > 0$ real, and $q \geq 2$ be an integer. Assume that we have access to an oracle that solves LWE$_{q, \Psi_{\leq \alpha}}$ given a polynomial number of samples. Then, there exists an efficient algorithm that, given an $n$-dimensional lattice $\Ll$, a number $r > \sqrt{2}q \eta_{\epsilon}(\Ll)$, and a polynomial list of samples from $\text{D}_{\Ll,r}$, solves \prob{CVP}$_{\Ll^{\vee},\alpha q/(\sqrt{2}r)}$.
 \end{lemma}
 Our goal is, given a point $\bm{x}$ close enough (precisely within $\alpha q/(\sqrt{2}r)$) to $\Lld$, construct an instance of a $A_{\bm{s}, \Psi_{\leq \alpha}}$ where the $\bm{s}$ will depend on $\bm{x}$. After polynomial amount of such samples, we can then use our oracle to recover $\bm{s}$ and consecutively $\bm{x}$. We say an algorithm solves \prob{CVP}$_{\Ll, d}$ if, given any point $\bm{x} \in \R^n$ within distance $d$ of $\Ll$ it gives $\bm{y} \mod q \in \Z_q^n$, the coefficient vector of the closest vector to $\bm{x}$ reduced modulo $q$\footnote{This is technically a solution to \prob{CVP}$^{(q)}_{\Ll, d}$ - regular \prob{CVP} but reduced modulo $q$. However as we will see later in the proof, there exists a reduction from one to another.}.
 
@@ -114,15 +153,15 @@ The following proof is a simplified version of the proof of Lemma 3.11 from \cit
 \begin{proof}
 	We start with a sample vector $\bm{v} \in \Ll$ from D$_{\Ll, r}$ and set $\bm{a} = \Ll^{-1} \bm{v} \mod q$ - its coefficient vector (notice that we are slightly abusing the notation here using $\Ll$ as the matrix representing the lattice). We note at this point that it is in fact enough to find solution modulo $q$ as there exists an algorithm iterating over the coefficients along with (for example) Babai's nearest plane algorithm (see \cite{babai}) to obtain the full, unreduced solution. For the details, see \cite{regev} Lemma 3.5. We now output
 	\begin{equation} (\bm{a}, \langle \bm{x}, \bm{v} \rangle + e' \mod q) \end{equation}
-	where the $e' \in \R^n$ is chosen from a normal distribution with deviation $\alpha/(\sqrt{2} \pi)$. We claim now that our output is within negligible statistical distance of $A_{\bm{s}, \Psi_{\leq \alpha}}$ for $\bm{s} = (\Lld)^{-1}\bm{y} \mod q$.
+	where the $e' \in \R^n$ is chosen from a continuous normal distribution with deviation $\alpha/(\sqrt{2} \pi)$. We claim now that our output is within negligible statistical distance of $A_{\bm{s}, \Psi_{\leq \alpha}}$ for $\bm{s} = (\Lld)^{-1}\bm{y} \mod q$.
 
-	To see this, first note that $\bm{a}$ is a uniform sample (\cite{regev}, Claim 3.8). Let us now fix $\bm{a}$ and consider $\bm{y} = \bm{x} - e$. Then
-	\[ \langle \bm{x}, \bm{v} \rangle + e' \mod q = \langle e, \bm{v} \rangle + \langle \bm{y}, \bm{v} \rangle + e' \mod q. \]
+	To see this, first note that $\bm{a}$ is a uniform sample (\cite{regev}, Claim 3.8). This is because $r \geq \eta_{\epsilon}(\Ll)$ and by our discussion in \ref{smoothing}, the $\D_{\Ll, r}$ will behave like a uniform distribution. Let us now fix $\bm{a}$ and consider $\bm{y} = \bm{x} - \bm{e}$. Then
+	\[ \langle \bm{x}, \bm{v} \rangle + e' \mod q = \langle \bm{e}, \bm{v} \rangle + \langle \bm{y}, \bm{v} \rangle + e' \mod q. \]
 Focusing now on the second term, we observe that
 \[ \langle \bm{y}, \bm{v} \rangle = (\Lld)^{-1} \langle \bm{y}, \bm{v} \rangle \Lld =  \langle (\Lld)^{-1}\bm{y}, \Ll^{-1} \bm{v} \rangle = \langle \bm{s}, \bm{a} \rangle \]
 since $\Ll^{-1} = (\Lld)^T$.
 
-To finish the proof we need to show that the remaining term $\langle e, \bm{v} \rangle + e'$ is distributed within negligible statistical distance of $\Psi_{\leq \alpha}$. This is obtained by noting that summing two normal distributions with the standard deviation within some bound, gives us a distribution that is indeed close enough to $\Psi_{\beta}$ for some $\beta \leq \alpha$ as desired. This is Claim 3.10 in the original paper by Regev.
+To finish the proof we need to show that the remaining term $\langle \bm{e}, \bm{v} \rangle + e'$ is distributed within negligible statistical distance of $\Psi_{\leq \alpha}$. This is obtained by noting that summing two normal distributions with the standard deviation within some bound, gives us a distribution that is indeed close enough to $\Psi_{\beta}$ for some $\beta \leq \alpha$ as desired. This is Claim 3.10 in the original paper by Regev.
 \end{proof}
 \begin{proposition}[Step 2 - quantum]\label{quantum}
 	There exists an efficient quantum algorithm that, given any $n$-dimensional lattice $\Ll$, a number $d < \lambda_n (\Lld)/2$, and an oracle that solves \prob{CVP}$_{\Lld,d}$, outputs a sample from D$_{\Ll,\sqrt{n}/(\sqrt{2}d)}$.
@@ -212,21 +251,25 @@ The decryption of a pair $(\bm{a}, b)$ is 0 if $b - \langle \bm{a}, \bm{s} \rang
 		\end{pmatrix} = \begin{pmatrix} 5 \\ 4 \\ 8 \\ 10 \\ 0  \end{pmatrix}.
 	    \]
 
-	    Decryption is just another simple computation, we first compute $\langle \bm{a}, \bm{s} \rangle = 108 \equiv 6 \mod 17$ which gives us $b - \langle \bm{a}, \bm{s} \rangle = 0 - 6 \equiv 11$. Let us compare the distances to 0 and $\lfloor q/2 \rfloor = 8$. $|11 - 17| = 6 > 3 = |11 - 8|$. Hence, our decryption worked correctly as indeed, the result is closer to $\lfloor q/2 \rfloor$ than to 0. Finally, we output 1 as the decryption of our message and we are done.
-
-
+	    Decryption is just another simple computation, we first compute $\langle \bm{a}, \bm{s} \rangle = 108 \equiv 6 \mod 17$ which gives us $b - \langle \bm{a}, \bm{s} \rangle = 0 - 6 \equiv 11 \mod 17$. Let us compare the distances to 0 and $\lfloor q/2 \rfloor = 8$. $|11 - 17| = 6 > 3 = |11 - 8|$. Hence, our decryption worked correctly as indeed, the result is closer to $\lfloor q/2 \rfloor$ than to 0. Finally, we output 1 as the decryption of our message and we are done.
 \end{example}
 
 \paragraph{Analysis}
 Now, that we have finally defined a cryptographic scheme we need to verify it. The two remaining questions we now have are first, is this scheme correct? That is, does the decryption algorithm correctly evaluate back to the original message? This is much more difficult to prove compared to the scheme over the integers presented in \ref{int_she}. The following is a somewhat simpler version of Claim 5.2 in \cite{regev}.
-\begin{claim}[Correctness]
-    For the above choice of parameters and $e$ following the $\chi$ distribution we have
-    \begin{equation} \Pr \Big[ |e| < \Bigl \lfloor \frac{q}{2} \Bigr \rfloor /2 \Big] > 1 - \delta(n) \end{equation}
-    for some $\alg{negligible}$ function $\delta(n)$.
-\end{claim}
+\begin{lemma}[Correctness]
+	For the above choice of parameters and $e$ following the $\bar{\Psi}_{\alpha}$ (the periodic $\Psi_{\alpha}$) distribution we have
+	\begin{equation} \Pr_{e \sim \bar{\Psi}_{\alpha}} \Big[ |e| < \Bigl \lfloor \frac{q}{2} \Bigr \rfloor /2 \Big] > 1 - \delta(n) \end{equation}
+    for some negligible function $\delta(n)$.
+\end{lemma}
+\begin{proof}
+	Note that if not for the error term, the decryption would always be correct. Hence we need to pay attention to the case where the error term is greater than $q/4$. Since there are $m$ such terms, each with standard deviation of $\sigma^2 = \alpha q$, we can use Proposition \ref{gauss_sum} to show that if $X_i \sim \mathcal{N}(0, \alpha q)$ are i.i.d. for $i \in [m]$, then the sum
+	\[ \sum_{i \in [m]} X_i \sim \mathcal{N}(0, \sum_{i \in [m]} \sigma^2) = \mathcal{N}(0, m \cdot \sigma^2)\]
+	is distributed with standard deviation equal to $\sqrt{m} \alpha q < q / \log(n)$ and the probability that such sample is greater than $q/4$ is negligible.
+\end{proof}
+
 This, in turn, implies that (this is Lemma 5.1)
 \begin{lemma}
-    The decryption is correct with probability $1 - \delta(n)$ where the $\delta(n)$ is some $\alg{negligible}$ function.
+    The decryption is correct with probability $1 - \delta(n)$ where the $\delta(n)$ is some negligible function.
 \end{lemma}
 
 \begin{proof}
@@ -241,6 +284,8 @@ Note that it seems almost trivial that we decrypt correctly, the scheme was desi
 Note that this closely relates to the last lemma from the previous section on the hardness of LWE. For a thorough and less technical analysis than the one given in the original paper, the reader is encouraged to look into section 5.4 in \cite{Micci2009}.
 
 \subsubsection*{Epilogue}
-Until the day of writing this paper, LWE is one of the most influential schemes that can be used for post-quantum cryptographic schemes. It was used as a basis for schemes like the one introduced in \cite{ot-lwe} (along with an oblivious transfer protocol), \cite{lwe-scheme1} or \cite{lwe-scheme2}. However, arguably the most important contribution, was that of laying ground work for the \textit{ring}-LWE scheme introduced in the next section. We will now present few alternatives to the results and proofs presented here.\\
+Until the day of writing this paper, LWE is one of the most influential schemes that can be used for post-quantum cryptographic schemes. It was used as a basis for schemes like the one introduced in \cite{ot-lwe} (along with an oblivious transfer protocol), \cite{lwe-scheme1} or \cite{lwe-scheme2}. However, arguably the most important contribution, was that of laying groundwork for the \textit{ring}-LWE scheme introduced in the next section. We will now present few alternatives to the results and proofs presented here.\\
 
+\iffalse
 Let us begin with the proof of the main theorem, namely, the quantum part. At some point, we would like to find entirely \textit{classical} and efficient reduction algorithm that proves the hardness of the problem. This is because we understand classical computation in much more detail than its quantum equivalent. Using classical computers we have cracked Enigma and landed on the moon. In the meantime, only recently a factorization of the integer 15 was achieved on a quantum computer using Shor's algorithm - see \krzys{find source of that statement}. Returning to the reduction problem, Chris Peikert in his paper \cite{peikert_classical} from 2009 has done exactly this. However, it was done in a somewhat ``inefficient'' way. That is, exponentially many samples are needed in the classical reduction compared to polynomial amount in the quantum version. For more details see the paper by Peikert and compare it with the original approach from Regev. It remains an important open question \krzys{also not sure about that} till this day, if the reduction can be made efficiently fully classical.
+\fi
