@@ -1,7 +1,7 @@
 \subsubsection*{LWE problem}
-There are multiple equivalent definitions of this problem. We adopt the notation and approach introduced in the original paper by Regev. In this section, we will mainly focus on the parts that are the most relevant for our study of ring-LWE such as\krzys{finish the lemmas most influenced by switch to ring}. 
+There are multiple equivalent definitions of this problem. We adopt the notation and approach introduced in the original paper by Regev. In this section, we will mainly focus on the parts that are the most relevant for our study of ring-LWE such as \ref{classical} and \ref{s-to-d}. 
 
-The problem is parametrized by positive integers $n$, $m$\footnote{As will be seen later, $m$ plays virtually no role in the problem definition and is usually omitted.} and prime $q$, as well as an error distibution $\chi$ over $\Z_q$. It is now defined as follows. We are given $m$ equations of the form $(\bm{a}_i, b_i = \langle \bm{a}_i, \bm{s} \rangle + e_i)$ and are asked to find the vector $\bm{s} \in \Z_q^n$. Here, $\bm{a}_i$ are chosen uniformly and independently from $\Z_q^n$, $b_i \in \Z_q$ and $\langle \cdot, \cdot \rangle$ denotes the usual dot product. The errors $e_i$ are obtained by sampling independently from the probability distribution $\chi : \Z_q \rightarrow \R^{+}$ on $\Z_q$. We will denote the problem of recovering $\bm{s}$ from such equations, by $\text{LWE}_{q, \chi}$ (learning with errors).
+The problem is parametrized by positive integers $n$, $m$\footnote{As will be seen later, $m$ plays virtually no role in the problem definition and is usually omitted.} and prime $q$, as well as a discrete error distibution $\chi$ over $\Z_q$. It is now defined as follows. We are given $m$ equations of the form $(\bm{a}_i, b_i = \langle \bm{a}_i, \bm{s} \rangle + e_i)$ and are asked to find the vector $\bm{s} \in \Z_q^n$. Here, $\bm{a}_i$ are chosen uniformly and independently from $\Z_q^n$, $b_i \in \Z_q$ and $\langle \cdot, \cdot \rangle$ denotes the usual dot product. The errors $e_i$ are obtained by sampling independently from the probability distribution $\chi : \Z_q \rightarrow \R_{> 0}$ on $\Z_q$. We will denote the problem of recovering $\bm{s}$ from such equations, by $\text{LWE}_{q, \chi}$ (learning with errors).
 
 \begin{example}\label{lwe_ex}
 	Given as input this set of equations, LWE asks us to recover the vector $\bm{s} = (s_1, s_2, s_3, s_4) \in \Z_{17}^4$. In this case $n = 4$, $q=17$ and the error distribution is giving us $e_i < 1$ for each $i \in [m]$. 
@@ -19,21 +19,106 @@ The central part of \cite{regev} revolves around proving the hardness of LWE. Sp
 	Let $n$, $q$ be positive integers and $\alpha \in (0, 1)$ be such that $\alpha q > 2 \sqrt{n}$. If there exists an efficient algorithm that solves $\text{LWE}_{q, \Psi_{\alpha}}$, then there exists an efficient quantum algorithm that approximates the decision version of the shortest vector problem (\prob{GapSVP}$_{\gamma}$) and the shortest independent vectors problem (\prob{SIVP}$_{\gamma}$) to within $\gamma = \tilde{O}(n/\alpha)$ in the worst case on any lattice of dimension $n$.	
 \end{theorem}
 
-Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{n}/q$ is one of those choices (and requirements). It specifies the shape of the $\Psi_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$\footnote{A comment from \cite{lattice-survey}: Originally, Regev considered the continuous Gaussian and rounded the result to the nearest integer. This does not exactly yield the discrete distribution but thanks to \cite{discr} we know how the problem can be fixed.}. The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \bar{\Psi}_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}. Since we strongly believe that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}) we are left with a difficult, yet efficient way to share secrets. Oded Regev proceeds to prove this using various lemmas and results from few areas of mathematics like probability, lattice theory and quantum computing. We will now present selected proofs and outline of whole the approach.
+Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{n}/q$ is one of those choices (and requirements). It specifies the shape of the $\Psi_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$\footnote{A comment from \cite{lattice-survey}: Originally, Regev considered the continuous Gaussian and rounded the result to the nearest integer. This does not exactly yield the discrete distribution but thanks to \cite{discr} we know how the problem can be fixed.}. It will be used to sample the errors with some nice and predictable properties. Later, by the end of this section, we will also show that in fact, there is sort of an equivalence between drawing them from continuous and discrete distributions.
+
+The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \Psi_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}. Since we strongly believe that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}, \cite{lbc}) we are left with a difficult, yet efficient way to share secrets. Oded Regev proceeds to prove this using various lemmas and results from few areas of mathematics like probability, lattice theory and quantum computing. We will now present selected proofs and outline of the whole the approach.
 
 \subsubsection{Background II}
+Here we will define essential and convenient definitions and lemmas concerning Gaussian distributions lattices and lattice-related problems. Note that no algebraic number theory is needed for this section as we work exclusively over $\R^n$ and $\Z^n_q$ for $q$ an integer (it is only required for $q$ to be prime in Theorem \ref{s-to-d}, otherwise no assumptions are made). 
+
 \paragraph{Gaussians}
+The ideas presented here heavily rely on the distribution of errors. The most important distribution we will be using is the \textit{Gaussian distribution} (also called the normal distribution). For some vector $\bm{x}$ and $r>0$, we define the Gaussian function as
+\[ \rho_r (\bm{x}) := \text{exp}(- \pi ||\bm{x}/r||^2) \]
+where exp($y$) stands for $e^y$. We will also denote $\rho_1$ by $\rho$. By normalizing it, we obtain the $n$-dimensional Gaussian distribution
+\[\D_r = \rho_r \Big/ \Big( \int_{\bm{s} \in \R^n} \rho_r(\bm{s}) d\bm{s} \Big) = \rho_r \cdot r^{-n}. \]
+We can also define the \textit{discrete Gaussian distribution} $\D_{\Ll, r}$ over a lattice $\Ll$ (or any countable set $A$ for that matter) by
+\begin{equation} \D_{\Ll, r}(\bm{x}) = \frac{\rho_r(\bm{x})}{\rho_r(\Ll)} \end{equation}
+where $\rho_{A, r}(\bm{x}) = \sum_{\bm{x} \in A} \rho_r(\bm{x})$ is an extension of $\rho_r$ to a countable set.
+
+\krzys{i dont think ill include this part about Psi beta at all}
+In order to avoid making our proofs depend on the specific choice of modulus $q$, we now define the family of Gaussian distributions over $\T = \R/\Z = [0,1)$ - a periodization of the normal distribution. More specifically, following \cite{regev}, for $\beta \in \R_{> 0}$ define $\Psi_{\beta}$ as the distribution on $\T$ obtained by sampling from a normal variable with mean 0 and standard deviation $\frac{\beta}{\sqrt{2\pi}}$ and reducing the result modulo 1,
+\begin{equation} \forall r \in [0,1), \Psi_{\beta}(r) := \sum_{k = -\infty}^{\infty} \frac{1}{\beta} \cdot \text{exp} \bigg(- \pi \Big(\frac{r-k}{\beta}\Big)^2\bigg). \end{equation}
+\krzys{also, it turns out, that for whatever value of $r$ we pick, the result of that sum is always $|\beta|/\beta = 1$?????}
+We will, for the sake of clearer notation, be a bit vague about the doman of $\Psi_{\beta}$. This is because sampling from $\Psi_{\beta}$ with parameter $\beta$, that is defined over $\T = [0,1)$ is equivalent to sampling from $\Psi_{q \beta}$ over $\Z_q$. \krzys{i am very hesitant about this statement - need to check if thats true}
+
+On top of that, following the definition given in \cite{lbc}, we define the \textit{statistical distance} as follows.
 \begin{definition}[Statistical distance]
+	Let $X,Y$ be two random variables over a countable set A. The statistical distance between them is defined as
+	\[\Delta(X,Y) = \sum_{a \in A} \Big| \Pr\{X = a\} - \Pr\{Y = a\} \Big|.\]
+Similarly, if $\varphi_X, \varphi_Y$ are the \textit{probability density} functions over $\R^n$ of $X$ and $Y$ respectively, then
+\[ \Delta(\varphi_X, \varphi_Y) = \int_{\bm{s} \in \R^n} \Big| \varphi_X(\bm{s}) - \varphi_Y(\bm{s}) \Big|d\bm{s}. \]
 \end{definition}
+It can be interpreted as a measure of how much apart two distributions are from each other. It is indeed not hard to show that this definition satisfies the properties of a distance function. We will be using this tool to measure how our elements are behaving, for example, in Lemma \ref{s-to-d}.
+
+\paragraph{Lattices II}
+
+\begin{definition}[Dual]
+    For a lattice $\Ll \subset \R^n$ its $\Z$\textit{-dual} is
+	\[ \Lld = \{ y \in \R^n : \langle y,\Ll \rangle \subset \Z \}.\]
+\end{definition}
+
+We simply require that the elements of the dual to be precisely those vectors that yield an integer when ``multiplied'' with an element of our lattice. Note that this is different from our standard definition of a dual. Namely, it is not the orthogonal compliment of our starting space, i.e. not all of the elements of the dual have 0 dot product against the vectors of the lattice.
+
+\begin{example}\label{ld-ex}
+    Take $\mathcal{L}= \Z 
+        \big(\begin{smallmatrix} 1\\2 \end{smallmatrix}\big) + 
+		\Z \big(\begin{smallmatrix} 0\\ 1 \end{smallmatrix}\big)$. See Figure \ref{lattices}.
+        To calculate the dual of $\mathcal{L}$ we need our $y = \big(\begin{smallmatrix}
+          a\\b\end{smallmatrix}\big)$ elements to satisfy $a \in \Z$ and $2a + b \in \Z$ which is equivalent to asking $a \in (1/2)\Z$ and so $\mathcal{L}^{\vee} = \big(\begin{smallmatrix}
+          1/2\\0
+        \end{smallmatrix}\big)\Z + \big(\begin{smallmatrix}
+          0\\1
+        \end{smallmatrix}\big) \Z$
+\end{example}
+
+Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
+\begin{figure}
+	\caption{Lattice $\Ll$ from example \ref{ld-ex} and its dual.}
+        \label{smoothing}
+        \centering
+        \begin{subfigure}{.5\textwidth} 
+                \centering
+                \includegraphics[scale=0.5]{lattice.png}
+                \caption{$\Ll$}
+        \end{subfigure}%
+        \begin{subfigure}{.5\textwidth}
+                \centering
+                \includegraphics[scale=0.5]{lattice-d.png}
+                \caption{$\Lld$}
+        \end{subfigure}
+\end{figure}
+
+
+\paragraph{Smoothing parameter}
+One of the most important concepts invoked in the paper is the so called \textit{smoothing parameter} $\eta$ of a lattice $\Ll$. We define it as follows.
 \begin{definition}[Smoothing parameter]\label{smoothing}
+	For an $n$-dimensional lattice $\Ll$ and positive real $\epsilon > 0$, we define the smoothing parameter $\eta_{\epsilon}(\Ll)$ to be the smallest $s$ such that $\rho_{1/s}(\Lld \backslash \{\bm{0}\}) \leq \epsilon$.
 \end{definition}
+In other words, $\eta_{\epsilon}(\Ll)$ is the smallest $s$ such that a Gaussian measure scaled by $1/s$ on the dual lattice $\Lld$ gives all but $\epsilon/(1+\epsilon)$ of its weight to the origin - \cite{regev}. As the name suggests, $\epsilon$ is usually taken to be very small and in fact, a negligible function of $n$. Roughly speaking, it provides the width beyond which the discrete Gaussian measure on a lattice behaves like a contiuous one. On the Figure \ref{smoothing} there are plotted two Gaussians. The first one has very small deviation and assigns most of its values to the origin. The second one, with the deviation $\sqrt{10}$ times the size of the first one, looks much more \textit{smooth} and continuous. For an appropriate choice of $\epsilon$, the smoothing parameter will lay somewhere between those two values.
+
+\begin{figure}
+        \caption{2 dimensional Gaussian with standard deviation $r$}
+        \label{smoothing}
+        \centering
+        \begin{subfigure}{.5\textwidth} 
+                \centering
+                \includegraphics[scale=0.5]{gaussian-1.png}
+                \caption{$r = 0.2$}
+        \end{subfigure}%
+        \begin{subfigure}{.5\textwidth}
+                \centering
+                \includegraphics[scale=0.5]{gaussian-2.png}
+                \caption{$r = 2$}
+        \end{subfigure}
+\end{figure}
+
 \begin{proposition}[Sum of Gaussians]\label{gauss_sum}
-If $X_1, X_2, \cdots, X_n$ are mutually independent normal random variables with means $\mu_1, \mu_2, \cdots, \mu_n$ and variances $\sigma_1, \sigma_2, \cdots, \sigma_n$, then the linear combination:
+If $X_1, X_2, \cdots, X_n$ are mutually independent normal random variables with means $\mu_1, \mu_2, \cdots, \mu_n$ and variances $\sigma_1, \sigma_2, \cdots, \sigma_n$, then the linear combination
 \[ Y = \sum_{i \in [n]} c_i X_i \]
 follows the normal distribution
-\[ \mathcal{N}\biggl(\sum_{i \in [n]} c_i \mu_i, \sum_{i \in [n]} c^2_i \sigma^2_i\biggr)  \]
+\[ \mathcal{N}\biggl(\sum_{i \in [n]} c_i \mu_i, \sum_{i \in [n]} c^2_i \sigma^2_i\biggr). \]
 \end{proposition}
-\paragraph{Hard Problems}
+\paragraph{Problems}
 \begin{definition}[Search-LWE]
 \end{definition}
 \begin{definition}[Decision-LWE]
@@ -43,7 +128,6 @@ follows the normal distribution
 \end{definition}
 \begin{definition}\label{dgs}
 \end{definition}
-\paragraph{Smoothing parameter}
 
 \subsubsection{Hardness of search LWE}
 In this section we will focus on proving the main statement of \cite{regev} following the steps presented in the paper. We will put an emphasis on the parts that require the most adjustment when trying to prove the same results for ring-LWE in the next section.
@@ -266,6 +350,23 @@ Now, that we have finally defined a cryptographic scheme we need to verify it. T
 	\[ \sum_{i \in [m]} X_i \sim \mathcal{N}(0, \sum_{i \in [m]} \sigma^2) = \mathcal{N}(0, m \cdot \sigma^2)\]
 	is distributed with standard deviation equal to $\sqrt{m} \alpha q < q / \log(n)$ and the probability that such sample is greater than $q/4$ is negligible.
 \end{proof}
+An example of a normal distribution with standard deviation $\sigma^2 = q/\log n$ and mean 0 can be seen in Figure \ref{1d-gaussians}. The shaded region corresponds to $|e| > q/4$. At the begining, for $n$ not as big, we can notice that the area does not necessarily correspond to an intuitive notion of ``negligible''. However, the definition concerns the asymptotic behavior of $n$ and indeed, we can see the area becomes quite small. One might even call it ``negligible''. The Python script used to generate these figures can be found in Appendix \ref{appendix:code}.
+
+\begin{figure}
+	\caption{1 dimensional Gaussian with standard deviation $\sigma^2 = q/\log n$ for:}
+	\label{1d-gaussians}
+	\centering
+	\begin{subfigure}{.5\textwidth} 
+		\centering
+		\includegraphics[scale=0.5]{gaussian1d-1024.png}
+		\caption{$n = 1024$}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[scale=0.5]{gaussian1d-32768.png}
+		\caption{$n = 32768$}
+	\end{subfigure}
+\end{figure}
 
 This, in turn, implies that (this is Lemma 5.1)
 \begin{lemma}

@@ -74,12 +74,16 @@ style=alphabetic,
 \newcommand{\I}{\mathcal{I}}
 \newcommand{\Id}{\mathcal{I}^{\vee}}
 \newcommand{\D}{\mathcal{D}}
+%\newcommand{\T}{\mathbb{T}}
 
 \newcommand{\pinar}[1]{{\textcolor{red}{[Pinar: #1]}}}
 \newcommand{\marcello}[1]{{\textcolor{red}{[Marcello: #1]}}}
 \newcommand{\krzys}[1]{\textcolor{purple}{[Krzys: #1]}}
 
 \usepackage{graphicx} % Required for including pictures
+\graphicspath{ {./images/} }
+\usepackage{caption}
+\usepackage{subcaption} % for images side by side
 %\usepackage{calc} % To reset the counter in the document after title page
 %\usepackage{enumitem} % Includes lists
 
@@ -128,5 +132,8 @@ pdfauthor={Krzysztof Pudowski},
 \newpage
 \printbibliography
 \addcontentsline{toc}{section}{Bibliography}
+
+\newpage
+\input{appendix}
 
 \end{document}
