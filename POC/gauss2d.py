@@ -7,7 +7,7 @@ from scipy.stats import multivariate_normal
 
 # Define mean vector and covariance matrix
 mean = [0, 0]
-cov = [[1, 0], [0, 1]]
+cov = [[0.2, 0], [0, 0.2]]
 
 # Create a grid of x and y values
 x, y = np.meshgrid(np.linspace(-3, 3, 30), np.linspace(-3, 3, 30))
@@ -27,7 +27,7 @@ z = z.flatten()
 # Create a 3D plot
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-ax.scatter(x, y, z, marker="*")
+ax.scatter(x, y, z, marker=".")
 
 # Plot vertical lines connecting z points with x, y plane
 for i in range(len(x)):
@@ -49,4 +49,4 @@ ax.set_zlabel('PDF')
 #ax.set_title('2D Gaussian Distribution')
 
 #plt.show()
-plt.savefig('../images/gaussian.png', dpi=200, format='png', transparent=True)
+plt.savefig('../images/gaussian-1.png', dpi=200, format='png', transparent=True)
