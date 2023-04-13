@@ -5,7 +5,7 @@
 \usepackage{lmodern} % font for the algorithms
 
 %Mathematical language packages
-\usepackage{amsmath, amssymb, amsthm, amsfonts, physics, mathtools, bbm}
+\usepackage{amsmath, amssymb, amsthm, amsfonts, physics, mathtools, mathrsfs, bbm}
 
 \usepackage{enumitem}
 \usepackage{xcolor, color}
@@ -74,6 +74,7 @@ style=alphabetic,
 \newcommand{\I}{\mathcal{I}}
 \newcommand{\Id}{\mathcal{I}^{\vee}}
 \newcommand{\D}{\mathcal{D}}
+%\newcommand{\ll}{\mathcal{l}}
 %\newcommand{\T}{\mathbb{T}}
 
 \newcommand{\pinar}[1]{{\textcolor{red}{[Pinar: #1]}}}
@@ -89,9 +90,9 @@ style=alphabetic,
 
 \frenchspacing % No double spacing between sentences
 \linespread{1.2} % Set linespace
-\usepackage[a4paper, lmargin=0.1666\paperwidth, rmargin=0.1666\paperwidth, tmargin=0.1111\paperheight, bmargin=0.1111\paperheight]{geometry} %margins
+%\usepackage[a4paper, lmargin=0.1666\paperwidth, rmargin=0.1666\paperwidth, tmargin=0.1111\paperheight, bmargin=0.1111\paperheight]{geometry} %margins
 %\usepackage{parskip}
-
+\usepackage[a4paper, lmargin=25mm, rmargin=25mm, tmargin=25mm, bmargin=25mm]{geometry} %margins
 \usepackage[all]{nowidow} % Tries to remove widows
 \usepackage[protrusion=true,expansion=true]{microtype} % Improves typography, load after fontpackage is selected
 
@@ -133,7 +134,7 @@ pdfauthor={Krzysztof Pudowski},
 \printbibliography
 \addcontentsline{toc}{section}{Bibliography}
 
-\newpage
-\input{appendix}
+%\newpage
+%\input{appendix}
 
 \end{document}

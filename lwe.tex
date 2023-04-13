@@ -41,7 +41,10 @@ In order to avoid making our proofs depend on the specific choice of modulus $q$
 \krzys{also, it turns out, that for whatever value of $r$ we pick, the result of that sum is always $|\beta|/\beta = 1$?????}
 We will, for the sake of clearer notation, be a bit vague about the doman of $\Psi_{\beta}$. This is because sampling from $\Psi_{\beta}$ with parameter $\beta$, that is defined over $\T = [0,1)$ is equivalent to sampling from $\Psi_{q \beta}$ over $\Z_q$. \krzys{i am very hesitant about this statement - need to check if thats true}
 
-On top of that, following the definition given in \cite{lbc}, we define the \textit{statistical distance} as follows.
+We also need to define \textit{distretization} of a probability density function for our cryptosystem introduced later. For an arbitrary probability density function $\phi~\T~\to~\R_{>0}$ and an integer $q \geq 2$, we define its discretization $\bar{\phi} : \Z_q \rightarrow R_{>0}$ as the discrete probability distribution obtained by sampling from $\Psi$, multiplying by $q$, and rounding to the closest integer modulo $q$. More formally,
+\begin{equation} \bar{\phi}(i) = \int_{(i -1/2)/q}^{i + 1/2)/q} \phi(x) dx \end{equation}
+
+Lastly, following the definition given in \cite{lbc}, we define the \textit{statistical distance} as follows.
 \begin{definition}[Statistical distance]
 	Let $X,Y$ be two random variables over a countable set A. The statistical distance between them is defined as
 	\[\Delta(X,Y) = \sum_{a \in A} \Big| \Pr\{X = a\} - \Pr\{Y = a\} \Big|.\]
@@ -54,7 +57,7 @@ It can be interpreted as a measure of how much apart two distributions are from 
 
 \begin{definition}[Dual]
     For a lattice $\Ll \subset \R^n$ its $\Z$\textit{-dual} is
-	\[ \Lld = \{ y \in \R^n : \langle y,\Ll \rangle \subset \Z \}.\]
+	\[ \Lld = \{ y \in \R^n : \langle y,\Ll \rangle \subseteq \Z \}.\]
 \end{definition}
 
 We simply require that the elements of the dual to be precisely those vectors that yield an integer when ``multiplied'' with an element of our lattice. Note that this is different from our standard definition of a dual. Namely, it is not the orthogonal compliment of our starting space, i.e. not all of the elements of the dual have 0 dot product against the vectors of the lattice.
@@ -62,19 +65,20 @@ We simply require that the elements of the dual to be precisely those vectors th
 \begin{example}\label{ld-ex}
     Take $\mathcal{L}= \Z 
         \big(\begin{smallmatrix} 1\\2 \end{smallmatrix}\big) + 
-		\Z \big(\begin{smallmatrix} 0\\ 1 \end{smallmatrix}\big)$. See Figure \ref{lattices}.
+		\Z \big(\begin{smallmatrix} 0\\ 1 \end{smallmatrix}\big)$.
         To calculate the dual of $\mathcal{L}$ we need our $y = \big(\begin{smallmatrix}
-          a\\b\end{smallmatrix}\big)$ elements to satisfy $a \in \Z$ and $2a + b \in \Z$ which is equivalent to asking $a \in (1/2)\Z$ and so $\mathcal{L}^{\vee} = \big(\begin{smallmatrix}
+          a\\b\end{smallmatrix}\big)$ elements to satisfy $a +2b \in \Z$ and $b \in \Z$ which is equivalent to asking $a \in (1/2)\Z$ and so $\mathcal{L}^{\vee} = \big(\begin{smallmatrix}
           1/2\\0
         \end{smallmatrix}\big)\Z + \big(\begin{smallmatrix}
           0\\1
         \end{smallmatrix}\big) \Z$
+		See Figure \ref{lattices} where the red vectors represent the basis.
 \end{example}
 
 Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
 \begin{figure}
 	\caption{Lattice $\Ll$ from example \ref{ld-ex} and its dual.}
-        \label{smoothing}
+        \label{lattices}
         \centering
         \begin{subfigure}{.5\textwidth} 
                 \centering
@@ -90,28 +94,43 @@ Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
 
 
 \paragraph{Smoothing parameter}
-One of the most important concepts invoked in the paper is the so called \textit{smoothing parameter} $\eta$ of a lattice $\Ll$. We define it as follows.
+One of the most important concepts invoked in the paper is the so called \textit{smoothing parameter} $\eta$ of a lattice $\Ll$. It was first introduced in \cite{smoothing} and has proven useful over the course of years as we will note later. The definition is quite technical as it makes use of the dual rather than the lattice itself. The intuition behind it could be obtained by imagining the following. Pick an element from your favourite lattice $\Ll$. If one now picks a ``noise'' vector from a Gaussian distribution with width at least as large as the smoothing parameter, the resulting distribution is very close to uniform. The precise definition is as follows.
 \begin{definition}[Smoothing parameter]\label{smoothing}
 	For an $n$-dimensional lattice $\Ll$ and positive real $\epsilon > 0$, we define the smoothing parameter $\eta_{\epsilon}(\Ll)$ to be the smallest $s$ such that $\rho_{1/s}(\Lld \backslash \{\bm{0}\}) \leq \epsilon$.
 \end{definition}
-In other words, $\eta_{\epsilon}(\Ll)$ is the smallest $s$ such that a Gaussian measure scaled by $1/s$ on the dual lattice $\Lld$ gives all but $\epsilon/(1+\epsilon)$ of its weight to the origin - \cite{regev}. As the name suggests, $\epsilon$ is usually taken to be very small and in fact, a negligible function of $n$. Roughly speaking, it provides the width beyond which the discrete Gaussian measure on a lattice behaves like a contiuous one. On the Figure \ref{smoothing} there are plotted two Gaussians. The first one has very small deviation and assigns most of its values to the origin. The second one, with the deviation $\sqrt{10}$ times the size of the first one, looks much more \textit{smooth} and continuous. For an appropriate choice of $\epsilon$, the smoothing parameter will lay somewhere between those two values.
+In other words, $\eta_{\epsilon}(\Ll)$ is the smallest $s$ such that a Gaussian measure scaled by $1/s$ on the dual lattice $\Lld$ gives all but $\epsilon/(1+\epsilon)$ of its weight to the origin - \cite{regev}. $\epsilon$ is our desired tolerance and as the name suggests, it is usually taken to be very small (in our cases, a negligible function of $n$). It is also worth noting that $\eta_{\epsilon}(\Ll)$ is a continuous function of $\epsilon$. 
 
-\begin{figure}
-        \caption{2 dimensional Gaussian with standard deviation $r$}
-        \label{smoothing}
+In the Figure \ref{smoothing-1}, there are plotted four Gaussians. The first one has very small deviation and assigns most of its values to the origin. The second one, with the deviation $\sqrt{10}$ times the size of the first one, looks a bit more \textit{smooth} and continuous. Finally, the last distribution is almost uniform or ``flat''. For an appropriate choice of $\epsilon$, the smoothing parameter will lay somewhere between those four values of $r$.
+
+\begin{figure}[h]
+        \caption{2-dimensional Gaussian with standard deviation $r$. The $z$-axis represents the probability.}
+        \label{smoothing-1}
         \centering
-        \begin{subfigure}{.5\textwidth} 
+		\begin{subfigure}{.5\linewidth} 
                 \centering
                 \includegraphics[scale=0.5]{gaussian-1.png}
                 \caption{$r = 0.2$}
         \end{subfigure}%
-        \begin{subfigure}{.5\textwidth}
+        \begin{subfigure}{.5\linewidth}
                 \centering
                 \includegraphics[scale=0.5]{gaussian-2.png}
                 \caption{$r = 2$}
         \end{subfigure}
 \end{figure}
 
+\begin{figure}[h]
+        \centering
+		\begin{subfigure}{.5\linewidth} 
+                \centering
+                \includegraphics[scale=0.5]{gaussian-3.png}
+                \caption{$r = 7$}
+        \end{subfigure}%
+        \begin{subfigure}{.5\linewidth}
+                \centering
+                \includegraphics[scale=0.5]{gaussian-4.png}
+                \caption{$r = 20$}
+        \end{subfigure}
+\end{figure}
 \begin{proposition}[Sum of Gaussians]\label{gauss_sum}
 If $X_1, X_2, \cdots, X_n$ are mutually independent normal random variables with means $\mu_1, \mu_2, \cdots, \mu_n$ and variances $\sigma_1, \sigma_2, \cdots, \sigma_n$, then the linear combination
 \[ Y = \sum_{i \in [n]} c_i X_i \]
@@ -119,20 +138,27 @@ follows the normal distribution
 \[ \mathcal{N}\biggl(\sum_{i \in [n]} c_i \mu_i, \sum_{i \in [n]} c^2_i \sigma^2_i\biggr). \]
 \end{proposition}
 \paragraph{Problems}
-\begin{definition}[Search-LWE]
-\end{definition}
-\begin{definition}[Decision-LWE]
-\end{definition}
+We will now define problems related specifically to the LWE. First, let us define the distribution induced by LWE. 
 \begin{definition}[LWE distribution]\label{lwe-distr}
-    Let $q \geq 2$ be some integer, and let $\chi : \Z_q \rightarrow \R^+$ be some probability distribution on $\Z_q$. Let $n$ be an integer and let $\bm{s} \in \Z_n^q$ be a vector. We define $A_{\bm{s},\chi}$ as the distribution on $\Z_n^q \cross \Z_q$ obtained by choosing a vector $\bm{a} \in \Z_q^n$ uniformly at random, choosing $e \in \Z_q$ according to $\chi$, and outputting $(\bm{a}, \langle \bm{a}, \bm{s} \rangle + e)$, where additions are performed in $\Z_q$, i.e., modulo $q$. In parallel, we define $U$ as the uniform distribution on $\Z_q^n \cross \Z_q$.
+	Let $q \geq 2$ be some integer, and let $\chi : \Z_q \rightarrow \R_{>0}$ be some probability distribution on $\Z_q$. Let $n$ be an integer and let $\bm{s} \in \Z_n^q$ be a vector. We define $A_{\bm{s},\chi}$ as the distribution on $\Z_n^q \cross \Z_q$ obtained by choosing a vector $\bm{a} \in \Z_q^n$ uniformly at random, choosing $e \in \Z_q$ according to $\chi$, and outputting $(\bm{a}, \langle \bm{a}, \bm{s} \rangle + e)$, where additions are performed in $\Z_q$, i.e., modulo $q$. In parallel, we define $U$ as the uniform distribution on $\Z_q^n \cross \Z_q$.
 \end{definition}
-\begin{definition}\label{dgs}
+
+There are two types of problems we can define over LWE - the \textit{search} and \textit{decision}. We will prove at the end of this section that they are in fact equivalent, i.e. there exists a reduction between them. Search-LWE is asking us to find $\bm{s}$ from a list of samples distributed according to $A_{\bm{s}, \chi}$ for some unknown $\chi$. Similarly, the \textit{decision} asks us to distinguish samples $(\bm{a}, b)$ that were draw from either $A_{\bm{s}, \chi}$ or the uniform distribution. Although not present in the original paper, we define them formally here.
+\begin{definition}[Search-LWE]\label{slwe}
+	Given access to arbitrarily many samples from the $A_{\bm{s}, \chi}$, find $\bm{s}$.
+\end{definition}
+\begin{definition}[Decision-LWE]\label{dlwe}
+	Given access to arbitrarily many samples from the $A_{\bm{s}, \chi}$ and the same amount of samples from the uniform distribution, distinguish (with non-negligible advantage) between them.
+\end{definition}
+The following is used as an intermediate step in our reduction to \prob{SIVP}. The acronym \prob{DGS} stands for \textit{discrete Gaussian sampling} problem and is concerned exactly with that - to find a sample from the normal distribution over our lattice. Formally:
+\begin{definition}[\prob{DGS}]\label{dgs}
+	Given an $n$-dimensional lattice $\Ll$ and a number $r \geq \sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha$, output a sample from $\D_{\Ll,r}$
 \end{definition}
 
 \subsubsection{Hardness of search LWE}
 In this section we will focus on proving the main statement of \cite{regev} following the steps presented in the paper. We will put an emphasis on the parts that require the most adjustment when trying to prove the same results for ring-LWE in the next section.
 
-Recall that we want to prove, that being able to solve $\text{LWE}_{q, \chi}$ implies that we are able to solve standard worst-case lattice problems like \prob{SIVP}. To achieve this, we need to proceed in steps, in other words, we perform reductions from one problem to another. From this point on, a probabilistic algorithm which solves a given $\text{LWE}_{q, \chi}$ instance, will be called an LWE-\textit{oracle} (or, when there is no confusion, simply an oracle).
+Recall what we want to prove, that being able to solve $\text{LWE}_{q, \chi}$ implies that we are able to solve standard worst-case lattice problems like \prob{SIVP}. To achieve this, we need to proceed in steps, in other words, we perform reductions from one problem to another. From this point on, a probabilistic algorithm which solves a given $\text{LWE}_{q, \chi}$ instance, will be called an LWE-\textit{oracle} (or, when there is no confusion, simply an oracle).
 
 The high-level version of the proof is as follows. Let us assume that we have such an oracle that solves $\text{LWE}_{q, \chi}$ on a lattice $\Ll$ just like in the assumption. The procedure is based on the so called \textit{iterative step} (IS). It is repeatedly used to reduce our LWE problem to the problem of sampling from the  discrete Gaussian distribution on $\Ll$. As it turns out, it is indeed sufficient to solve the \prob{DGS} problem (Definition \ref{dgs}). Intuitively, if we have enough samples from the Gaussian distribution of some small radius $r$ around our lattice, we can use it to obtain short lattice vectors. Indeed, if we call the \prob{DGS} oracle enough times we can prove, that with very high probability, there are $n$ linearly independent vectors among the samples returned by oracle - thus, a solution to \prob{SIVP}.
 
@@ -153,9 +179,9 @@ On each of the iterations, the IS is using the oracle to produce discrete Gaussi
 \end{tikzpicture}
 \end{center}
 
-The algorithm can be divided into two basic steps, the \textit{classical} step and the \textit{quantum} step. First, given some polynomial number $n^c$ (where $c$ is some positive integer) of samples from a discrete Gaussian on $\Ll$ with some (large enough) parameter $r$, we us the first step to obtain a solution to a \prob{CVP} on the dual lattice $\Lld$ to within some (smaller than the initial $r$) distance. We then use this solution along with the second step - the quantum algorithm - to obtain $n^c$ samples from a dicrete Gaussian with parameter $r' < r$. Iterating these steps polynomial amount of times, we finally get $n^c$ samples from D$_{\Ll, r''}$ where $r'' \ll r$. We simply pick one of those samples to solve the DGS$_{\Ll, r}$ and we are done.
+The algorithm can be divided into two basic steps, the \textit{classical} step and the \textit{quantum} step. First, given some polynomial number $n^c$ (where $c$ is some positive integer) of samples from a discrete Gaussian on $\Ll$ with some (large enough) parameter $r$, we us the first step to obtain a solution to a \prob{CVP} on the dual lattice $\Lld$ to within some (smaller than the initial $r$) distance. We then use this solution along with the second step - the quantum algorithm - to obtain $n^c$ samples from a dicrete Gaussian with parameter $r' < r$. Iterating these steps polynomial amount of times, we finally get $n^c$ samples from D$_{\Ll, r''}$ where $r'' \ll r$. We simply pick one of those samples to solve the \prob{DGS}$_{\Ll, r}$ and we are done.
 
-The full picture now stands as follows. We begin with a assumed solution to LWE and we end up with a solution to some (conjured) hard lattice problems like SIVP to within some tolerance $\gamma = \tilde{O}(n/\alpha)$.
+The full picture now stands as follows. We begin with a assumed solution to LWE and we end up with a solution to some (conjured) hard lattice problems like \prob{SIVP} to within some tolerance $\gamma = \tilde{O}(n/\alpha)$.
 
 \begin{center}
 \begin{tikzpicture}
@@ -176,27 +202,28 @@ The full picture now stands as follows. We begin with a assumed solution to LWE 
 \end{center}
 We will now focus on the first step of the reduction from LWE to \prob{DGS} as it is what is altered the most in the ring-LWE hardness proof. This, however, will follow in the next section.
 
-The following statement (Theorem 3.1 in \cite{regev}) is the core of the hardness results of (search) LWE. Given an oracle form LWE, there exists an algorithm that gives us samples from discrete Gaussian distribution which in turn can yield us a solution to the \prob{CVP}. For example, later we will show the equivalence between search-LWE and decision-LWE (Theorem \ref{s-to-d}). This is an important result as it is usually much easier to construct cryptographic schemes based on some \textit{decision} version of a problem rather than the \textit{search}.
+The following statement (Theorem 3.1 in \cite{regev}) is the core of the hardness results of (search) LWE. Given an oracle for LWE, there exists an algorithm that gives us samples from discrete Gaussian distribution which in turn can yield us a solution to the \prob{CVP}. For example, later we will show the equivalence between search-LWE and decision-LWE (Theorem \ref{s-to-d}). This is an important result as it is usually much easier to construct cryptographic schemes based on some \textit{decision} version of a problem rather than the \textit{search}.
 
 \begin{theorem}\label{heart}
-	Let $\epsilon = \epsilon(n)$ be some negligible function of $n$. Also, let $q = q(n)$ be some integer and $\alpha = \alpha(n) \in (0, 1)$ be such that $\alpha q > 2\sqrt{n}$. Assume that we have access to an oracle W that solves $\text{LWE}_{q,\Psi_{\alpha}}$ given a polynomial number of samples. Then there exists an efficient quantum algorithm for $\text{DGS}_{\sqrt{2}n \cdot \eta_{\epsilon}(L)/\alpha}$.
+	Let $\epsilon = \epsilon(n)$ be some negligible function of $n$. Also, let $q = q(n)$ be some integer and $\alpha = \alpha(n) \in (0, 1)$ be such that $\alpha q > 2\sqrt{n}$. Assume that we have access to an oracle W that solves $\text{LWE}_{q,\Psi_{\alpha}}$ given a polynomial number of samples. Then there exists an efficient quantum algorithm for $\text{DGS}_{\sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha}$.
 \end{theorem}
 \begin{proof}
-	The proof follows in a straight-forward manner by the Lemma \ref{is}. We sample a polynomial amount of elements from the D$_{\Ll, r}$ for $r$ large enough\footnote{By Claim 2.13 and Lemma 3.2 of \cite{regev}, we can efficiently draw samples that are exponentially close to D$_{\Ll, r}$ if $r > 2^{2n} \lambda_n(\Ll)$.}. We then apply the IS to obtain D$_{\Ll, r'}$ for $r' \leq r/2$. Applying this procedure enough times (turns out only about $3n$ iterations are needed). At the end of the loop, we are left with the same amount of samples but each within sufficient distance $d \leq \sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha$ and we complete the algorithm by simply outputting the first one.
+	The proof follows in a straight-forward manner by the Lemma \ref{is}. We sample a polynomial amount of elements from the $\D_{\Ll, r}$ for $r$ large enough\footnote{By Claim 2.13 and Lemma 3.2 of \cite{regev}, we can efficiently draw samples that are exponentially close to $\D_{\Ll, r}$ if $r > 2^{2n} \lambda_n(\Ll)$.}. We then apply the IS to obtain D$_{\Ll, r'}$ for $r' \leq r/2$. Applying this procedure enough times (turns out only about $3n$ iterations are needed). At the end of the loop, we are left with the same amount of samples but each within sufficient distance $d \leq \sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha$ and we complete the algorithm by simply outputting the first one.
 \end{proof}
 
 \paragraph{The iterative step}
 The proof of Theorem \ref{heart} relies mainly on the following algorithm. This is slightly altered Lemma 3.3 in \cite{regev}. 
 \begin{lemma}[Iterative Step]\label{is}
-	Let $\epsilon = \epsilon(n)$ be a negligible function, $\alpha > 0$ real, and $q \geq 2$ be an integer. Assume that we have access to an oracle that solves $LWE_{q,\Psi_{\leq \alpha}}$ given a polynomial number of samples. Then, there exists an efficient quantum algorithm that, given any $n$-dimensional lattice $\Ll$, a number $r > \sqrt{2}q \eta_{\epsilon}(\Ll)$, and a polynomial list of samples from the discrete Gaussian distribution $\text{D}_{\Ll,r}$, produces a sample from $\text{D}_{\Ll,r\sqrt{n}/(\alpha q)}$.
+	Let $\epsilon = \epsilon(n)$ be a negligible function, $\alpha > 0$ real, and $q \geq 2$ be an integer. Assume that we have access to an oracle that solves $LWE_{q,\Psi_{\leq \alpha}}$ given a polynomial number of samples. Then, there exists an efficient quantum algorithm that, given any $n$-dimensional lattice $\Ll$, a number $r > \sqrt{2}q \eta_{\epsilon}(\Ll)$, and a polynomial list of samples from the discrete Gaussian distribution $\D_{\Ll,r}$, produces a sample from $\D_{\Ll,r\sqrt{n}/(\alpha q)}$.
 \end{lemma}
 \begin{proof}
-	As mentioned before, the algorithm consists of two parts. The first part is presented in \ref{classical}, where, given an oracle W and samples from $\text{D}_{L,r}$, solves \prob{CVP}$_{L^{\vee}, \alpha q / (\sqrt{2} r)}$. The second part - the quantum algorithm \ref{quantum} - when given an oracle that solves \prob{CVP}$_{L^{\vee}, \alpha q / (\sqrt{2} r)}$, yields us a sample from $\text{D}_{L, r\sqrt{n}/\alpha q)}$.
+	As mentioned before, the algorithm consists of two parts. The first part is presented in \ref{classical}, where, given an oracle W and samples from $\D_{\Ll,r}$, solves \prob{CVP}$_{\Lld, \alpha q / (\sqrt{2} r)}$. The second part - the quantum algorithm \ref{quantum} - when given an oracle that solves \prob{CVP}$_{\Lld, \alpha q / (\sqrt{2} r)}$, yields us a sample from $\D_{\Ll, r\sqrt{n}/(\alpha q)}$.
 \end{proof}
-
-Pictographically, here are two iterations of the algorithm:\\
-
-\begin{center}
+Pictographically, two iterations of the algorithm are presented in Figure \ref{fig:is}.
+\begin{figure}
+	\caption{Two iterations of the iterative step}
+	\label{fig:is}
+	\centering
 	{\small
 \begin{tikzpicture}
 % Define the first block
@@ -225,7 +252,7 @@ Pictographically, here are two iterations of the algorithm:\\
 \node[above=0.5cm] at (2, -5) {\Huge $\vdots$};
 \end{tikzpicture}
 }
-\end{center}
+\end{figure}
 
 We now present heavily simplified version of the algorithm that, when given a polynomial amount of samples from the discrete Gaussian, gives us a solution to the \prob{CVP} to within error of $\alpha q /(\sqrt{2} r)$ to the dual lattice $\Lld$.
 \begin{lemma}[Step 1 - classical]\label{classical}
@@ -245,7 +272,7 @@ Focusing now on the second term, we observe that
 \[ \langle \bm{y}, \bm{v} \rangle = (\Lld)^{-1} \langle \bm{y}, \bm{v} \rangle \Lld =  \langle (\Lld)^{-1}\bm{y}, \Ll^{-1} \bm{v} \rangle = \langle \bm{s}, \bm{a} \rangle \]
 since $\Ll^{-1} = (\Lld)^T$.
 
-To finish the proof we need to show that the remaining term $\langle \bm{e}, \bm{v} \rangle + e'$ is distributed within negligible statistical distance of $\Psi_{\leq \alpha}$. This is obtained by noting that summing two normal distributions with the standard deviation within some bound, gives us a distribution that is indeed close enough to $\Psi_{\beta}$ for some $\beta \leq \alpha$ as desired. This is Claim 3.10 in the original paper by Regev.
+To finish the proof we need to show that the remaining term $\langle \bm{e}, \bm{v} \rangle + e'$ is distributed within negligible statistical distance of $\Psi_{\leq \alpha}$. This is obtained by noting that summing two normal distributions with the standard deviation less than the smoothing parameter, gives us a distribution that is indeed close enough to $\Psi_{\beta}$ for some $\beta \leq \alpha$ as desired. This is Claim 3.10 in the original paper by Regev.
 \end{proof}
 \begin{proposition}[Step 2 - quantum]\label{quantum}
 	There exists an efficient quantum algorithm that, given any $n$-dimensional lattice $\Ll$, a number $d < \lambda_n (\Lld)/2$, and an oracle that solves \prob{CVP}$_{\Lld,d}$, outputs a sample from D$_{\Ll,\sqrt{n}/(\sqrt{2}d)}$.
@@ -258,7 +285,7 @@ Lastly, we can finish the proof of Theorem \ref{main} by presenting the followin
 \end{proposition}
 
 \subsubsection{Pseudorandomness of LWE}
-In this section we will prove that the search version of LWE - Definition \ref{slwe} - to the decision version -Definition \ref{dlwe}. More precisely, if our sample is of the form $(\bm{a}, b)$, there is no way for us to tell if $b$ is uniform or actually $b = \langle \bm{a}, \bm{s} \rangle + e$ for some secret $\bm{s}$ and small error $e$.
+In this section we will prove that the search version of LWE - Definition \ref{slwe} - to the decision version - Definition \ref{dlwe}. More precisely, if our sample is of the form $(\bm{a}, b)$, there is no way for us to tell if $b$ is uniform or actually $b = \langle \bm{a}, \bm{s} \rangle + e$ for some secret $\bm{s}$ and small error $e$.
 
 In general, the decision version is considered more suitable for cryptographic purposes because it is often easier to analyze and prove security guarantees for. For many cryptographic problems, it is computationally infeasible to find the solution to the search version, but it is possible to determine the correct answer to the decision version with high probability. Thus, cryptographic schemes are often designed based on decision versions of hard computational problems.
 
@@ -294,8 +321,10 @@ In other words, if we have an oracle (called procedure in this theorem) that sol
 \subsubsection{LWE cryptosystem}
 Now that we have a solid hardness assumptions, we can attempt to construct a cryptosystem that employs those results. The following public key cryptosystem was presented in the same paper. To keep the notation consistent with previous section, we will slightly deviate from the original.
 
-We begin by specifying our parameters. Let us denote by $n$ our security parameter. As before, the scheme is characterized by two integers $m$ and $q$ and a probability distribution $\chi$ over $\Z_q$. To now make the scheme secure and correct, we should choose $q$ prime between $n^2$ and $2n^2$, $m = (1 + \epsilon)(n + 1) \log q$ for some arbitrary constant $\epsilon > 0$. We define the distribution $\chi$ to be $\bar{\Psi}_{\alpha (n)}$ where $\alpha (n) = o(1/(\sqrt{n} \log n))$ (recall from Section \ref{hardness} that it means $\lim_{n\to\infty} \alpha (n) \cdot \sqrt{n} \log n = 0$).\\
+We begin by specifying our parameters. Let us denote by $n$ our security parameter. As before, the scheme is characterized by two integers $m$ and $q$ and a probability distribution $\chi$ over $\Z_q$. To now make the scheme secure and correct, we should choose $q$ prime between $n^2$ and $2n^2$, $m = (1 + \epsilon)(n + 1) \log q$ for some arbitrary constant $\epsilon > 0$. We define the distribution $\chi$ to be $\bar{\Psi}_{\alpha (n)}$ (the discretized Gaussian distribution $\Psi_{\alpha}$) where $\alpha (n) = o(1/(\sqrt{n} \log n))$ (recall from Section \ref{hardness} that it means $\lim_{n\to\infty} \alpha (n) \cdot \sqrt{n} \log n = 0$). The scheme is presented in Table \ref{lwe-enc}.
 
+\begin{table}[ht]
+	\centering
 \begin{mdframed}
 $\alg{KeyGen:}$
 \begin{itemize}
@@ -307,6 +336,9 @@ To encrypt a single bit we choose a random set $S$ uniformly among all $2^m$ sub
 $\alg{Decrypt:}$\\
 The decryption of a pair $(\bm{a}, b)$ is 0 if $b - \langle \bm{a}, \bm{s} \rangle$ is closer to 0 than to $\lfloor q/2 \rfloor$ modulo~$q$.
 \end{mdframed}
+\caption{LWE encryption scheme}
+\label{lwe-enc}
+\end{table}
 
 \begin{example}
     Almost exactly like in the Example \ref{lwe_ex}, set $n = 4$, $q=17$ and $m=4$. We pick our \textbf{secret key} $\bm{s} = (2,1,3,7)$ and artificially (i.e. by design and not uniformly at random) pick
@@ -341,7 +373,7 @@ The decryption of a pair $(\bm{a}, b)$ is 0 if $b - \langle \bm{a}, \bm{s} \rang
 \paragraph{Analysis}
 Now, that we have finally defined a cryptographic scheme we need to verify it. The two remaining questions we now have are first, is this scheme correct? That is, does the decryption algorithm correctly evaluate back to the original message? This is much more difficult to prove compared to the scheme over the integers presented in \ref{int_she}. The following is a somewhat simpler version of Claim 5.2 in \cite{regev}.
 \begin{lemma}[Correctness]
-	For the above choice of parameters and $e$ following the $\bar{\Psi}_{\alpha}$ (the periodic $\Psi_{\alpha}$) distribution we have
+	For the above choice of parameters and $e$ following the $\bar{\Psi}_{\alpha}$ distribution we have
 	\begin{equation} \Pr_{e \sim \bar{\Psi}_{\alpha}} \Big[ |e| < \Bigl \lfloor \frac{q}{2} \Bigr \rfloor /2 \Big] > 1 - \delta(n) \end{equation}
     for some negligible function $\delta(n)$.
 \end{lemma}
@@ -350,7 +382,7 @@ Now, that we have finally defined a cryptographic scheme we need to verify it. T
 	\[ \sum_{i \in [m]} X_i \sim \mathcal{N}(0, \sum_{i \in [m]} \sigma^2) = \mathcal{N}(0, m \cdot \sigma^2)\]
 	is distributed with standard deviation equal to $\sqrt{m} \alpha q < q / \log(n)$ and the probability that such sample is greater than $q/4$ is negligible.
 \end{proof}
-An example of a normal distribution with standard deviation $\sigma^2 = q/\log n$ and mean 0 can be seen in Figure \ref{1d-gaussians}. The shaded region corresponds to $|e| > q/4$. At the begining, for $n$ not as big, we can notice that the area does not necessarily correspond to an intuitive notion of ``negligible''. However, the definition concerns the asymptotic behavior of $n$ and indeed, we can see the area becomes quite small. One might even call it ``negligible''. The Python script used to generate these figures can be found in Appendix \ref{appendix:code}.
+An example of a normal distribution with standard deviation $\sigma^2 = q/\log n$ and mean 0 can be seen in Figure \ref{1d-gaussians}. The shaded region corresponds to $|e| > q/4$. At the begining, for $n$ not as big, we can notice that the area does not necessarily correspond to an intuitive notion of ``negligible''. However, the definition concerns the asymptotic behavior of $n$ and indeed, we can see the area becomes quite small. One might even call it ``negligible''.% The Python script used to generate these figures can be found in Appendix \ref{appendix:code}.
 
 \begin{figure}
 	\caption{1 dimensional Gaussian with standard deviation $\sigma^2 = q/\log n$ for:}
@@ -385,6 +417,7 @@ Note that it seems almost trivial that we decrypt correctly, the scheme was desi
 Note that this closely relates to the last lemma from the previous section on the hardness of LWE. For a thorough and less technical analysis than the one given in the original paper, the reader is encouraged to look into section 5.4 in \cite{Micci2009}.
 
 \subsubsection*{Epilogue}
+\krzys{do last if theres time}
 Until the day of writing this paper, LWE is one of the most influential schemes that can be used for post-quantum cryptographic schemes. It was used as a basis for schemes like the one introduced in \cite{ot-lwe} (along with an oblivious transfer protocol), \cite{lwe-scheme1} or \cite{lwe-scheme2}. However, arguably the most important contribution, was that of laying groundwork for the \textit{ring}-LWE scheme introduced in the next section. We will now present few alternatives to the results and proofs presented here.\\
 
 \iffalse

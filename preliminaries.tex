@@ -101,7 +101,7 @@ We can also need some notion of the shortest possible vector of a lattice.
 	More generally, for $1 \leq i \leq n$, the $i$th sucessive minimum of $\Ll$ is
 	\[\lambda_i(\Ll) := \inf \{r : \Ll \text{ has $i$ linearly independent vectors of length at most } r \}. \]
 \end{definition}
-	For example, in order to be able to go ``away'' from the lattice $\Ll$ ``out'' into the ambient space $\R^n$ and still be able to return to the original vector, we need to make sure the distance $d$ we travel is at most $\lambda_1(\Ll)/2$.
+For example, in order to be able to go ``away'' from the lattice $\Ll$ ``out'' into the ambient space $\R^n$ and still be able to return to the original vector, we need to make sure the distance $d$ we travel is at most $\lambda_1(\Ll)/2$. This is for example a requirement in the \prob{BDD} problem where the decoding is \textit{promised}. For the exact definition see Section \ref{hardness}.
 \subsection{Algebraic Number Theory}
 
 Algebraic number theory is the study of \textit{number fields}, \textit{rings of integers} and \textit{finite fields}. In this section we will provide all the necessary background needed to understand and verify the results presented in the cryptographic schemes later in the text. Most results will be stated without proof however all of them can be found in the book \textbf{Number Fields} by \textbf{Daniel A. Marcus} \cite{algebra} after which this sections is modelled.
@@ -178,7 +178,14 @@ Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then the
 
 \pinar{Maximal orders (ring of integers) are dedekind domains, embedding of $\Q(\alpha)$ to $\C$ hence embedding of the ideals. Properties of ideals in dedekind domains, operations, unique factorization and so on. all the necessary info. }
 
-\subsection{Complexity Theory and hard problems} \label{hardness}
+\subsection{Complexity Theory and Hard Problems} \label{hardness}
+When talking about cryptography, we cannot avoid talking about algorithms as an encryption scheme is simply a instruction on how to encode sensitive data. We will thus require some terminology from computational complexity theory - a field on the overlap of computer science and mathematics. The problems it is concerned are those of the time and space required for solving computational problems. Most of the time, the goal of the study is to prove the lower bound on the resources required to solve a problem using the best know algorithm. For example, how long does it take to find a factorization of a large composite number. The goal of this section is to give an overview of few parts of the field that we will be using throughout the paper. 
+
+\subsubsection*{}
+We begin with necessary terminology. Throughout this section, $n$ shall denote the ``size'' of the input to the algorithm. Here the word size could mean many things like for example the bit-length of a number or its value in the base 10 representation.
+
+In order to represent the time or space required to solve the problem, most of the time we will use the ``big-O'' notation. For any function $f$ and $g$ of some variable $x$, is defined as $f(x) \in O(g(x))$ if there exists some constant $M$ and $x_0$ such that $f(x) \leq Mg(x)$ for all $x \geq x_0$.
+
 \pinar{will wait}
 mention "efficient", "negligible", "hard" and define reductions. show some problems like svp, cvp, bdd
 In this section we will briefly introduce what it means for a problem to be considered \textit{hard} and provide couple of examples
@@ -189,6 +196,5 @@ We define a \prob{negligible} amount in $n$ as an amount that is asymptotically 
 The best know examples
 \prob{FACTORIZE}
 \subsubsection*{Quantum computations}
-
 I'm not sure if that is supposed to be in a section about preliminaries but I also don't want to include it in the introduction coz its a bit long
 
