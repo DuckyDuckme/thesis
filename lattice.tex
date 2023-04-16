@@ -2,6 +2,12 @@
 \input{lwe}
 \input{ring-lwe}
 \subsection{Fully Homomorphic Encryption Using Ideal Lattices}
+To finally tie back to the topic of FHE, we will present how ideal lattices and (ring) LWE are useful in the abstract construction. In this section we will present a handful of cryptographic constructions that are capable of evaluating any circuit and are thus by definition fully homomorphic. This list by no mean exhaustful and the latest result is from the year \krzys{insert the year}. Each one of them comes up with an idea that solves one problem but generally introduces a new one. One of the main obstacles is the computational complexity of the schemes due to the ``bootstrapping'' requirement. Most of the works were therefore focused on improving the efficiency or removing the requirement altogether and replacing it with some innovative technique instead.
+
+The field of (working) homomorphic encryption has already seen lots of progress and so, new terminology was introduced since the inception that we will use as well.
+
+\subsubsection{First generation}
+We begin by recalling the original scheme presented by Gentry in his original PhD thesis
 three ``generations'' of fhe schemes, first original gentry, smart and
 explain here how we can construct a really nice homomorphic encryption scheme using ideal lattices \cite{gentry}. present the 
 \subsubsection*{On Ideal Lattices and Learning With Errors Over Rings}

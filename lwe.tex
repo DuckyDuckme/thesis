@@ -6,10 +6,10 @@ The problem is parametrized by positive integers $n$, $m$\footnote{As will be se
 \begin{example}\label{lwe_ex}
 	Given as input this set of equations, LWE asks us to recover the vector $\bm{s} = (s_1, s_2, s_3, s_4) \in \Z_{17}^4$. In this case $n = 4$, $q=17$ and the error distribution is giving us $e_i < 1$ for each $i \in [m]$. 
 \begin{align*}
-	0s_1 + 11s_2 +8s_3 + 2s_4 & \approx_{e_1} 3 \, (\mod 17)\\
-	9s_1 +  3s_2 + 7s_3 + 0s_4 & \approx_{e_2} 16 \\
-	1s_1 +  15s_2 + 9s_3 + 5s_4 & \approx_{e_3} 16 \\
-	0s_1 +  0s_2 + 13s_3 + 5s_4 & \approx_{e_4} 1\\
+	0s_1 + 11s_2 +8s_3 + 2s_4 & \approx_{e_1} 3 \, \mod 17\\
+	9s_1 +  3s_2 + 7s_3 + 0s_4 & \approx_{e_2} 16 \, \mod 17\\
+	1s_1 +  15s_2 + 9s_3 + 5s_4 & \approx_{e_3} 16 \, \mod 17\\
+	0s_1 +  0s_2 + 13s_3 + 5s_4 & \approx_{e_4} 1 \, \mod 17\\
 \end{align*}
 In this case, $\bm{s} = (7, 13, 12, 16)$. Note that if not for the error, the secret would be very easy to find. Given about $n$ equations, we could recover $\bm{s}$ in an efficient way using Gaussian elimination. Inducing the error is what seems to render the problem untraceable for modern day algorithms.
 \end{example}
@@ -19,7 +19,7 @@ The central part of \cite{regev} revolves around proving the hardness of LWE. Sp
 	Let $n$, $q$ be positive integers and $\alpha \in (0, 1)$ be such that $\alpha q > 2 \sqrt{n}$. If there exists an efficient algorithm that solves $\text{LWE}_{q, \Psi_{\alpha}}$, then there exists an efficient quantum algorithm that approximates the decision version of the shortest vector problem (\prob{GapSVP}$_{\gamma}$) and the shortest independent vectors problem (\prob{SIVP}$_{\gamma}$) to within $\gamma = \tilde{O}(n/\alpha)$ in the worst case on any lattice of dimension $n$.	
 \end{theorem}
 
-Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{n}/q$ is one of those choices (and requirements). It specifies the shape of the $\Psi_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$\footnote{A comment from \cite{lattice-survey}: Originally, Regev considered the continuous Gaussian and rounded the result to the nearest integer. This does not exactly yield the discrete distribution but thanks to \cite{discr} we know how the problem can be fixed.}. It will be used to sample the errors with some nice and predictable properties. Later, by the end of this section, we will also show that in fact, there is sort of an equivalence between drawing them from continuous and discrete distributions.
+Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{n}/q$ is one of those choices (and requirements). It specifies the shape of the $\Psi_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$. It will be used to sample the errors with some nice and predictable properties. Later, by the end of this section, we will also show that in fact, there is sort of an equivalence between drawing them from continuous and discrete distributions.
 
 The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \Psi_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}. Since we strongly believe that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}, \cite{lbc}) we are left with a difficult, yet efficient way to share secrets. Oded Regev proceeds to prove this using various lemmas and results from few areas of mathematics like probability, lattice theory and quantum computing. We will now present selected proofs and outline of the whole the approach.
 
@@ -41,8 +41,8 @@ In order to avoid making our proofs depend on the specific choice of modulus $q$
 \krzys{also, it turns out, that for whatever value of $r$ we pick, the result of that sum is always $|\beta|/\beta = 1$?????}
 We will, for the sake of clearer notation, be a bit vague about the doman of $\Psi_{\beta}$. This is because sampling from $\Psi_{\beta}$ with parameter $\beta$, that is defined over $\T = [0,1)$ is equivalent to sampling from $\Psi_{q \beta}$ over $\Z_q$. \krzys{i am very hesitant about this statement - need to check if thats true}
 
-We also need to define \textit{distretization} of a probability density function for our cryptosystem introduced later. For an arbitrary probability density function $\phi~\T~\to~\R_{>0}$ and an integer $q \geq 2$, we define its discretization $\bar{\phi} : \Z_q \rightarrow R_{>0}$ as the discrete probability distribution obtained by sampling from $\Psi$, multiplying by $q$, and rounding to the closest integer modulo $q$. More formally,
-\begin{equation} \bar{\phi}(i) = \int_{(i -1/2)/q}^{i + 1/2)/q} \phi(x) dx \end{equation}
+We also need to define \textit{distretization} of a probability density function for our cryptosystem introduced later. For an arbitrary probability density function $\phi~:~\T~\to~\R_{>0}$ and an integer $q \geq 2$, we define its discretization $\bar{\phi} : \Z_q \rightarrow R_{>0}$ as the discrete probability distribution obtained by sampling from $\Psi$, multiplying by $q$, and rounding to the closest integer modulo $q$. More formally,
+\begin{equation} \bar{\phi}(i) = \int_{(i -1/2)/q}^{(i + 1/2)/q} \phi(x) dx \end{equation}
 
 Lastly, following the definition given in \cite{lbc}, we define the \textit{statistical distance} as follows.
 \begin{definition}[Statistical distance]
@@ -76,7 +76,7 @@ We simply require that the elements of the dual to be precisely those vectors th
 \end{example}
 
 Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension.
-\begin{figure}
+\begin{figure}[ht]
 	\caption{Lattice $\Ll$ from example \ref{ld-ex} and its dual.}
         \label{lattices}
         \centering
@@ -102,9 +102,7 @@ In other words, $\eta_{\epsilon}(\Ll)$ is the smallest $s$ such that a Gaussian 
 
 In the Figure \ref{smoothing-1}, there are plotted four Gaussians. The first one has very small deviation and assigns most of its values to the origin. The second one, with the deviation $\sqrt{10}$ times the size of the first one, looks a bit more \textit{smooth} and continuous. Finally, the last distribution is almost uniform or ``flat''. For an appropriate choice of $\epsilon$, the smoothing parameter will lay somewhere between those four values of $r$.
 
-\begin{figure}[h]
-        \caption{2-dimensional Gaussian with standard deviation $r$. The $z$-axis represents the probability.}
-        \label{smoothing-1}
+\begin{figure}[ht]
         \centering
 		\begin{subfigure}{.5\linewidth} 
                 \centering
@@ -130,6 +128,8 @@ In the Figure \ref{smoothing-1}, there are plotted four Gaussians. The first one
                 \includegraphics[scale=0.5]{gaussian-4.png}
                 \caption{$r = 20$}
         \end{subfigure}
+        \caption{2-dimensional Gaussian with standard deviation $r$. The $z$-axis represents the probability.}
+        \label{smoothing-1}
 \end{figure}
 \begin{proposition}[Sum of Gaussians]\label{gauss_sum}
 If $X_1, X_2, \cdots, X_n$ are mutually independent normal random variables with means $\mu_1, \mu_2, \cdots, \mu_n$ and variances $\sigma_1, \sigma_2, \cdots, \sigma_n$, then the linear combination

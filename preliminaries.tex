@@ -154,10 +154,23 @@ As another example, we can make a following statement about the ring of integers
     Given a field $K$ and a positive integer $n$, an element $\zeta \in K$ is called \textit{primitive $n$-th root of unity} if $\zeta$ has order $n$ in the multiplicative group $K^{\cross}$. (In other words, $\zeta^n = 1$ and $\zeta^m \neq 1$ for $1 \leq m < n$).
 \end{definition}
 The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial. Formally we define it as 
-\[ \Phi_n(x) = \]
-It can be shown that every such $\zeta$ is equal to precisely $e^{2\pi \sqrt{-1}/n}$ and $\zeta^i = \zeta^j$ if and only if $i = j$.
+\[ \Phi_n(x) = \prod_{\gcd(k,n) = 1} \bigg( x - e^{2\sqrt{-1} \pi k/n} \bigg) \]
+It can be shown that $\zeta^i = \zeta^j$ if and only if $i = j$. The following equality is very useful for computing the polynomial itself:
+\begin{equation}\label{comp_cycl} 
+\Phi_n(x) = (x^n - 1) \bigg/ \prod_{d | n} \Phi_d(x) 
+\end{equation}
+\begin{example}
+  Take $n = 8$. Then we can use equation \ref{comp_cycl} to compute:
+\end{example}
+As a usefull corollary of the equation \ref{comp_cycl}, we can prove that for $n$ a power of 2, $n = 2^k$ for some $k \geq 1$, the equation is of the form $x^{2^{k - 1}} + 1$.
+\begin{corollary}
+  Let $n= 2^k$ for some $k \in Z_{> 0}$. Then $\Phi_n(x) = x^{2^{k-1}} + 1$.
+\end{corollary}
+\begin{proof}
+  By induction,
+\end{proof}
 
-What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\alpha \in \C$, the ring of integers is not necessarily the $\Z[\alpha]$. Instead, $\Z[\alpha]$ is what's called an \textit{order} in $\Oo_K$. We will not consider them in general here because they are not relevant for our study. However, one very useful feature of cyclotomic fields is that their ring of integers is actually just $\Z[\zeta]$. That is - $\Oo_K = \Z[\zeta]$ for $K = \Q(\zeta)$ and $\zeta$ is some $n$-th root of unity. This greately simplifies the approach in proving some of the results later in this paper. In general, a field $K = \Q(\alpha)$ such that $\Oo_K = \Z[\alpha]$ is called a \textit{monogenic} field. For more details on orders, look at for example Chapter 5 of \cite{stein}.
+What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\alpha \in \C$, the ring of integers is not necessarily the $\Z[\alpha]$. Instead, $\Z[\alpha]$ is what's called an \textit{order} in $\Oo_K$. We will not consider them in general here because they are not relevant for our study. However, one very useful feature of cyclotomic fields is that their ring of integers is actually just $\Z[\zeta]$. That is - $\Oo_K = \Z[\zeta]$ for $K = \Q(\zeta)$ and $\zeta$ is some $n$-th root of unity. This greately simplifies the approach in proving some of the results later in this paper. In general, a field $K = \Q(\alpha)$ such that $\Oo_K = \Z[\alpha]$ is called a \textit{monogenic} field or a \textit{simple algebraic extension}. For more details on orders, look at for example Chapter 5 of \cite{stein}.
 
 \begin{proposition}
 	The ring of integers of a cyclotomic number field $K = \Q(\zeta)$ is $\Oo_K = \Z[\zeta]$.
