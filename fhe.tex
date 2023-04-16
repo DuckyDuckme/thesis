@@ -36,24 +36,62 @@ However, this comfortable security comes at great cost because, as shown in \cit
 \subsection{Fully Homomorphic Encryption}
 We will now present the main idea introduced in Gentry's PhD thesis \cite{gentry_phd}. Namely, how can we make use of idea lattices to create a encryption scheme that can handle an arbitrary amount of functions.
 
-\subsubsection*{Boostrapping}
+\subsubsection{Boostrapping}
 We are faced with a problem. Because our method relies on some error being added to the message, it builds up after we perform operations on our data. The scheme $\E$ can handle functions in a limited set $\mathcal{F}_{\E}$ until the noise becomes too large. Is there a way for us to somehow expand this set and yet retain the homomorphic properties of the scheme? Can we, further on, expand this set to include an arbitrary polynomial function? The answer turns out to be yes. As shown by Gentry, one of the requirements for this is that the scheme can decrypt its encryption correctly ``and some''. This part will be a brief explanation of what the bootstrapping is and how we can achieve it using (also introduced in the same paper) ``squashing''.
 
 \begin{remark}
-  In cryptography, which is a field in the intersection of mathematics and computing science, instead of general functions, one often considers a \textit{circuit} instead. Roughly speaking, a circut is a translation of what a mathematician thinks when they say ``function''. It consists of (finite amount) of gates - they are just boolean functions. For example there is a $\alg{NOT}$ gate that takes a bit $b \in \{0,1\}$ and outputs $b + 1$, where all the operations are performed modulo 2. Others include for example $\alg{XOR}$ - this is an exclusive logical $\alg{OR}$ - or $\alg{NAND}$ which is a $\alg{AND}$ followed up by a $\alg{NOT}$ gate. From a theoretical point of view, one can use solely a $\alg{NAND}$ gate to represent any circuit and thus we will be mostly concerned with that one.
+  In cryptography, which is a field in the intersection of mathematics and computing science, instead of general functions, one often considers a \textit{circuit} instead. Roughly speaking, a circut is a translation of what a mathematician thinks when they say ``function''. It consists of (finite amount) of gates which are just boolean functions. For example there is a $\alg{NOT}$ gate that takes a bit $b \in \{0,1\}$ and outputs $b + 1$, where all the operations are performed modulo 2. Others include for example $\alg{XOR}$ - this is an exclusive logical $\alg{OR}$ - or $\alg{NAND}$ which is a $\alg{AND}$ followed up by a $\alg{NOT}$ gate. From a theoretical point of view, one can use solely a $\alg{NAND}$ gate to represent any circuit and thus we will be mostly concerned with that one.
 \end{remark}
 
 Imagine we have a SH scheme $\E$ (one can think of the one from previous section as a concrete example) that is correct for its decryption circuit augumented by an $\alg{NAND}$ gate. We call such scheme \textit{bootstrappable}. As shown in the paper, one can use this circuit to create a (leveled) fully homomorphic encryption $\E^{(d)}$. It is called \textit{leveled} because the correctnes depends on the ``depth'' (or the level) $d$ of the circuit making it depend on $d$. It can be show that by appropriately augumenting the public key, such leveled scheme can be made independent of depth and thus made into a \textit{fully homomorphic} one. Moreover, if the scheme itself is secure\footnote{The precise security mentioned is the semantic security agains chosen plaintext attacks.}, then so is any $\alg{Evaluate}_{\E^(d)}$ algorithm.
 
-Why is this the correct requirement for a FHE? Supposed that there is an ``error'' associated with each ciphertext, just like in the scheme from previous part. Then as noted there, after we perform one operations too many, the error builds up soo much that we are no longer able to decrypt correctly. We would therefore like to somehow make the error small enough again and ``refresh'' the ciphertext without using the secret key. Clearly we could get rid of the error completely if we were to decrypt it and create a ``fresh'' ciphertext of the same message. This is precisely the idea behind bootstrapping, to decrypt the message but do it homomorphically! An idea on how to do it, is by appending the encryption of the secret key in the public key.
+Why is this the correct requirement for a FHE? Supposed that there is an ``error'' associated with each ciphertext, just like in the scheme from previous part. Then as noted there, after we perform one operations too many, the error builds up soo much that we are no longer able to decrypt correctly. We would therefore like to somehow make the error small enough again and ``refresh'' the ciphertext without using the secret key. Clearly we could get rid of the error completely if we were to decrypt it and create a ``fresh'' ciphertext of the same message. This is the idea behind bootstrapping, to decrypt the message but do it homomorphically! An idea on how to do it, is by appending the encryption of the secret key in the public key.
 
 \begin{remark}
-Note that this requires another assumption called ``circular security'' or KDM (Key Dependent Message) security. That is, we are assuming that the publication of the encryption of a secret key does not leak any valuable information about the key itself. This is however very difficult to prove in practice but also no known attacts are know and hence it is just assumed along.
+Note that this requires another assumption called ``circular security'' or KDM (Key Dependent Message) security. That is, we are assuming that the publication of the encryption of a secret key does not leak any valuable information about the key itself. This is however very difficult to prove in practice but also no known attacks are know and hence it is just assumed along.
 \end{remark}
 
 To do this, we introduce an algorithm called $\alg{Recrypt}$. Imagine we have a ciphertext $c_1$ that we want to refresh. \krzys{finish if there is time, include the need for a NAND gate as the "progress" in the circuit}.
 
-\subsubsection*{Lattice based scheme}
-The motivation for the choice of lattices as opposed to number theoretic constructions (like RSA or ElGamma for example), is that the former has lower decryption complexity and is therefore more suitable as a bootstrappable encryption scheme. Additionally, one requires not only one supported homomorphism like addition but also the multiplication. Those factors (among others, see \cite{gentry} for more details) has led to the choice of \textit{ideal lattices}.
+\subsubsection{Simple lattice based scheme}
+The motivation for the choice of lattices as opposed to number theoretic constructions (like RSA or ElGamma for example which are based on expontiation), is that the former has some desirable properties. Firstly, the lattices have lower decryption complexity and are therefore more suitable as a bootstrappable encryption scheme. Next, one requires not only one supported homomorphism like addition but also the multiplication - lattices as ideals poses both. Those factors among many others, (see \cite{gentry} for more details) have led to the choice of \textit{ideal lattices}.
 
-The idea behind the encryption is similar to the one of GGH. That is, we are going to fix a lattice and publish a bad basis as the public key and keep a good basis as a secret key. Let us then fix some ring $R$
+The idea behind the encryption is somewhat similar to the one of GGH. That is, we are going to fix a lattice and publish a bad basis as the public key and keep a good basis as a secret key. The security of this scheme is based on the Ideal Coset Problem (ICP) which briefly stated asks us to find a distinguishable representative of a coset of some fixed ideal in an arbitrary ring. Let us then fix some ring $R$
+
+\subsubsection{Squashing}
+\subsubsection{Limitations}
+
+\subsection{Further developments in FHE}
+Since the inception of FHE, many new ideas have emerged as potential replacement for the details in the implementation in Gentry's work. In this section, we will briefly introduce some of such techniques and ideas.
+
+\subsubsection{FHE from the standard LWE}
+ One of such ideas is to replace the ideal lattices (which poses more structure than regular lattices and are thus possibly more prone to new attacks) by an LWE sample instead.
+
+
+ Let us now attempt to construct a SH scheme that is using the LWE assumption along the ideas presented in \cite{fhe-lwe}. Recall that a LWE$_{q, \chi}$ is specified by the odd modulus $q > 2$ and error distribution $\chi$. It provides us with the LWE distribution that we called $A_{s, \chi}$ where $\bm{s}$ was a random vector representing the secret key outputting us samples of the form
+\[A_{s, \chi} \rightarrow (\bm{a}, b) = (\bm{a}, \langle \bm{a}, \bm{s} \rangle + e)\],
+where $e$ was drawn from some distribution $\chi$ (usually taken to be the discrete Gaussian distribution with small standard deviation) over $\Z_q$ for $q$ prime\footnote{Since we will be using the decision version of the problem, we need to assume $q$ to be prime.}. We can now imagine a scheme that works as follows: to encrypt a single bit $m \in \{0,1\}$ using a secret key $\bm{s}$, draw a sample from $A_{s, \chi}$ and output the ciphertext
+\[ c \; = \; (\bm{a}, b = \langle \bm{a}, \bm{s} \rangle +2e +m) \; \; \; \in \Z_q^n \cross \Z_q \]
+Note that we have replaced the error $e$ with its two-times multiple in contrast to the original formulation by Regev as can be seen in Table \ref{lwe-enc}. This is not a problem at all because 2 and $q$ are coprime. To decrypt the message, first compute $\langle \bm{a},\bm{s} \rangle$ and substract that from $b$, giving $2e + m \mod q$ which, since $e \ll q$, is actually equal to $2e +m$ exactly. Finally, reduce modulo 2 and we are left with the original message $m$.
+
+The scheme is clearly additively homomorphic. The issue arises when we try to multiply two ciphertexts. As shown in \cite{one-mult}, the (slight variation of) this scheme supports only a \textit{single} homomorphic multiplication with the expense of huge blowup in the ciphertext size.
+
+To see how this is the case, consider a symbolic function $f_{\bm{a},b} : \Z_q^n \rightarrow \Z_q$ defined as:
+\[f_{\bm{a}, b}(\bm{x}) = b - \langle \bm{a, x} \rangle \mod q = b - \bm{a}_i \bm{x}^i \; \; \; \in \Z_q \]
+where we are using Eisenstein notation to represent elements $\bm{x} \in \Z_q^n$ (the transpose of the first element is implicit). Note now that the decryption is nothing else but evaluating this function on the secret key $\bm{s}$ and taking the result modulo 2. We can now define addition and multiplication using this function. Addition is straightforward, $f_{\bm{a}, b}$ is a linear function and so sum of two linear functions is still linear. Symbolically, $f_{\bm{a},b}(\bm{x}) + f_{\bm{a}',b'}(\bm{x}) = f_{(\bm{a}+\bm{a}',b+b')}(\bm{x})$ will represent the homomorphically added ciphertext $(\bm{a}+\bm{a}',b+b')$. Similarly, multiplying two such functions gives us
+\begin{equation}\label{mult}
+  \begin{split}
+  f_{\bm{a},b}(\bm{x}) \cdot f_{\bm{a}',b'}(\bm{x}) & = ( b - \bm{a}_i \bm{x}^i) \cdot ( b' - \bm{a}'_i \bm{x}^i ) \\
+						    & = h_0 + h_i \cdot \bm{x}^i + h_{i,j} \cdot \bm{x}^i \bm{x}^j,
+\end{split}
+\end{equation}
+which yields us a second degree polynomial with coefficients $h_{i,j}$ that can be computed by expanding the parenthesis of the upper equation. The decryption is as before, that is evaluating at $\bm{s}$ and reducing modulo 2. Hence, the scheme is trully homomorphic. Unfortunately, nothing in life comes for free and indeed, the multiplication which took a ciphertexts of size $n+1$, expanded it to the one of size approximately $n^2/2$. As one might imagine this is completely unacceptable from an efficiency point of view and surely not enough for bootstrapping. This is where the main contribution of \cite{fhe-lwe} comes in - the \textit{re-linearization} technique.
+\paragraph{Re-linearization}
+The goal is to reduce the ciphertext blow-up for multiplication. As turns out we can actually reduce the result back to just a $n+1$ size assuming something that resembles KDM security or ``circular security'' - i.e. we need to assume that the encryption of a secret key does not leak any information about it. However, the key difference is that we encrypt all of the linear and quadratic terms of $\bm{s}$ but using a different key, call it $\bm{t}$. More precisely, we encrypt numbers $\bm{s}^i$ as well as $\bm{s}^{i,j}$ using the new secret key $\bm{t}$. The adjusted equation \ref{mult} with $\bm{s}$ plugged in for $\bm{x}$ now (approximately) looks like: 
+\begin{align*}
+  %b^i = \langle \bm{a}^i, \bm{t} \rangle + 2e^i +\bm{s}^i \approx \langle \bm{a}^i, \bm{t} \rangle + \bm{s}^i \\
+  %b^{i,j} = \langle \bm{a}^{i,j}, \bm{t} \rangle + 2e^{i,j} +\bm{s}^{i,j} \approx \langle \bm{a}^{i,j}, \bm{t} \rangle + \bm{s}^{i,j} \\
+  & h_0 + h_i \cdot \bm{s}^i + h_{i,j} \cdot \bm{s}^i \bm{s}^j\\
+  = \; \; & h_0 + h_i \cdot (b^i - \langle \bm{a}^i, \bm{t} \rangle) + h_{i,j} \cdot (b^{i,j} - \langle \bm{a}^{i,j}, \bm{t} \rangle), 
+\end{align*}
+which is just a linear function in $\bm{t}$! The key take-away is that multiplying the two linear functions and later re-linearizing, gives us another linear function that when evaluated in $\bm{t}$, outputs the product of the original messages.
