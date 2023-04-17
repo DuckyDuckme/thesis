@@ -2,13 +2,15 @@ Fully Homomorphic Encryption (FHE) has been referred as the ``holy grail'' of mo
 
 Simply stated, in homomorphic encryption we want our data to be secure but we also want to perform calculations on it. This is useful when you need a third party (e.g. someone with more computational power) to perform operations on your data while still retaining privacy. Alice can store her data somewhere on external server (the cloud) and ask to perform computations on it. For example query searches without the engine knowing what is actually being searched for.
 
-In other words, we would like our encryption scheme to satisfy the following. Say the ciphertexts $c_i$'s decrypt to messages $m_i$'s. Then we want
-$$ \alg{Decrypt}_{\E}(c_1 + c_2) = m_1 + m_2, \qquad \alg{Decrypt}_{\E}(c_1*c_2) = m_1*m_2$$
+In other words, we would like our encryption scheme -- call it $\E$ -- to satisfy the following. Say the ciphertexts $c_i$'s decrypt to messages $m_i$'s. Then we want
+\[ \alg{Decrypt}_{\E}(c_1 + c_2) = m_1 + m_2, \qquad \alg{Decrypt}_{\E}(c_1*c_2) = m_1*m_2 \]
 Equivalently, we want $\alg{Decrypt}$ to be a ring homomorphism. $\E$ being \textit{fully homomorphic} means that whenever $f$ is a composition of \textbf{arbitrily many} additions and multiplications, then $\alg{Decrypt}_{\E}(f(c_1, \dots, c_n)) = f(m_1, \dots, m_n)$\footnote{There are two more technical requitements, namely \textit{compactness of the ciphertexts} and \textit{efficiency} but we will not consider them in this paper.} which is also refered to as the \textit{correctness} of the scheme.
 
 \begin{remark} \label{algs}
     Typically, an encryption scheme $\mathcal{E}$ is a tuple of $\alg{KeyGen}_{\E}$, $\alg{Encrypt}_{\E}$ and $\alg{Decrypt}_{\E}$ (representing the key-generation, encryption and decryption respectively), all of which we require to be \textit{efficient} - i.e. run in time poly($\lambda$) - polynomial in the security parameter $\lambda$ that represents the bit-length of the keys (see for example \cite{katz} or \cite{book} for more details on the abstract build of a encryption scheme). A homomorphic encryption scheme has a fourth algorithm - $\alg{Evaluate}_{\E}$ which we associate with some set of \textit{permitted functions}. In our case this will simply be $\alg{Add}_{\E}$ and $\alg{Mult}_{\E}$ which we will introduce in further sections. Adopting the notation from \cite{easy_fhe} we will denote by $\mathcal{F}_{\E}$, the generalized set of such functions.
 \end{remark}
+
+One might ask a question now, how secure can such scheme ultimately be? After all, we are giving the adversary a quite powerful tool in the form of being able to compute (ultimately) \textit{any} function on our data.
 
 \subsection{Somewhat Homomorphic Encryption}\label{int_she}
 Before we introduce the solution on to how to construct such FHE presented by Gentry, we will start with something slightly simpler, introduced in \cite{int_scheme} by van Dijk et al. Their scheme works over the integers rather than lattices but relies on a similar assumption. Namely, that finding the greatest common divisor of many ``noisy'' multiples of a number is computationally difficult. We will come back to this problem later. To keep the exposition compact, we will avoid specifying most parameter choices.
