@@ -11,7 +11,8 @@ When the situation demands us to make use of many variables and/or indicies, we 
 \subsection{Lattices}
 \subsubsection*{Basic Definitions}
 We define a \textit{lattice} as a discrete additive subgroup of $\R^n$. Once we fix a basis $\B = (\bm{b}_1, \dots ,\bm{b}_n) \in \R^n$ we can then describe the lattice as
-$$ \Lambda = \mathcal{L}(\bm{B}) = \Bigl\{ \sum_i z_i \bm{b}_i : z_i \in \Z \Bigl\}.$$
+\[ \Lambda = \mathcal{L}(\bm{B}) = \Bigl\{ \sum_i z_i \bm{b}_i : z_i \in \Z \Bigl\}.\]
+In other words, $\Lambda$ is the $\Z$-span of the specific basis $\B$.
 
 There are many bases for a lattice (actually, for $n \geq 2$, there are infinitely many as can be proven using a diagonalization argument), some ``better'' than others. This will be the foundation for some of the cryptosystems later like the GGH.
 
@@ -87,7 +88,7 @@ $$ \R^n = \bigcup_{\bm{t} \in \mathcal{L}} \{\bm{f} : \bm{f} \in \mathcal{F} \}$
 \begin{remark}
     Sometimes the \textit{fundamental domain} is refered to as a parallelepiped or parallelotope and denoted by caligraphic $\mathcal{P}$. If we take a matrix $\bm{B}$ to represent our lattice $\mathcal{L}$, then $\mathcal{P}_{1/2}(\bm{B}) = \{\bm{x}\bm{B}, \bm{x} \in [-1/2, 1/2]^n \}$ can also represent the (shifted by a half) fundamental domain of $\mathcal{L}$ (like for example in \cite{gentry}).
 \end{remark}
-
+\iffalse
 We will now present two results that give us an upper bound on the length of the shortest vector in a lattice. This will later on be useful to determine the security and/or correctness of our schemes. These theorems are due to Hermite (1822 - 1901) and Minkowski (1864 - 1909).
 
 \begin{theorem}[Hermite's Theorem]
@@ -95,7 +96,8 @@ We will now present two results that give us an upper bound on the length of the
     $$ \norm{v} \leq \sqrt{n} \det(\mathcal{L})^{\frac{1}{n}}.$$
 \end{theorem}
 \krzys{add minkowski's theorem}\\
-We can also need some notion of the shortest possible vector of a lattice. 
+\fi
+We can also need some notion of the shortest possible vector of a lattice. These will be very useful in the study of the hardness of a given problem.
 \begin{definition}
 	For a $n$-dimensional lattice $\Ll$, we denote its shortest nonzero vector (also called the \textit{minimum distance}) by $\lambda_1(\Ll)$. Formally
 	\[ \lambda_1(\Ll) := \min_{0 \neq \bm{v} \in \Ll} ||\bm{v}|| \]
@@ -103,12 +105,14 @@ We can also need some notion of the shortest possible vector of a lattice.
 	\[\lambda_i(\Ll) := \inf \{r : \Ll \text{ has $i$ linearly independent vectors of length at most } r \}. \]
 \end{definition}
 For example, in order to be able to go ``away'' from the lattice $\Ll$ ``out'' into the ambient space $\R^n$ and still be able to return to the original vector, we need to make sure the distance $d$ we travel is at most $\lambda_1(\Ll)/2$. This is for example a requirement in the \prob{BDD} problem where the decoding is \textit{promised}. For the exact definition see Section \ref{hardness}.
-\subsection{Algebraic Number Theory}
 
-Algebraic number theory is the study of \textit{number fields}, \textit{rings of integers} and \textit{finite fields}. In this section we will provide all the necessary background needed to understand and verify the results presented in the cryptographic schemes later in the text. Most results will be stated without proof however all of them can be found in the book \textbf{Number Fields} by \textbf{Daniel A. Marcus} \cite{algebra} after which this sections is modelled.
+Aditionally, most of the problems used in this paper are the \textit{approximate} versions to some varying constant usually called $\gamma$. As we will see later, $\gamma$ very often depends on $\lambda_1(\Ll)$ which roughly measures how ``strict'' or ``precise'' we can make our problem. This will be made explicing in the Section \ref{hardness} on the hardness and complexity theory.
+
+\subsection{Algebraic Number Theory}
+Algebraic number theory is the study of \textit{number fields}, \textit{rings of integers} and \textit{finite fields}. In this section we will provide all the necessary background needed to understand and verify the results presented in the cryptographic schemes later in the text. Most results will be stated without proof however all of them can be found in the books \textbf{Number Fields} by Daniel A. Marcus \cite{algebra} and \textbf{Classical Theory of Algebraic Numbers} by Paulo Ribenboim \cite{ribenboim} after which this sections is modeled.
 
 \subsubsection*{Number Fields}
-A \textit{number field} is defined as a subfield of $\oQ$ having finite dimension as a vector space over the rationals $\Q$. The \textit{degree} of a number field $K$ is defined as the dimension of $K$ over $\Q$. There exists a monic irreducible polynomial\footnote{Recall that we call polynomial monic if its leading coefficient is 1. It is an irreducible polynomial if it is irreducible as an element of the polynomial ring $\Q[x]$.} $f \in \Q[x]$ such that $K \cong \Q[x]/\langle f \rangle$. In fact, every monic and irreducible polynomial in $\Q[x]$ defines a number field via such isomorphism.
+A \textit{number field} is defined as a subfield of $\oQ$ having finite dimension as a vector space over the rationals $\Q$. The \textit{degree} of a number field $K$ is defined as the dimension of $K$ over $\Q$. There exists a monic irreducible polynomial\footnote{Recall that we call polynomial monic if its leading coefficient is 1. It is an irreducible polynomial if it is irreducible as an element of the polynomial ring $\Q[x]$.} $f \in \Q[x]$ such that $K \cong \Q[x]/(f )$. In fact, every monic and irreducible polynomial in $\Q[x]$ defines a number field via such isomorphism.
 
 \begin{definition}[Algebraic integer]
     An element $\alpha \in \C$ is an \textit{algebraic integer} if and only if, it is a root of some monic polynomial in $\Z[x]$.
@@ -126,8 +130,8 @@ $$
     The field $K = \Q$ is a number field of degree 1. Its ring of integers is, as one can guess, the ordinary integers $\Z$.
 \end{example}
 
-\begin{example}
-    The ring of Gaussian integers $\Z[\sqrt{-1}]$ is the ring of integers of $K = \Q(\sqrt{-1}) = \{a + b\sqrt{-1}\, :\, a,b\in \Q\}$ which has degree 2 since $x^2+1$ is the minimal (and irreducible) polynomial of $\sqrt{-1}$ over $\Q$.
+\begin{example}\label{z-basis}
+	The ring of Gaussian integers $\Z[\sqrt{-1}] = \{a+b\sqrt{-1}\, : \, a,b \in \Z \}$ is the ring of integers of $K = \Q(\sqrt{-1}) = \{a + b\sqrt{-1} \, : \, a,b\in \Q\}$ which has degree 2 since $x^2+1$ is the minimal (and irreducible) polynomial of $\sqrt{-1}$ over $\Q$. Note that $\Oo_K$ is spanned by $\{1, \sqrt{-1} \}$.
 \end{example}
 
 As another example, we can make a following statement about the ring of integers of a quadratic extension of rationals (real quadratic field).
@@ -144,53 +148,95 @@ As another example, we can make a following statement about the ring of integers
 \begin{proof}
 	Take $d \equiv 1 \mod 4$ square-free.
 \end{proof}
+For example for $K = \Q(\sqrt{5})$ its ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. 
+\begin{remark}\label{monogenic}
+	What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\alpha \in \oQ$, the ring of integers is not necessarily the $\Z[\alpha]$. Instead, $\Z[\alpha]$ is what's called an \textit{order} in $\Oo_K$. We will not consider them in general here because they are not relevant for our study as motivated in the next subsection. In general, a field $K = \Q(\alpha)$ such that $\Oo_K = \Z[\alpha]$ is called a \textit{monogenic} field or a \textit{simple algebraic extension}. For more details on orders, look at for example Chapter 5 of \cite{stein}.
+\end{remark}
 
-\begin{example}
-	For $K = \Q(\sqrt{5})$ the ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. 
-\end{example}
+One useful property of the integers we would like to preserve is the unique prime decomposition of its elements as stated in the Fundamental Theorem of Algebra. As the name suggests, the ring of integers has a property analogous to such decompositions. Namely, every nonzero proper ideal factors uniquely into prime ideals. Such ring in general is called a \textit{Daedeking domain}.
+
+Let us now get back to the topic of lattices for a moment and try to connect those two subjects a bit. Although not shown in this paper, we note that each element of $\Oo_K$ can be expressed as an integer linear combination of some basis $\bm{\mathcal{B}} = \{\beta_1, \beta_2, \ldots, \beta_n \} \subset \Oo_K$ (see the exercise \ref{z-basis} as a simple case.). The set $\bm{\mathcal{B}}$ is also called the \textit{integral basis} of $\Oo_K$ and is also a basis for $K$ as $\Q$-vector space. Now recall from the beginning of the previous section that any lattice can be defined as the $\Z$-span of some specific basis $\B \subset \R^n$. Analogously, we can define a lattice for any number field $K$.
+\begin{definition}
+	In a number field $K$ of degree $n$, a lattice in $K$ is the $\Z$-span of a $\Q$-basis of $K$.
+\end{definition}
+Examples of lattices in $K$ include the ring of integers $\Oo_K$, fractional ideals of $\Oo_K$ (introduced in the section on ring-LWE), and aforementioned orders in $K$.
 
 \subsubsection*{Cyclotomic fields}
+One particularly handy family of polynomials are the \textit{cyclotomic polynomials}. As defined momentarily, they are the minimal polynomials of the primitive roots of unity which poses many interesting algebraic properties. They also turn out to be much easier to compute and in general perform computational operations over, in contrast to most other polynomials.
 
 \begin{definition}[Roots of unity]
-    Given a field $K$ and a positive integer $n$, an element $\zeta \in K$ is called \textit{primitive $n$-th root of unity} if $\zeta$ has order $n$ in the multiplicative group $K^{\cross}$. (In other words, $\zeta^n = 1$ and $\zeta^m \neq 1$ for $1 \leq m < n$).
+    Given a field $K$ and a positive integer $n$, an element $\zeta \in K$ is called \textit{primitive $n$-th root of unity} if $\zeta$ has order $n$ in the multiplicative group $K^{\cross}$. In other words, $\zeta^n = 1$ and $\zeta^k \neq 1$ for $1 \leq k < n$. 
 \end{definition}
+It is also true that all $\zeta^k$ for $1 \leq k < n$ and $\gcd(k,n) = 1$ are conjugates of $\zeta$. It follows that $\Q(\zeta)$ has degree $\varphi(n)$ over $\Q$ (p.13 in \cite{algebra}). This leads us to the following proposition. Recall that the Galois group Gal$(K/\Q)$ of a finite extension of degree $n$ of $K$ over $\Q$ (or any other field for that matter) is the group of all $\Q-$automorphism. That is, Gal$(K/\Q)$ consists of maps $\tau : K \rightarrow K$ that fix $\Q$. In other words, the image of $\Q$ under $\tau$ is still $\Q$. 
+\begin{proposition}[p. 13 in \cite{algebra}]
+	The Galois group of $K = \Q(\zeta)$ over $\Q$ is isomorphic to the multiplicative group of integers$\mod n$
+	\[ \Z_n^* = \{ k : 1 \leq k \leq n, \; \gcd(k,n) = 1 \}. \]
+	For each $k \in \Z_n^*$ the corresponding automorphism in Gal$(K/\Q)$ sends $\zeta$ to $\zeta^k$. In particular, for any $g \in \Z[x]$ we have $g(\zeta) \mapsto g(\zeta^k)$.
+\end{proposition}
+\begin{example}
+	Take $K = \Q(\zeta)$
+\end{example}
+
 The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial. Formally we define it as 
-\[ \Phi_n(x) = \prod_{\gcd(k,n) = 1} \bigg( x - e^{2\sqrt{-1} \pi k/n} \bigg) \]
-It can be shown that $\zeta^i = \zeta^j$ if and only if $i = j$. The following equality is very useful for computing the polynomial itself:
+\[ \Phi_n(x) = \prod_{\substack{\gcd(k,n) = 1 \\ 1 \leq k < n}} \bigg( x - \zeta^k \bigg) = \prod_{\substack{\gcd(k,n) = 1 \\ 1 \leq k < n}} \bigg( x - e^{2\pi k \sqrt{-1}/n} \bigg). \]
+
+The following equality is very useful for computing the polynomial itself:
 \begin{equation}\label{comp_cycl} 
-\Phi_n(x) = (x^n - 1) \bigg/ \prod_{d | n} \Phi_d(x) 
+	\Phi_n(x) = (x^n - 1) \bigg/ \prod_{\substack{d | n\\ 1 \leq d < n}} \Phi_d(x) 
 \end{equation}
 \begin{example}
-  Take $n = 8$. Then we can use equation \ref{comp_cycl} to compute:
+	To find $\Phi_8(x)$, we can use equation \ref{comp_cycl} to first precompute:
+  \begin{align*}
+	  \Phi_1(x) = & \hfill &  x - 1 \\
+	  \Phi_2(x) = & \hfill & x^2-1\Big/\Phi_1(x) = \frac{x^2 - 1}{x-1} = x+1 \\
+	  \Phi_4(x) = & \hfill & x^4-1\Big/\Phi_1(x)\cdot \Phi_2(x) = \frac{x^4-1}{(x-1)(x+1)} = x^2 + 1
+  \end{align*}
+	  And use it one more time to find:
+	  \begin{align*}
+		  \Phi_8(x) = \; & (x^8 - 1) \Big/ \prod_{{d | 4}} \Phi_d(x) = \Phi_1(x) \cdot \Phi_2(x) \cdot \Phi_4(x) \\
+		  = \; & (x^8 - 1) \Big/(x-1)(x+1)(x^2+1) \\
+		  = \; & (x^4+1)\cdot (x^2+1)(x+1)(x-1) \Big/(x^2+1)(x+1)(x-1) \\
+		  = \; & x^4 +1,
+	  \end{align*}
+	  as desired.
 \end{example}
-As a usefull corollary of the equation \ref{comp_cycl}, we can prove that for $n$ a power of 2, $n = 2^k$ for some $k \geq 1$, the equation is of the form $x^{2^{k - 1}} + 1$.
-\begin{corollary}
+As a usefull corollary of the equation \ref{comp_cycl}, we can prove that for $n$ a power of 2, $n = 2^k$ for some $k \geq 1$, the cyclotomic polynomial $\Phi_n(x)$ is of the form $x^{2^{k - 1}} + 1$.
+\begin{corollary}\label{2k-cycl}
   Let $n= 2^k$ for some $k \in Z_{> 0}$. Then $\Phi_n(x) = x^{2^{k-1}} + 1$.
 \end{corollary}
 \begin{proof}
-  By induction,
+	Attempting to prove it by induction, we first check that indeed $\Phi_2(x) = x+1$. For the step, assume that we have $\Phi_n(x) = x^{2^{k-1}} + 1$ for some $n = 2^k$. Then it is not difficult to see that $x^{2^k} -1$ ``splits'' as 
+	\begin{align*}
+		x^{2^k} = & (x^{2^{k-1}} + 1)(x^{2^{k-1}} - 1) \\
+		= & (x^{2^{k-1}} + 1)(x^{2^{k-2}} + 1) \cdot \ldots \cdot (x+1)(x-1) \\
+		= & (x^{2^{k-1}} + 1) \cdot \Phi_{2^{k-1}}(x) \cdot \ldots \cdot \Phi_2(x) \cdot \Phi_1(x) \\
+		= & (x^{2^{k-1}} + 1) \cdot \prod_{d | n} \Phi_d(x)
+	\end{align*}
+	and so the equation \ref{comp_cycl} becomes
+	\begin{align*}
+		\Phi_n(x) = & (x^n - 1) \Big/ \prod_{d|n} \Phi_d(x) \\
+		= & (x^{2^{k-1}} + 1) \cdot \prod_{d|n} \Phi_d(x) \Big/ \prod_{d|n} \Phi_d(x)\\
+		= & x^{2^{k-1}} + 1
+	\end{align*}
 \end{proof}
 
-What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\alpha \in \C$, the ring of integers is not necessarily the $\Z[\alpha]$. Instead, $\Z[\alpha]$ is what's called an \textit{order} in $\Oo_K$. We will not consider them in general here because they are not relevant for our study. However, one very useful feature of cyclotomic fields is that their ring of integers is actually just $\Z[\zeta]$. That is - $\Oo_K = \Z[\zeta]$ for $K = \Q(\zeta)$ and $\zeta$ is some $n$-th root of unity. This greately simplifies the approach in proving some of the results later in this paper. In general, a field $K = \Q(\alpha)$ such that $\Oo_K = \Z[\alpha]$ is called a \textit{monogenic} field or a \textit{simple algebraic extension}. For more details on orders, look at for example Chapter 5 of \cite{stein}.
+As mentioned in remark \ref{monogenic}, rings of integers are usually not generated by a single element. However, one very useful feature of cyclotomic fields is that their ring of integers is actually just $\Z[\zeta]$. That is -- $\Oo_K = \Z[\zeta]$ for $K = \Q(\zeta)$ and $\zeta$ is some $n$-th root of unity. This greately simplifies the approach in proving some of the results later in this paper as we will only need to look at what heppens with $\zeta$ instead of all other generators.
 
-\begin{proposition}
-	The ring of integers of a cyclotomic number field $K = \Q(\zeta)$ is $\Oo_K = \Z[\zeta]$.
+\begin{proposition}\label{cycl-ok}
+	The ring of integers of a cyclotomic number field $K = \Q[x]/\Phi_m(x) \cong \Q(\zeta)$ is $\Oo_K = \Z[\zeta]$. Additionally, if $n = \varphi(m)$ is the degree of $K$, then $\Z[\zeta]$ is generated by $\{1, \zeta, \zeta^2, \dots, \zeta^{n-1} \}$.
 \end{proposition}
 
 \subsubsection*{Embeddings in $\C$}
-Let $K = \Q(\alpha)$ be a number field of degree $n$ for some $\alpha$. Then there are exactly $n$ embeddings (injective ring homomorphisms) of $K$ in $\C$. These are easily described by observing that $\alpha$ can be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $(\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates).
+Let $K = \Q(\alpha)$ be a number field of degree $n$ for a root $\alpha$ of some irreducible $f \in \Q[x]$. It can be shown, that there are exactly $n$ embeddings (injective ring homomorphisms) of $K$ in $\C$. This can be shown noting that since $\Q$ has characteristic 0, all of the roots of $f$ over $K$ must be distinct. Therefore $\alpha$ can only be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates.
 
 \begin{example}
     The quadratic field $\Q[\sqrt{d}]$, $d$ squarefree, has two embeddings in $\C$: The identity mapping, and also the one which sends $a + b\sqrt{d}$ to $a - b\sqrt{d}$ ($a$, $b$ $\in \Q$), since $\sqrt{d}$ and $-\sqrt{d}$ are the two conjugates of $\sqrt{d}$. The $n$-th cyclotomic field has $\varphi(n)$ embeddings in $\C$, the $\varphi(n)$ automorphisms where $\sigma_i(\zeta) = \zeta^i$.
 \end{example}
 
+ 
 \begin{definition}[Canonical embedding]
 
 \end{definition}
-\pinar{what do we want to consider as a cyclotomic poly? is $n=2^a$? is $n$ a prime? and why?}
-
-
-\pinar{Maximal orders (ring of integers) are dedekind domains, embedding of $\Q(\alpha)$ to $\C$ hence embedding of the ideals. Properties of ideals in dedekind domains, operations, unique factorization and so on. all the necessary info. }
 
 \subsection{Complexity Theory and Hard Problems} \label{hardness}
 When talking about cryptography, we cannot avoid talking about algorithms as an encryption scheme is simply a instruction on how to encode sensitive data. We will thus require some terminology from computational complexity theory - a field on the overlap of computer science and mathematics. The problems it is concerned are those of the time and space required for solving computational problems. Most of the time, the goal of the study is to prove the lower bound on the resources required to solve a problem using the best know algorithm. For example, how long does it take to find a factorization of a large composite number. The goal of this section is to give an overview of few parts of the field that we will be using throughout the paper. 

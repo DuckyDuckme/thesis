@@ -23,7 +23,7 @@ Let us unwrap this statement. As said before, we need an appropriate choice of p
 
 The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \Psi_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}. Since we strongly believe that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}, \cite{lbc}) we are left with a difficult, yet efficient way to share secrets. Oded Regev proceeds to prove this using various lemmas and results from few areas of mathematics like probability, lattice theory and quantum computing. We will now present selected proofs and outline of the whole the approach.
 
-\subsubsection{Background II}
+\subsubsection{Preliminaries}
 Here we will define essential and convenient definitions and lemmas concerning Gaussian distributions lattices and lattice-related problems. Note that no algebraic number theory is needed for this section as we work exclusively over $\R^n$ and $\Z^n_q$ for $q$ an integer (it is only required for $q$ to be prime in Theorem \ref{s-to-d}, otherwise no assumptions are made). 
 
 \paragraph{Gaussians}
