@@ -3,13 +3,13 @@ Most of the notation is ``standard'' in the field of number theory and cryptogra
 
 \noindent Any scalars $a, t, \beta, \dots$ are represented by non-bold, latin or greek letters.\\
 Bold symbols $\bm{v}, \bm{x}, \bm{s}, \dots$ will denote vectors. \\
-$\alg{Algorithms}$ will be represented by $\alg{lmodern font}$ names such as $\alg{Encrypt}$ or $\alg{Evaluate}$.\\
-Traditionally, the symbols $\Z, \Q, \R, \C$ shall represent the sets of integer, rational, real and complex numbers, respectivelly.\\
+$\alg{Algorithms}$ will be represented by $\alg{textsf font}$ names such as $\alg{Encrypt}$ or $\alg{Evaluate}$.\\
+Traditionally, the symbols $\Z, \Q, \R, \C$ shall represent the sets of integers, rational, real and complex numbers, respectivelly.\\
 Additionally, for any real $m \geq 0$, $\flo{m}$ shall denote greatest integer not exceeding $m$, $\round{m} = \flo{m + \frac{1}{2}}$ and $[m]$ is the set $\{1, 2, \dots, \flo{m}\}$.\\
-When the situation demands us to make use of many variables and/or indicies, we will be using Eisenstein notation which is defined as \krzys{fill that in}
+%When the situation demands us to make use of many variables and/or indicies, we will be using Eisenstein notation which is defined as \krzys{fill that in}
 
 \subsection{Lattices}
-\subsubsection*{Basic Definitions}
+\subsubsection*{Basic definitions}
 We define a \textit{lattice} as a discrete additive subgroup of $\R^n$. Once we fix a basis $\B = (\bm{b}_1, \dots ,\bm{b}_n) \in \R^n$ we can then describe the lattice as
 \[ \Lambda = \mathcal{L}(\bm{B}) = \Bigl\{ \sum_i z_i \bm{b}_i : z_i \in \Z \Bigl\}.\]
 In other words, $\Lambda$ is the $\Z$-span of the specific basis $\B$.
@@ -18,7 +18,7 @@ There are many bases for a lattice (actually, for $n \geq 2$, there are infinite
 
 \begin{example}
     The simplest example of a lattice is the $\Z^n$ itself. Taking the standard basis $\B_1 = (\bm{e}_1, \dots, \bm{e}_n)$ we obtain
-$$\mathcal{L}(\bm{B}_1) = \Bigl\{ \sum_i z_i \bm{e}_i : z_i \in \Z \Bigl\} = \Z^n.$$
+	\[ \mathcal{L}(\bm{B}_1) = \Bigl\{ \sum_i z_i \bm{e}_i : z_i \in \Z \Bigl\} = \Z^n. \]
 \end{example}
 More generally, $\Lambda$ is a lattice of rank $m$ in $\R^n$ if it is a rank $m$ free abelian group. Recall that we call a group \textit{free abelian group} of rank $m$ if it can be written as $\Lambda = \Z\beta_1 \oplus \cdots \oplus\Z\beta_m$ with $\beta_1, \dots, \beta_m$ linearly independent over $\R$ where $\oplus$ represents the direct sum. In this paper we will only consider lattices of full rank $n$. 
 
@@ -43,8 +43,8 @@ Reciprocally, any matrix $\bm{B} \in GL_n(\R)$ spans a lattice: the set of all i
         \end{smallmatrix}\big)$
     \item $\mathcal{L} = \{(z_1,z_2) : z_1 + z_2 \text{ is even}\}$
     \item $\mathcal{L} = \begin{pmatrix}
-        13 & 21\\
-        21 & 34
+        1/3 & \pi\\
+        0 & 21/7
         \end{pmatrix}$
 \end{enumerate}
 \end{example}
@@ -57,21 +57,22 @@ As noted before, the basis of a lattice is not unique. There is one that is part
     $$ \mathcal{F}(\bm{b}_1, \dots, \bm{b}_n) = \{t_1\bm{b}_1 + \cdots + t_n\bm{b}_n : 0 \leq t_i < 1 \}.$$
 \end{definition}
 
-We define the \textit{volume} of $\mathcal{F}(\bm{B})$ as the volume of the corresponding parallelepiped in $\R^n$. The \textit{volume} - closely connected to the determinant - plays a very important role in our study which will become evident in later chapters. One of the advantages, of defining the fundamental domain, is that we can formalize the notion of area (or the determinant) of any given lattice. Recall that a lattice is just a countable collection of points and therefore has no volume by itself. This, however, is resolved by introducing the following.
+We define the \textit{volume} of $\mathcal{F}(\bm{B})$ as the volume of the corresponding parallelepiped in $\R^n$. The \textit{volume} -- closely connected to the determinant -- plays a very important role in our study which will become evident in later chapters. One of the advantages, of defining the fundamental domain, is that we can formalize the notion of area (or the determinant) of any given lattice. Recall that a lattice is just a countable collection of points and therefore has no volume by itself. This, however, is resolved by introducing the following.
 
 \begin{definition}
     Let $\mathcal{L}$ be a lattice of dimension $n$ and let $\mathcal{F}(\bm{B})$ be a fundamental domain for $\mathcal{L}$ over some basis $\bm{B}$. We define the \textit{determinant} of that lattice as
-    $$ \det (\mathcal{L}) = \VF{\bm{B}} = |\det (\bm{B}) |$$
+	\[ \det (\mathcal{L}) = \VF{\bm{B}} = |\det (\bm{B}) | \]
 \end{definition}
 
-The next two propositions are \textit{de facto} foundation for lattice based cryptography. The first one states that the $\det (\mathcal{L})$ does not depend on the choice of the basis for that lattice. The second, that our whole ambient space $\R^n$ can be described using only vectors from the lattice and the fundamental domain. We will only give an outline of the proofs for the sake of keeping this section compact. Full proofs, however, can be found in \cite{book}, chapter 6.4.
+The next two propositions are arguably the two most fundamental resuls for lattice based cryptography. The first one, states that the $\det (\mathcal{L})$ does not depend on the choice of the basis for that lattice. The second, that our whole ambient space $\R^n$ can be described using only vectors from the lattice and the fundamental domain. We will only give an outline of the proofs for the sake of keeping this section compact. Full proofs, however, can be found in \cite{book}, chapter 6.4.
 
-\begin{proposition}
+\begin{lemma}
     The $\det (\mathcal{L})$ of an $n$-dimensional lattice is invariant under the choice of the basis.
-\end{proposition}
+\end{lemma}
 
 \begin{proof}[Outline of the proof]
-    Let $\bm{B}_1, \bm{B}_2$ be two bases for a lattice $\mathcal{L}$. The crucial part of the proof is to note that any two bases are related by some unimodular matrix $U$ (i.e. a matrix with the determinant of $\pm 1$) s.t. $\bm{B}_1 = U \bm{B}_2$. It now easily follows to compute $| \det (\bm{B}_1) | = \det (\mathcal{L}) = | \det (U \cdot \bm{B}_2) | = | \det(U) | \cdot | \det(\bm{B}_2) | = | \det(\bm{B}_2)|$ 
+    Let $\bm{B}_1, \bm{B}_2$ be two bases for a lattice $\mathcal{L}$. The crucial part of the proof is to note that any two bases are related by some unimodular matrix $U$ (i.e. a matrix with the determinant of $\pm 1$) s.t. $\bm{B}_1 = U \bm{B}_2$. Then it easily follows that 
+	\[| \det (\bm{B}_1) | = \det (\mathcal{L}) = | \det (U \cdot \bm{B}_2) | = | \det(U) | \cdot | \det(\bm{B}_2) | = | \det(\bm{B}_2)| \]
 \end{proof}
 
 From now on we will write $\mathcal{F}$ to denote the fundamental domain of the lattice without specifying the basis.
@@ -108,140 +109,50 @@ For example, in order to be able to go ``away'' from the lattice $\Ll$ ``out'' i
 
 Aditionally, most of the problems used in this paper are the \textit{approximate} versions to some varying constant usually called $\gamma$. As we will see later, $\gamma$ very often depends on $\lambda_1(\Ll)$ which roughly measures how ``strict'' or ``precise'' we can make our problem. This will be made explicing in the Section \ref{hardness} on the hardness and complexity theory.
 
-\subsection{Algebraic Number Theory}
-Algebraic number theory is the study of \textit{number fields}, \textit{rings of integers} and \textit{finite fields}. In this section we will provide all the necessary background needed to understand and verify the results presented in the cryptographic schemes later in the text. Most results will be stated without proof however all of them can be found in the books \textbf{Number Fields} by Daniel A. Marcus \cite{algebra} and \textbf{Classical Theory of Algebraic Numbers} by Paulo Ribenboim \cite{ribenboim} after which this sections is modeled.
-
-\subsubsection*{Number Fields}
-A \textit{number field} is defined as a subfield of $\oQ$ having finite dimension as a vector space over the rationals $\Q$. The \textit{degree} of a number field $K$ is defined as the dimension of $K$ over $\Q$. There exists a monic irreducible polynomial\footnote{Recall that we call polynomial monic if its leading coefficient is 1. It is an irreducible polynomial if it is irreducible as an element of the polynomial ring $\Q[x]$.} $f \in \Q[x]$ such that $K \cong \Q[x]/(f )$. In fact, every monic and irreducible polynomial in $\Q[x]$ defines a number field via such isomorphism.
-
-\begin{definition}[Algebraic integer]
-    An element $\alpha \in \C$ is an \textit{algebraic integer} if and only if, it is a root of some monic polynomial in $\Z[x]$.
-\end{definition}
-In fact, the set of \textit{algebraic integers} forms a ring.
-
-\begin{definition}[Ring of Integers]
-We define the \textit{ring of integers} (sometimes also called \textit{maximal order}) $\Oo_K$ of a number field $K$ as the intersection:
-$$
-  \Oo_K = K \cap \overline{\Z} = \{x \in K : \text{ $x$ is an algebraic integer}\}.
-$$
+\paragraph{Dual}
+\begin{definition}[Dual]
+    For a lattice $\Ll \subset \R^n$ its $\Z$\textit{-dual} is
+    \[ \Lld = \{ y \in \R^n : \langle y,\Ll \rangle \subseteq \Z \}.\]
 \end{definition}
 
-\begin{example}
-    The field $K = \Q$ is a number field of degree 1. Its ring of integers is, as one can guess, the ordinary integers $\Z$.
+We simply require that the elements of the dual to be precisely those vectors, that yield an integer when ``multiplied'' with an element of our lattice. Note that this is different from our standard definition of a dual. Namely, it is not the orthogonal compliment of our starting space, i.e. not all of the elements of the dual have 0 dot product against the vectors of the lattice.
+
+\begin{example}\label{ld-ex}
+    Take $\mathcal{L}= \Z 
+        \big(\begin{smallmatrix} 1\\2 \end{smallmatrix}\big) + 
+        \Z \big(\begin{smallmatrix} 0\\ 1 \end{smallmatrix}\big)$.
+        To calculate the dual of $\mathcal{L}$ we need our $y = \big(\begin{smallmatrix}
+          a\\b\end{smallmatrix}\big)$ elements to satisfy $a +2b \in \Z$ and $b \in \Z$ which is equivalent to asking $a \in (1/2)\Z$ and so $\mathcal{L}^{\vee} = \big(\begin{smallmatrix}
+          1/2\\0
+        \end{smallmatrix}\big)\Z + \big(\begin{smallmatrix}
+          0\\1
+        \end{smallmatrix}\big) \Z$
+        See Figure \ref{lattices} where the red vectors represent the basis.
 \end{example}
 
-\begin{example}\label{z-basis}
-	The ring of Gaussian integers $\Z[\sqrt{-1}] = \{a+b\sqrt{-1}\, : \, a,b \in \Z \}$ is the ring of integers of $K = \Q(\sqrt{-1}) = \{a + b\sqrt{-1} \, : \, a,b\in \Q\}$ which has degree 2 since $x^2+1$ is the minimal (and irreducible) polynomial of $\sqrt{-1}$ over $\Q$. Note that $\Oo_K$ is spanned by $\{1, \sqrt{-1} \}$.
-\end{example}
+Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension. One can imagine the dual as the original lattice ``flipped'' in the sence that the shortes element becomes the longest and vice versa.
+\begin{figure}[ht]
+    \caption{Lattice $\Ll$ from example \ref{ld-ex} and its dual.}
+        \label{lattices}
+        \centering
+        \begin{subfigure}{.5\textwidth} 
+                \centering
+                \includegraphics[scale=0.5]{lattice.png}
+                \caption{$\Ll$}
+        \end{subfigure}%
+        \begin{subfigure}{.5\textwidth}
+                \centering
+                \includegraphics[scale=0.5]{lattice-d.png}
+                \caption{$\Lld$}
+        \end{subfigure}
+\end{figure}
 
-As another example, we can make a following statement about the ring of integers of a quadratic extension of rationals (real quadratic field).
-\begin{lemma}
-     Let $d \in \Z$ be a square-free integer. For the field $K = \Q(\sqrt{d})$, its ring of integers is 
-     \[ \Oo_K = 
-	 \begin{cases} 
-	     \Z[\sqrt{d}] & \text{if $d \equiv 2, 3 \mod 4$}, \\
-	     \Z[(1 + \sqrt{d})/2] & \text{otherwise}.
-     	 \end{cases}
-     \]
-\end{lemma}
-
-\begin{proof}
-	Take $d \equiv 1 \mod 4$ square-free.
-\end{proof}
-For example for $K = \Q(\sqrt{5})$ its ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. 
-\begin{remark}\label{monogenic}
-	What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\alpha \in \oQ$, the ring of integers is not necessarily the $\Z[\alpha]$. Instead, $\Z[\alpha]$ is what's called an \textit{order} in $\Oo_K$. We will not consider them in general here because they are not relevant for our study as motivated in the next subsection. In general, a field $K = \Q(\alpha)$ such that $\Oo_K = \Z[\alpha]$ is called a \textit{monogenic} field or a \textit{simple algebraic extension}. For more details on orders, look at for example Chapter 5 of \cite{stein}.
-\end{remark}
-
-One useful property of the integers we would like to preserve is the unique prime decomposition of its elements as stated in the Fundamental Theorem of Algebra. As the name suggests, the ring of integers has a property analogous to such decompositions. Namely, every nonzero proper ideal factors uniquely into prime ideals. Such ring in general is called a \textit{Daedeking domain}.
-
-Let us now get back to the topic of lattices for a moment and try to connect those two subjects a bit. Although not shown in this paper, we note that each element of $\Oo_K$ can be expressed as an integer linear combination of some basis $\bm{\mathcal{B}} = \{\beta_1, \beta_2, \ldots, \beta_n \} \subset \Oo_K$ (see the exercise \ref{z-basis} as a simple case.). The set $\bm{\mathcal{B}}$ is also called the \textit{integral basis} of $\Oo_K$ and is also a basis for $K$ as $\Q$-vector space. Now recall from the beginning of the previous section that any lattice can be defined as the $\Z$-span of some specific basis $\B \subset \R^n$. Analogously, we can define a lattice for any number field $K$.
-\begin{definition}
-	In a number field $K$ of degree $n$, a lattice in $K$ is the $\Z$-span of a $\Q$-basis of $K$.
-\end{definition}
-Examples of lattices in $K$ include the ring of integers $\Oo_K$, fractional ideals of $\Oo_K$ (introduced in the section on ring-LWE), and aforementioned orders in $K$.
-
-\subsubsection*{Cyclotomic fields}
-One particularly handy family of polynomials are the \textit{cyclotomic polynomials}. As defined momentarily, they are the minimal polynomials of the primitive roots of unity which poses many interesting algebraic properties. They also turn out to be much easier to compute and in general perform computational operations over, in contrast to most other polynomials.
-
-\begin{definition}[Roots of unity]
-    Given a field $K$ and a positive integer $n$, an element $\zeta \in K$ is called \textit{primitive $n$-th root of unity} if $\zeta$ has order $n$ in the multiplicative group $K^{\cross}$. In other words, $\zeta^n = 1$ and $\zeta^k \neq 1$ for $1 \leq k < n$. 
-\end{definition}
-It is also true that all $\zeta^k$ for $1 \leq k < n$ and $\gcd(k,n) = 1$ are conjugates of $\zeta$. It follows that $\Q(\zeta)$ has degree $\varphi(n)$ over $\Q$ (p.13 in \cite{algebra}). This leads us to the following proposition. Recall that the Galois group Gal$(K/\Q)$ of a finite extension of degree $n$ of $K$ over $\Q$ (or any other field for that matter) is the group of all $\Q-$automorphism. That is, Gal$(K/\Q)$ consists of maps $\tau : K \rightarrow K$ that fix $\Q$. In other words, the image of $\Q$ under $\tau$ is still $\Q$. 
-\begin{proposition}[p. 13 in \cite{algebra}]
-	The Galois group of $K = \Q(\zeta)$ over $\Q$ is isomorphic to the multiplicative group of integers$\mod n$
-	\[ \Z_n^* = \{ k : 1 \leq k \leq n, \; \gcd(k,n) = 1 \}. \]
-	For each $k \in \Z_n^*$ the corresponding automorphism in Gal$(K/\Q)$ sends $\zeta$ to $\zeta^k$. In particular, for any $g \in \Z[x]$ we have $g(\zeta) \mapsto g(\zeta^k)$.
-\end{proposition}
-\begin{example}
-	Take $K = \Q(\zeta)$
-\end{example}
-
-The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial. Formally we define it as 
-\[ \Phi_n(x) = \prod_{\substack{\gcd(k,n) = 1 \\ 1 \leq k < n}} \bigg( x - \zeta^k \bigg) = \prod_{\substack{\gcd(k,n) = 1 \\ 1 \leq k < n}} \bigg( x - e^{2\pi k \sqrt{-1}/n} \bigg). \]
-
-The following equality is very useful for computing the polynomial itself:
-\begin{equation}\label{comp_cycl} 
-	\Phi_n(x) = (x^n - 1) \bigg/ \prod_{\substack{d | n\\ 1 \leq d < n}} \Phi_d(x) 
-\end{equation}
-\begin{example}
-	To find $\Phi_8(x)$, we can use equation \ref{comp_cycl} to first precompute:
-  \begin{align*}
-	  \Phi_1(x) = & \hfill &  x - 1 \\
-	  \Phi_2(x) = & \hfill & x^2-1\Big/\Phi_1(x) = \frac{x^2 - 1}{x-1} = x+1 \\
-	  \Phi_4(x) = & \hfill & x^4-1\Big/\Phi_1(x)\cdot \Phi_2(x) = \frac{x^4-1}{(x-1)(x+1)} = x^2 + 1
-  \end{align*}
-	  And use it one more time to find:
-	  \begin{align*}
-		  \Phi_8(x) = \; & (x^8 - 1) \Big/ \prod_{{d | 4}} \Phi_d(x) = \Phi_1(x) \cdot \Phi_2(x) \cdot \Phi_4(x) \\
-		  = \; & (x^8 - 1) \Big/(x-1)(x+1)(x^2+1) \\
-		  = \; & (x^4+1)\cdot (x^2+1)(x+1)(x-1) \Big/(x^2+1)(x+1)(x-1) \\
-		  = \; & x^4 +1,
-	  \end{align*}
-	  as desired.
-\end{example}
-As a usefull corollary of the equation \ref{comp_cycl}, we can prove that for $n$ a power of 2, $n = 2^k$ for some $k \geq 1$, the cyclotomic polynomial $\Phi_n(x)$ is of the form $x^{2^{k - 1}} + 1$.
-\begin{corollary}\label{2k-cycl}
-  Let $n= 2^k$ for some $k \in Z_{> 0}$. Then $\Phi_n(x) = x^{2^{k-1}} + 1$.
-\end{corollary}
-\begin{proof}
-	Attempting to prove it by induction, we first check that indeed $\Phi_2(x) = x+1$. For the step, assume that we have $\Phi_n(x) = x^{2^{k-1}} + 1$ for some $n = 2^k$. Then it is not difficult to see that $x^{2^k} -1$ ``splits'' as 
-	\begin{align*}
-		x^{2^k} = & (x^{2^{k-1}} + 1)(x^{2^{k-1}} - 1) \\
-		= & (x^{2^{k-1}} + 1)(x^{2^{k-2}} + 1) \cdot \ldots \cdot (x+1)(x-1) \\
-		= & (x^{2^{k-1}} + 1) \cdot \Phi_{2^{k-1}}(x) \cdot \ldots \cdot \Phi_2(x) \cdot \Phi_1(x) \\
-		= & (x^{2^{k-1}} + 1) \cdot \prod_{d | n} \Phi_d(x)
-	\end{align*}
-	and so the equation \ref{comp_cycl} becomes
-	\begin{align*}
-		\Phi_n(x) = & (x^n - 1) \Big/ \prod_{d|n} \Phi_d(x) \\
-		= & (x^{2^{k-1}} + 1) \cdot \prod_{d|n} \Phi_d(x) \Big/ \prod_{d|n} \Phi_d(x)\\
-		= & x^{2^{k-1}} + 1
-	\end{align*}
-\end{proof}
-
-As mentioned in remark \ref{monogenic}, rings of integers are usually not generated by a single element. However, one very useful feature of cyclotomic fields is that their ring of integers is actually just $\Z[\zeta]$. That is -- $\Oo_K = \Z[\zeta]$ for $K = \Q(\zeta)$ and $\zeta$ is some $n$-th root of unity. This greately simplifies the approach in proving some of the results later in this paper as we will only need to look at what heppens with $\zeta$ instead of all other generators.
-
-\begin{proposition}\label{cycl-ok}
-	The ring of integers of a cyclotomic number field $K = \Q[x]/\Phi_m(x) \cong \Q(\zeta)$ is $\Oo_K = \Z[\zeta]$. Additionally, if $n = \varphi(m)$ is the degree of $K$, then $\Z[\zeta]$ is generated by $\{1, \zeta, \zeta^2, \dots, \zeta^{n-1} \}$.
-\end{proposition}
-
-\subsubsection*{Embeddings in $\C$}
-Let $K = \Q(\alpha)$ be a number field of degree $n$ for a root $\alpha$ of some irreducible $f \in \Q[x]$. It can be shown, that there are exactly $n$ embeddings (injective ring homomorphisms) of $K$ in $\C$. This can be shown noting that since $\Q$ has characteristic 0, all of the roots of $f$ over $K$ must be distinct. Therefore $\alpha$ can only be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates.
-
-\begin{example}
-    The quadratic field $\Q[\sqrt{d}]$, $d$ squarefree, has two embeddings in $\C$: The identity mapping, and also the one which sends $a + b\sqrt{d}$ to $a - b\sqrt{d}$ ($a$, $b$ $\in \Q$), since $\sqrt{d}$ and $-\sqrt{d}$ are the two conjugates of $\sqrt{d}$. The $n$-th cyclotomic field has $\varphi(n)$ embeddings in $\C$, the $\varphi(n)$ automorphisms where $\sigma_i(\zeta) = \zeta^i$.
-\end{example}
-
- 
-\begin{definition}[Canonical embedding]
-
-\end{definition}
+\input{ant}
 
 \subsection{Complexity Theory and Hard Problems} \label{hardness}
-When talking about cryptography, we cannot avoid talking about algorithms as an encryption scheme is simply a instruction on how to encode sensitive data. We will thus require some terminology from computational complexity theory - a field on the overlap of computer science and mathematics. The problems it is concerned are those of the time and space required for solving computational problems. Most of the time, the goal of the study is to prove the lower bound on the resources required to solve a problem using the best know algorithm. For example, how long does it take to find a factorization of a large composite number. The goal of this section is to give an overview of few parts of the field that we will be using throughout the paper. 
+When talking about cryptography, we cannot avoid talking about algorithms since an encryption scheme is simply a instruction on how to encode sensitive data. We will thus require some terminology from computational complexity theory - a field on the overlap of computer science and mathematics. The problems it is concerned are those of the time and space required for solving computational problems. Most of the time, the goal of the study is to prove the lower bound on the resources required to solve a problem using the best know algorithm. For example, how long does it take to find a factorization of a large composite number. The goal of this section is to give an overview of few parts of the field that we will be using throughout the paper. 
 
-\subsubsection*{}
+\subsubsection*{Complexity theory and hard problems}
 We begin with necessary terminology. Throughout this section, $n$ shall denote the ``size'' of the input to the algorithm. Here the word size could mean many things like for example the bit-length of a number or its value in the base 10 representation.
 
 In order to represent the time or space required to solve the problem, most of the time we will use the ``big-O'' notation. For any function $f$ and $g$ of some variable $x$, is defined as $f(x) \in O(g(x))$ if there exists some constant $M$ and $x_0$ such that $f(x) \leq Mg(x)$ for all $x \geq x_0$.
