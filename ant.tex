@@ -36,7 +36,7 @@ As another example, we can make a following statement about the ring of integers
 \end{lemma}
 
 \begin{proof}
-	Take $d \equiv 1 \mod 4$ square-free.
+	Take $d \equiv 1 \mod 4$ square-free. \pinar{if you dont have time to finish the proof give a reference.}
 \end{proof}
 For example for $K = \Q(\sqrt{5})$ its ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. 
 \begin{remark}\label{monogenic}
@@ -45,14 +45,44 @@ For example for $K = \Q(\sqrt{5})$ its ring of integers is $\Oo_K = \Z[(1 + \sqr
 
 Recall that an ideal $\I$ of some ring $R$ is an additive subgroup of $R$ (if $x,y \in \I$ then $x-y \in \I$) and closed under multiplication of the elements in $R$ ($x \in \I$ implies $r \cdot x \in \I$ for any $r \in R$). We call an ideal in a ring of integers by \textit{integral ideal}.
 
-One useful property of the integers we would like to preserve is the unique prime decomposition of its elements as stated in the Fundamental Theorem of Algebra. As the name might suggest\footnote{As stated on p.34 in \cite{stein} ``\textit{...it is this unique factorization that initially motivated the introduction of rings of integers of number fields over a century ago''}.}, the ring of integers has a property analogous to such decompositions. Namely, that every nonzero proper ideal factors uniquely into prime ideals. Such ring in general is called a \textit{Daedekind domain}.
+One useful property of the integers we would like to preserve is the unique prime decomposition of its elements as stated in the Fundamental Theorem of Algebra. As the name might suggest\footnote{As stated on p.34 in \cite{stein} ``\textit{...it is this unique factorization that initially motivated the introduction of rings of integers of number fields over a century ago''}.}, the ring of integers has a property analogous to such decompositions. Namely, that every nonzero proper ideal factors uniquely into prime ideals. Such ring in general is called a \textit{Dedekind domain}.
 
-More precisely, take $D$ to be a Daedekind domain (for example the $\Oo_K$) and $\I \subset D$ a nonzero ideal (and also not an empty set). Then $\I$ factorizes uniquely (up to ordering) into prime ideals $\I = \p_1^{e_1} \p_2^{e_2} \ldots \p_r^{e_r}$ where each $e_i$ is an integer and each $\p_i$ is prime. Additionally it can be shown that in a Daedekind domain, every prime ideal $\p$ is also \textit{maximal} (the only superideal of $\p$ is the $D$ itself). This in turn implies that $D/\p$ is a finite field of order equal to the index of $|\Oo_K /\I|$ as an additive subgroup of $\Oo_K$.
+More precisely, take $D$ to be a Dedekind \pinar{Dedekind} domain (for example $\Oo_K$) and $\I \subset D$ a nonzero ideal (and also not an empty set). Then $\I$ factorizes uniquely (up to ordering) into prime ideals $\I = \p_1^{e_1} \p_2^{e_2} \ldots \p_r^{e_r}$ where each $e_i$ is an integer and each $\p_i$ is prime. Additionally it can be shown that in a Dedekind domain, every prime ideal $\p$ is also \textit{maximal} (the only superideal \pinar{superideal?} of $\p$ is the $D$ itself). This in turn implies that $D/\p$ is a finite field of order equal to the index of $|\Oo_K /\I|$ as an additive subgroup of $\Oo_K$. \pinar{$D$ or $\Oo_K$? Mixing notation. Not $|\Oo_K /\I|$ but $|\Oo_K /\p|$}
 
 \begin{definition}
-	In a number field $K$ of degree $n$, a lattice in $K$ is the $\Z$-span of a $\Q$-basis of $K$.
+	In a number field $K$ of degree $n$, a lattice in $K$ is the $\Z$-span of a $\Q$-basis of~$K$.
 \end{definition}
 Examples of lattices in $K$ include the ring of integers $\Oo_K$, fractional ideals of $\Oo_K$ (introduced in the section on ring-LWE), and aforementioned orders in $K$.
+
+
+\subsubsection*{Embeddings in $\C$} 
+Let $K = \Q(\alpha)$ be a number field of degree $n$ for a root $\alpha$ of some irreducible $f \in \Q[x]$. It can be shown, that there are exactly $n$ embeddings (injective ring homomorphisms) of $K$ in $\C$. This can be shown noting that since $\Q$ has characteristic 0, all of the roots of $f$ over $K$ must be distinct. Therefore $\alpha$ can only be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates.
+
+\begin{example}
+    The quadratic field $\Q[\sqrt{d}]$, $d$ squarefree, has two embeddings in $\C$: The identity mapping, and also the one which sends $a + b\sqrt{d}$ to $a - b\sqrt{d}$ ($a$, $b$ $\in \Q$), since $\sqrt{d}$ and $-\sqrt{d}$ are the two conjugates of $\sqrt{d}$.
+\end{example}
+ 
+%As noted, we have many embeddings in $\C^n$. The simplest case could be the na\"ive coefficient embedding. Simply take an element of our number field $\alpha \in K = \Q[x]/(f)$ seen as a polynomial ring and map each of the coefficients $\alpha_i$ into the corresponding spot of the $\C^n$ vector. Although easy to picture, we will instead almost exclusively be using the \textit{canonical embedding} defined as follows.
+
+\begin{definition}[Canonical embedding]
+	Let $K = \Q(\alpha)$ be a simple algebraic extension (generated by just $\alpha$) of $\Q$ of degree $n$. Let $f(x)$ be the minimal polynomial of $\alpha$. Denote by $\sigma_i : K \rightarrow K$ the $\Q-$automorphism such that $\sigma_i(\alpha) = \alpha_i$ where $\alpha := \alpha_1$ and $\alpha_i$ are the roots of $f(x)$. The \textit{canonical embedding} $\sigma$ is defined as
+	\[ \sigma : K \rightarrow \C^n, \; \; \; \alpha \mapsto  (\sigma_1(\alpha), \sigma_2(\alpha), \ldots, \sigma_n(\alpha)). \]
+\end{definition}
+
+\begin{example}
+    For $K = \Q(\sqrt{5})$ we have two embeddings $a+b\sqrt{5} \mapsto a \pm b\sqrt{5}$ and so the cannonical embedding is given by
+	\[ a + b\sqrt{5} \mapsto (a + b\sqrt{5},\, a - b\sqrt{5}). \]
+\end{example}
+
+One last thing we will need to introduce are the \textit{trace} and \textit{norm} of some field $K$. \pinar{They will be helpful in generalizing the concept of a lattice to an arbitrary number field.}
+
+\begin{definition}
+	Let $K$ be a number field with $n = [K:\Q]$ and let $\sigma_1, \sigma_2, \ldots, \sigma_n$ denote the embeddings of $K$ in $\C$ just like above. For $\alpha \in K$ we define the \textit{trace} as
+	\[ \Tr_{K/\Q}(\alpha) = \sum_{i \in [n]} \sigma_i(\alpha) \]
+	and the \textit{norm}
+	\[ \text{N}_{K/\Q}(\alpha) = \prod_{i \in [n]} \sigma_i(\alpha). \]
+\end{definition}
+
 
 \subsubsection*{Cyclotomic fields}
 One particularly handy family of polynomials are the \textit{cyclotomic polynomials}. As defined momentarily, they are the minimal polynomials of the primitive roots of unity which poses many interesting algebraic properties. They also turn out to be much easier to compute and in general perform computational operations over, in contrast to most other polynomials.
@@ -60,11 +90,11 @@ One particularly handy family of polynomials are the \textit{cyclotomic polynomi
 \begin{definition}[Roots of unity]\label{r-of-1}
     Given a field $K$ and a positive integer $n$, an element $\zeta \in K$ is called \textit{primitive $n$-th root of unity} if $\zeta$ has order $n$ in the multiplicative group $K^{\cross}$. In other words, $\zeta^n = 1$ and $\zeta^k \neq 1$ for $1 \leq k < n$. 
 \end{definition}
-It is also true that all $\zeta^k$ for $1 \leq k < n$ and $\gcd(k,n) = 1$ are conjugates of $\zeta$. It follows that $\Q(\zeta)$ has degree $\varphi(n)$ over $\Q$. This leads us to the following proposition. Recall that the Galois group Gal$(K/\Q)$ of a finite extension of degree $n$ of $K$ over $\Q$ (or any other field for that matter) is the group of all $\Q-$automorphism. That is, Gal$(K/\Q)$ consists of maps $\tau : K \rightarrow K$ that fix $\Q$. In other words, the image of $\Q$ under $\tau$ is still $\Q$. 
+It is also true that all $\zeta^k$ for $1 \leq k < n$ and $\gcd(k,n) = 1$ are conjugates of $\zeta$. It follows that $\Q(\zeta)$ has degree $\varphi(n)$ over $\Q$. This leads us to the following proposition. Recall that the Galois group Gal$(K/\Q)$ of a finite extension of degree $n$ of $K$ over $\Q$ (or any other field for that matter) is the group of all $\Q-$automorphism. That is, Gal$(K/\Q)$ consists of maps $\tau : K \rightarrow K$ that fix $\Q$ elementwise. As a result the image of $\Q$ under $\tau$ is still $\Q$. 
 \begin{proposition}[p. 13 in \cite{algebra}]\label{galois}
 	The Galois group of $K = \Q(\zeta_n)$ over $\Q$ is isomorphic to the multiplicative group of integers$\mod n$
 	\[ \Z_n^* = \{ k : 1 \leq k < n, \; \gcd(k,n) = 1 \}. \]
-	For each $k \in \Z_n^*$ the corresponding automorphism in Gal$(K/\Q)$ sends $\zeta$ to $\zeta^k$. In particular, for any $g \in \Z[x]$ we have $g(\zeta) \mapsto g(\zeta^k)$.
+	For each $k \in \Z_n^*$ the corresponding automorphism in Gal$(K/\Q)$ sends $\zeta$ to $\zeta^k$. \pinar{Remove? In particular, for any $g \in \Z[x]$ we have $g(x) \mapsto g(x^k)$.}
 \end{proposition}
 
 The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial. Formally we define it as 
@@ -90,9 +120,9 @@ The following equality is very useful for computing the polynomial itself:
 	  \end{align*}
 	  as desired.
 \end{example}
-As a usefull corollary of the equation \ref{comp_cycl}, we can prove that for $n$ a power of 2, $n = 2^k$ for some $k \geq 1$, the cyclotomic polynomial $\Phi_n(x)$ is of the form $x^{2^{k - 1}} + 1$.
+As a useful corollary of the equation \ref{comp_cycl}, we can prove that for $n$ a power of 2, $n = 2^k$ for some $k \geq 1$, the cyclotomic polynomial $\Phi_n(x)$ is of the form $x^{2^{k - 1}} + 1$.
 \begin{corollary}\label{2k-cycl}
-  Let $n= 2^k$ for some $k \in Z_{> 0}$. Then $\Phi_n(x) = x^{2^{k-1}} + 1$.
+  Let $n= 2^k$ for some $k \in \Z_{> 0}$. Then $\Phi_n(x) = x^{2^{k-1}} + 1$.
 \end{corollary}
 \begin{proof}
 	Attempting to prove it by induction, we first check that indeed $\Phi_2(x) = x+1$. For the step, assume that we have $\Phi_n(x) = x^{2^{k-1}} + 1$ for some $n = 2^k$. Then it is not difficult to see that $x^{2^k} -1$ ``splits'' as 
@@ -110,31 +140,14 @@ As a usefull corollary of the equation \ref{comp_cycl}, we can prove that for $n
 	\end{align*}
 \end{proof}
 
-As mentioned in remark \ref{monogenic}, rings of integers are usually not generated by a single element. However, one very useful feature of cyclotomic fields is that their ring of integers is actually just $\Z[\zeta]$. That is -- $\Oo_K = \Z[\zeta]$ for $K = \Q(\zeta)$ and $\zeta$ is some $n$-th root of unity. This greately simplifies the approach in proving some of the results later in this paper as we will only need to look at what happens with $\zeta$ instead of all other generators.
+As mentioned in Remark \ref{monogenic}, rings of integers are usually not generated by a single element. However, one very useful feature of cyclotomic fields is that their ring of integers is actually just $\Z[\zeta]$. That is -- $\Oo_K = \Z[\zeta]$ for $K = \Q(\zeta)$ and $\zeta$ is some $n$-th root of unity. This greately simplifies the approach in proving some of the results later in this paper as we will only need to look at what happens with $\zeta$ instead of all other generators.
 
 \begin{proposition}\label{cycl-ok}
 	The ring of integers of a cyclotomic number field $K = \Q[x]/\Phi_m(x) \cong \Q(\zeta)$ is $\Oo_K = \Z[\zeta]$. Additionally, if $n = \varphi(m)$ is the degree of $K$, then $\Z[\zeta]$ is generated by $\{1, \zeta, \zeta^2, \dots, \zeta^{n-1} \}$.
 \end{proposition}
 
-\subsubsection*{Embeddings in $\C$}
-Let $K = \Q(\alpha)$ be a number field of degree $n$ for a root $\alpha$ of some irreducible $f \in \Q[x]$. It can be shown, that there are exactly $n$ embeddings (injective ring homomorphisms) of $K$ in $\C$. This can be shown noting that since $\Q$ has characteristic 0, all of the roots of $f$ over $K$ must be distinct. Therefore $\alpha$ can only be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates.
-
 \begin{example}
-    The quadratic field $\Q[\sqrt{d}]$, $d$ squarefree, has two embeddings in $\C$ (in fact they embed in $\R$ but we take $\C \supset \R$ for consistency): The identity mapping, and also the one which sends $a + b\sqrt{d}$ to $a - b\sqrt{d}$ ($a$, $b$ $\in \Q$), since $\sqrt{d}$ and $-\sqrt{d}$ are the two conjugates of $\sqrt{d}$.
-\end{example}
- 
-As noted, we have many embeddings in $\C^n$. The simplest case could be the na\"ive coefficient embedding. Simply take an element of our number field $\alpha \in K = \Q[x]/(f)$ seen as a polynomial ring and map each of the coefficients $\alpha_i$ into the corresponding spot of the $\C^n$ vector. Although easy to picture, we will instead almost exclusively be using the \textit{canonical embedding} defined as follows.
-
-\begin{definition}[Canonical embedding]
-	Let $K = \Q(\alpha)$ be a simple algebraic extension (generated by just $\alpha$) of $\Q$ of degree $n$. Denote by $\sigma_i : K \rightarrow K$ the $\Q-$automorphism such that $\sigma_i(\alpha) = \alpha^i$. The \textit{canonical embedding} $\sigma$ is defined as
-	\[ \sigma : K \rightarrow \C^n, \; \; \; x \mapsto  (\sigma_1(x), \sigma_2(x), \ldots, \sigma_n(x)). \]
-\end{definition}
-
-\begin{example}
-	For $K = \Q(\sqrt{5})$ we have two embeddings $a+b\sqrt{5} \mapsto a \pm b\sqrt{5}$ and so the cannonical embedding is given by
-	\[ a + b\sqrt{5} \mapsto \begin{pmatrix} a + b\sqrt{5} \\ a - b\sqrt{5} \end{pmatrix} = 
-	a \begin{pmatrix} 1 \\ 1 \end{pmatrix} + b \begin{pmatrix} \sqrt{5} \\ -\sqrt{5} \end{pmatrix}. \]
-	Similarly, for $K = \Q(\zeta_5) = \Q[x]/(x^4 +x^3 +x^2+x +1)$, we have four embeddings. These are precisely $\sigma_i(\zeta) = \zeta^i$ and now the canonical embedding maps $a + b\zeta + c\zeta^2 + d\zeta^3$ to
+		Similarly, for $K = \Q(\zeta_5) = \Q[x]/(x^4 +x^3 +x^2+x +1)$, we have four embeddings. These are precisely $\sigma_i(\zeta) = \zeta^i$ and now the canonical embedding maps $a + b\zeta + c\zeta^2 + d\zeta^3$ to
 	\begin{align*}
 		\begin{pmatrix}
 		a + b\zeta + c\zeta^2 +d \zeta^3 \\
@@ -162,14 +175,8 @@ In order to make $\sigma$ a ring homomorphism, we define the addition and multip
 
 Another very handy property of the cyclotomic fields is that for $n > 3$, the $n$-th cyclotomic field has $\varphi(n)$ embeddings in $\C$. These are precisely the $\varphi(n)$ automorphisms where $\sigma_i(\zeta) = \zeta^i$ is simply the conjugation of the generator. Therefore $K$ has only complex embeddings and we call such field a CM-field. Since the $\Q$-automorphisms map $\zeta$ to one of its conjugates, it is easy to see that any automorphism $\tau_k : K \rightarrow K$ mapping $\tau_k(\zeta) = \zeta^k$ simply permutes the coordinates of the canonical embedding. More precisely, $\sigma_i(\tau_k(\zeta)) = \sigma_i(\zeta^k) = \zeta^{ik}$ for all $i,k \in \Z_{\varphi(n)}^*$. Hence $\sigma \o \tau_k$ is just a permutation of the coordinates.
 
-One last thing we will need to introduce are the \textit{trace} and \textit{norm} of some field $K$. They will be helpful in generalizing the concept of a lattice to an arbitrary number field.
-
-\begin{definition}
-	Let $K$ be a number field with $n = [K:\Q]$ and let $\sigma_1, \sigma_2, \ldots, \sigma_n$ denote the embeddings of $K$ in $\C$ just like above. For $\alpha \in K$ we define the \textit{trace} as
-	\[ \Tr_{K/\Q}(\alpha) = \sum_{i \in [n]} \sigma_i(\alpha) \]
-	and the \textit{norm}
-	\[ \text{N}_{K/\Q}(\alpha) = \prod_{i \in [n]} \sigma_i(\alpha). \]
-\end{definition}
-
 \subsubsection*{Ideal lattices}
-Let us now get back to the topic of lattices for a moment and try to connect those two subjects a bit. Although not shown in this paper, we note that each element of $\Oo_K$ can be expressed as an integer linear combination of some basis $\bm{\mathcal{B}} = \{\beta_1, \beta_2, \ldots, \beta_n \} \subset \Oo_K$ (see the exercise \ref{z-basis} as a simple case.). The set $\bm{\mathcal{B}}$ is also called the \textit{integral basis} of $\Oo_K$ and is also a basis for $K$ as $\Q$-vector space. Now recall from the beginning of the previous section that any lattice can be defined as the $\Z$-span of some specific basis $\B \subset \R^n$. Analogously, we can define a lattice for any number field $K$.
+Let us now get back to the topic of lattices for a moment and try to connect those two subjects a bit. Although not shown in this paper, we note that each element of $\Oo_K$ can be expressed as an integer linear combination of some basis $\bm{\mathcal{B}} = \{\beta_1, \beta_2, \ldots, \beta_n \} \subset \Oo_K$ (see the Exercise \ref{z-basis} as a simple case.). The set $\bm{\mathcal{B}}$ is also called the \textit{integral basis} of $\Oo_K$ and is also a basis for $K$ as $\Q$-vector space. Now recall from the beginning of the previous section that any lattice can be defined as the $\Z$-span of some specific basis $\B \subset \R^n$. Analogously, we can define a lattice for any number field $K$.
+
+\pinar{Define duals, embedding of ideals in $\C$.}
+

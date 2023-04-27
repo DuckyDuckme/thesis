@@ -1,5 +1,5 @@
 
-\subsection{Ring-LWE}
+\subsection{Ring-LWE}\label{ring-lwe}
 One of the recurring problems in lattice-based cryptography is the key-size and general efficiency. In the GGH cryptosystem, the key-size is $\tilde{O}(n^4)$. In the system based on the hardness of LWE presented in the previous section, the size is in the range of $\tilde{O}(n^2)$\footnote{There are $m$ samples of length $n$. Turns out that for $m > n$, the problem can become only easier, but the same holds for $m \ll n$. Therefore, in most applications, $m$ is chosen to be roughly the size of $n$.}. As we will also see later, there is some minimal efficiency needed for the scheme in order to enable the boostrapping (for FHE). Unfortunately, none of the schemes presented so far satisfy those criterions and so, we need to look for something better.
 
 One idea to improve the efficiency, is to assume some underlying structure of the space we are performing computations in. For example, we can assume that the $\bm{a}$ vectors from previous section are given to us in block of $n$ samples $\bm{a}_1, \bm{a}_2, \dots, \bm{a}_n \in \Z_q^n$ where all of the elements are related. Namely, $\bm{a}_1 = (a_1, \dots, a_n)$ is again chosen uniformly but each $\bm{a}_i = (a_i, \dots, a_n, -a_1, \dots, -a_{i - 1})$ is a ``anti-cyclic'' of the initial $\bm{a}_1$. This choice seems rather arbitrary however we will show how it is a natural consequence of everything we did so far and yields arguably the best results. For example if $n = 4$ and $q = 17$ and $\bm{a}_1 = (1, 16, 4, 5)$ as before, then $\bm{a}_3$ has the form $(4, 5, -1, -16) = (4, 5, 16, 1)$. Note that representing $n$ vectors now takes only $O(n)$ elements from $\Z_q$ rather than $O(n^2)$. The underlying structure is a ring, hence the name ring-LWE (or R-LWE), that is, we replace the group $\Z_q^n$ by picking some ring $R$ of degree $n$ over $\Z$ and a positive modulus $q$ defining the quotient ring $R_q := R/qR$. In this exposition, to simplify some steps, $R$ is taken to be a \textit{cyclotomic} ring - i.e. $R_q = \Z_q[x]/ (x^n + 1 )$ for $n = 2^k$ which turns out to yield much simpler proofs for somewhat weaker results.
@@ -20,6 +20,8 @@ where the equality holds by Proposition \ref{cycl-ok} and therefore is generated
 This ring however is slightly too big for our desire. Analogously to the LWE case we therefore consider the coset obtained by reducing all elements modulo some integer $q$. Let us now consider two specific cases.
 \subsubsection*{Ideal Lattices}
 We can finally introduce the ideal lattices used in the construction. We will first take a small detour into the theory of ideals and then use the canonical embedding to obtain lattices. For a good discussion on the \textit{different} idal, see Keith Conrads \href{https://kconrad.math.uconn.edu/blurbs/gradnumthy/different.pdf}{paper}.
+
+\krzys{add discussion about fractional ideals and the different ideal}
 
 \paragraph{Chinese Remainder Theorem}
 Lastly, we will present the Chinese Remainder Theorem for rings and few related propositions that will be useful for our reductions in the two following sections.
@@ -163,7 +165,7 @@ The reduction follows from search-$R$-LWE to decision-$R$-LWE and in high-level 
 \label{fig:4reds}
 \end{figure}
 
-\paragraph{What do we mean by ``act transitively''}
+\paragraph{What do we mean by ``act transitively''?}
 Although not present in the original, we now explain the implicit details of the proof below. Most importantly, what do we mean by ``act transitively'' and why it is the case.
 
 Recall from section \ref{ant} that the Galois group of a cyclotomic number field $\Q(\zeta_m)$ is isomorphic to $\Z_m^* = \{k: 1 \leq l < m, \gcd(l,m) = 1\}.$ For our choice of $q \equiv 1 \mod m = 2n = 2^k$, this group is actually just
@@ -177,8 +179,8 @@ Recall also, from the section about cyclotomic fields, that this means that the 
 is the set of all the $2n$-th roots of unity and all of those elements are actually in $\Z_q$. We conclude that the polynomial $x^n +1$ ``splits completely'' into linear factors modulo $q$:
 \[ x^n + 1 = (x-z)(x-z^3) \cdot \ldots \cdot (x-z^{2n-1}) = \prod_{\substack{r \, <\, 2n \\ r \text{ is odd}}} (x-z^r). \]
 By the CRT (Proposition \ref{crt}), there is an isomorphism
-\[ R_q \Big/\prod_{\substack{r \, < \, 2n \\ r \text{ is odd}}}(x-z^r) \rightarrow R_q/(x-z) \cross R_q/(x-z^3) \cross \ldots \cross R_q/(x-z^{2n-1}). \]
-Since our underlying ring is the ring of integers (it is a Daedekind domain) and $(x-z^r)$ are prime (for $a,b$ odd, if $z^a \cdot z^b \in (z^r)$ then either $a$ or $b$ must thus be in $(z^r)$ because a sum of two odd integers is even) for all odd $r < 2n$, they are actually maximal. Therefore, each $R_q/(x-z^r)$ is a field. \krzys{im not sure if that is usefull at all}
+\[ R_q = \Z_q[x] \Big/\prod_{\substack{r \, < \, 2n \\ r \text{ is odd}}}(x-z^r) \rightarrow  \Z_q[x]/(x-z) \cross  \Z_q[x]/(x-z^3) \cross \ldots \cross  \Z_q[x]/(x-z^{2n-1}). \]
+Since our underlying ring is the ring of integers (it is a Dedekind domain) and $(x-z^r)$ are prime (for $a,b$ odd, if $z^a \cdot z^b \in (z^r)$ then either $a$ or $b$ must thus be in $(z^r)$ because a sum of two odd integers is even) for all odd $r < 2n$, they are actually maximal. Therefore, we have $\Z_q[x]/(x-z^r) \cong \Z_q$. \krzys{im not sure if that is usefull at all}
 
 Finally tying those two concepts together, the Galois group and $\Z_q$, we 
 
@@ -209,11 +211,11 @@ We ilustrate how the automorphisms act on the ring with two examples. The first 
 
 	Just like in the proof, we are given access to an oracle -- call it $\orc$ (in this case we will act as one because we already know the secret $s$, in principle, we need the $\orc$ to be efficient for the reduction to work) -- that yields $s(x)$ modulo only one ideal, say it will be $\q_1$ in this example.
 
-	Let us now take $s(x), a(x) \in \Z_5/(x^2+1)$ to be $s(x) = 1 + 4x$ and $a(x) = 2x$. Since the oracle $\orc$ will return us the correct result for any input, it will also return us the correct input when the error $e$ is 0. Let us then take it as such.
+	Let us now take $s(x), a(x) \in \Z_5[x]/(x^2+1)$ to be $s(x) = 1 + 4x$ and $a(x) = 2x$. Since the oracle $\orc$ will return us the correct result for any input, it will also return us the correct input when the error $e$ is 0. Let us then take it as such.
 
 	So we now encounter a sample $(a,b) \leftarrow A_{s, \psi}$ that looks like 
 	\[ (a, a\cdot s + e) = (2x, 2x(1+4x)) = (2x, 2x +8x^2) = (2x, 2+2x). \]
-	Let us give this sample to the $\orc$ which will tell us what is $s(x) \mod \q_1 R_q$. Since we are the oracle, we need to do the computation and so
+	Let us give this sample to the $\orc$ which will tell us what is $s(x) \mod \q_1 R_q$. Since we are the oracle, we need to do the computation, and so
 	\[ s(x) \mod (x-2)R_q = 4 \]
 	is the answer.
 
@@ -254,6 +256,15 @@ So $s(x) = \alpha x + \beta = 4x + 1$ which is (unsurprisingly) the correct answ
 
 \end{example}
 
-For instance, they have unique factorization of ideals, and their fractional ideals form a multiplicative group; in general, neither property holds in $\Z[x]/\langle f (x) \rangle$ for monic irreducible $f (x)$, as demonstrated by the ring $\Z[x]/\langle x^2+3 \rangle = \Z[\sqrt{-3}]$. (For example, in this ring $4 = 22 = (1+\sqrt{-3})(1 - \sqrt{-3})$, but 2, $1 + \sqrt{-3}$, and $1 - \sqrt{-3}$ are all irreducible.)
+The last step left for us is the reduction to the decision-RLWE. We 
+\begin{lemma}[$\q_i$-LWE to DLWE]
+\end{lemma}
+\begin{proof}
+\end{proof}
 
-One of the applications is \cite{qTESLA} signature scheme.
+\paragraph{Alternative proof}
+There is great disparity between required assumptions for the search and the decision version of the problem. The former holds for any number ring, (not even cyclotomic) whereas we need to make many assumptions about the structure of the ring from which we sample our variables from. It would be very practical if we could attain the same results but for more general structure. For one, the Galois fields are rare to encouter and the application might require us to consider something more modest. Secondly, from the cryptoanalytical point of view, usually the more assumptions we make, the less secure our problem is in the sence that one could abuse the additional structure for a specified attack.
+
+One of the solutions was presented by C.Peikert O. Regev and N. Stephens-Davidowitz in their 2020 paper \textit{Pseudorandomness of Ring-LWE for Any Ring and Modulus} -- \cite{oracle}. The approach they use differs greately from the one we introduced here. Firstly, the reduction is from the decision-RLWE to the \prob{BDD} (which was replaced by \prob{CVP} in our case) directly, without invoking an oracle for the search version at all. Secondly, as mentioned, this reduction works for any number field $K$, not only cyclotomic, as well as for any modulus $q$, not only prime.
+
+The very brief description of their approach is as follows. We take a point $t$ from the ambient space and use the decision oracle to measure how close it is to the actual lattice point. The goal is to use the so called ``acceptance probability'' of the oracle on some new point, call it $t'$, and check if it is significantly closer to the desired solution. This approach seems to be very easy, however, there are many important questions that need to be answered before proving that it actually works. For example, how do we pick the point $t'$ and, more importantly, how do we know it is in fact closer to the desired solution? Answering the second question is the main concern of the paper. For the full proof, the reader is redirected to the paper itself - \cite{oracle}.

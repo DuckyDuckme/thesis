@@ -150,12 +150,12 @@ Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension. One ca
 \input{ant}
 
 \subsection{Complexity Theory and Hard Problems} \label{hardness}
-When talking about cryptography, we cannot avoid talking about algorithms since an encryption scheme is simply a instruction on how to encode sensitive data. We will thus require some terminology from computational complexity theory - a field on the overlap of computer science and mathematics. The problems it is concerned are those of the time and space required for solving computational problems. Most of the time, the goal of the study is to prove the lower bound on the resources required to solve a problem using the best know algorithm. For example, how long does it take to find a factorization of a large composite number. The goal of this section is to give an overview of few parts of the field that we will be using throughout the paper. 
+When talking about cryptography, we cannot avoid talking about algorithms since an encryption scheme is simply a instruction on how to encode sensitive data. We will thus require some terminology from computational complexity theory -- a field on the overlap of computer science and mathematics. The problems the field is concerned are those of the time and space required for solving computational problems. Most of the time, the goal of the study is to prove the lower bound on the resources required to solve a problem using the best know algorithm. For example, how long does it take to find a factorization of a large composite number. The goal of this section is to give an overview of few parts of the field that we will be using throughout the paper. 
 
-\subsubsection*{Complexity theory and hard problems}
+\subsubsection*{Complexity theory}
 We begin with necessary terminology. Throughout this section, $n$ shall denote the ``size'' of the input to the algorithm. Here the word size could mean many things like for example the bit-length of a number or its value in the base 10 representation.
 
-In order to represent the time or space required to solve the problem, most of the time we will use the ``big-O'' notation. For any function $f$ and $g$ of some variable $x$, is defined as $f(x) \in O(g(x))$ if there exists some constant $M$ and $x_0$ such that $f(x) \leq Mg(x)$ for all $x \geq x_0$.
+In order to represent the time or space required to solve the problem, most of the time we will use the ``big-O'' notation. For any function $f$ and $g$ of some variable $x$, we say that $f(x) \in O(g(x))$ if there exists some constant $M > 0$ and $x_0$ such that $f(x) \leq Mg(x)$ for all $x \geq x_0$. Roughly speaking, the function $g$ will eventually ``grows faster'' than $f$.
 
 \pinar{will wait}
 mention "efficient", "negligible", "hard" and define reductions. show some problems like svp, cvp, bdd
@@ -166,6 +166,12 @@ We define a \prob{negligible} amount in $n$ as an amount that is asymptotically 
 \end{definition}
 The best know examples
 \prob{FACTORIZE}
-\subsubsection*{Quantum computations}
-I'm not sure if that is supposed to be in a section about preliminaries but I also don't want to include it in the introduction coz its a bit long
+\subsubsection{Hard problems}
+\begin{definition}[FACTORIZE]
+\end{definition}
+\begin{definition}[SVP]
+\end{definition}
+\subsubsection*{Basic cryptographic concepts}
+One-way function\\
+semantic security
 
