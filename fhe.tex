@@ -104,25 +104,52 @@ From now on, let $R$ be an arbitrary ring, and set $\I, \J \subset R$ as two cop
 	$\alg{KeyGen}(\B_{\I}, R$) \\
 	Generate two basis for $\J$, $\B_{\J}^{sk}$ and $\B_{\J}^{pk}$. The \textbf{public key} $pk$ includes $R$, $\B_{\I}$, $\B_{\J}^{pk}$ and the sampling algorithm \alg{Samp}. The \textbf{secret key} $sk$  also includes the $\B_{\J}^{sk}$. We denote by $\mathcal{P}$ the plaintext space which is (a subset of) $R \mod \B_{\I}$.\\
 	$\alg{Encrypt}(\text{pk}, m)$ \\
-	For a message $m \in \mathcal{P}$, set $c' \leftarrow$ \alg{Samp}$(m, \B_{\I}, R, \B_{\J}^{pk})$ and output $c \cong c' \mod \B_{\J}^{pk}$.\\
+	For a message $m \in \mathcal{P}$, set $c' \leftarrow$ \alg{Samp}$(m, \B_{\I}, R, \B_{\J}^{pk})$ and output $c \equiv c' \mod \B_{\J}^{pk}$.\\
 	$\alg{Decrypt}(\text{sk}, c)$ \\
 	For the ciphertext $c$, output $(c \mod \B_{\J}^{sk}) \mod \B_{\I}$.\\
 	$\alg{Evaluate}(\text{pk}, f, C)$ \\
 	This algorithm takes a set of ciphertexts $C = (c_1, \ldots, c_t)$ and applies the function $f \in \mathcal{F}_{\E}$ using the public key pk. It outputs $f(c_1, \ldots, c_t)$. Since we only support two operations from the ring, $f: R \rightarrow R$ needs to be a homomorphism.
 \end{mdframed}
 
-Having the bootstrapping in mind, we should pay close attention to the decryption algorithm
-\subsubsection{Limitations}
-KDM security assumption
+Having the bootstrapping in mind, we should pay close attention to the correctness of the decryption algorithm. Before proving it, let us state few definitions first.
+
+\begin{definition}
+	Let $X_{Enc}$ be the image of $\alg{Samp}$. Notice that all ciphertexts output by $\alg{Encrypt}$ are in $X_{Enc} + J$. Let $X_{Dec}$ equal $R \mod \B^{sk}_{\J}$, the distinguished representatives of cosets of $\J$ wrt the secret basis $\B^{sk}_{\J}$.
+\end{definition}
+
+\begin{definition}[Permitted Functions]
+	Let
+	\[ \mathcal{F}_{\E} := \{ f : \forall (x_1, \ldots, x_t) \in X_{Enc}^T, f(x_1, \ldots, x_t) \in X_{Dec}. \} \]
+	In other words, $\mathcal{F}_{\E}$ is the set of those functions of which output will always be in $X_{Dec}$ when the input is from $X_{End}$.
+\end{definition}
+Aditionally, we say the $\hat{c}$ a \textit{valid ciphertext} if it equals $\alg{Evaluate}$(pk, $f, (c_1, \ldots, c_t)$ for some function $f \in \mathcal{F}_{\E}$. We can now state and prove the correctness of our scheme.
+\begin{theorem}[Correctness]
+	Assume $\mathcal{F}_{\E}$ is a set of permitted functions containing the identity. $\E$ is correct for $\mathcal{F}_{\E}$ –- i.e., $\alg{Decrypt}$ correctly decrypts valid ciphertexts.
+\end{theorem}
+\begin{proof}
+	For $C = \{c_1, \ldots, c_t\}, c_k = m_k +i_k +j_k$, where $m_k \in \mathcal{P}, i_k \in \I, j_k \in \J$ and $m_k +i_k \in X_{Enc}$, we have
+	\begin{align*}
+		\alg{Evaluate}(\text{pk}, f, C) = & f(C) \mod \B_{\J}^{\text{sk}} \\
+		= & f(m_1 +i_1 +j_1, \ldots, m_t+i_t+j_t) \mod \B_{\J}^{\text{sk}} \\	
+		\in & f(m_1 +i_1, \ldots, m_t +i_t) + \J.
+	\end{align*}
+	If $f \in \mathcal{F}_{\E}$, then we have $f(X_{Enc}, \ldots, X_{Enc}) \in X_{Dec}$ and so
+	\begin{align*}
+		\alg{Decrypt} & (\text{sk}, \alg{Evaluate}(\text{pk}, C)) \\
+		& = f(m_1+i_1, \ldots, m_t +i_t) \mod \B_{\I} \\
+		& = f(m_1, \ldots, m_t) \mod \B_{\I} \\
+		& = f(m_1, \ldots, m_t)
+	\end{align*}
+	as required.
+\end{proof}
+
+Once we have the correctness, we can focus on the actual implementations of any fully homomorphic schemes. This in turn implies that we should pay very close attention to the size of $X_{Enc}$ and $X_{Dec}$. Namely, we want to maximize $X_{Dec}$ and minimize $X_{Enc}$ (while still retaining security). \krzys{finish the geometric interpretation of $X_{Enc}$ and $X_{Dec}$ if there is time}.
 
 \subsection{Further developments in FHE}
 Since the inception of FHE, many new ideas have emerged as potential replacement for the details in the implementation in Gentry's work. In this section, we will briefly introduce some of such techniques and ideas. Finally the work we have done on LWE and its ring equivalent will pay off as we can rely on those results to abstractly create FHE scheme \krzys{i dont like this sentence but idk how to make it prettier}. 
 
 \subsubsection{FHE from the standard LWE}
- One of such ideas is to replace the ideal lattices by an LWE sample instead.
-
-
- Let us now attempt to construct a SH scheme that is using the LWE assumption along the ideas presented in \cite{fhe-lwe}. Recall that a LWE$_{q, \chi}$ is specified by the odd modulus $q > 2$ and error distribution $\chi$. It provides us with the LWE distribution that we called $A_{s, \chi}$ where $\bm{s}$ was a random vector representing the secret key outputting us samples of the form
+ One of such ideas is to replace the ideal lattices by an LWE sample instead. Let us now attempt to construct a SH scheme that is using the LWE assumption along the ideas presented in \cite{fhe-lwe}. Recall that a LWE$_{q, \chi}$ is specified by the odd modulus $q > 2$ and error distribution $\chi$. It provides us with the LWE distribution that we called $A_{s, \chi}$ where $\bm{s}$ was a random vector representing the secret key outputting us samples of the form
 \[A_{s, \chi} \rightarrow (\bm{a}, b) = (\bm{a}, \langle \bm{a}, \bm{s} \rangle + e),\]
 where $e$ was drawn from some distribution $\chi$ (usually taken to be the discrete Gaussian distribution with small standard deviation) over $\Z_q$ for $q$ prime\footnote{Since we will be using the decision version of the problem, we need to assume $q$ to be prime.}. We can now imagine a scheme that works as follows: to encrypt a single bit $m \in \{0,1\}$ using a secret key $\bm{s}$, draw a sample from $A_{s, \chi}$ and output the ciphertext
 \[ c \; = \; (\bm{a}, b = \langle \bm{a}, \bm{s} \rangle +2e +m) \; \; \; \in \Z_q^n \cross \Z_q \]
@@ -132,7 +159,7 @@ The scheme is clearly additively homomorphic. The issue arises when we try to mu
 
 To see how this is the case, consider a symbolic function $f_{\bm{a},b} : \Z_q^n \rightarrow \Z_q$ defined as:
 \[f_{\bm{a}, b}(\bm{x}) = b - \langle \bm{a, x} \rangle \mod q = b - \bm{a}_i \bm{x}^i \; \; \; \in \Z_q \]
-where we are using Eisenstein notation to represent elements $\bm{x} \in \Z_q^n$ (the transpose of the first element is implicit). Note now that the decryption is nothing else but evaluating this function on the secret key $\bm{s}$ and taking the result modulo 2. We can now define addition and multiplication using this function. Addition is straightforward, $f_{\bm{a}, b}$ is a linear function and so sum of two linear functions is still linear. Symbolically, $f_{\bm{a},b}(\bm{x}) + f_{\bm{a}',b'}(\bm{x}) = f_{(\bm{a}+\bm{a}',b+b')}(\bm{x})$ will represent the homomorphically added ciphertext $(\bm{a}+\bm{a}',b+b')$. Similarly, multiplying two such functions gives us:
+where we are using Eisenstein notation to represent elements $\bm{x} \in \Z_q^n$ (the transpose of the first element is implicit). Note now that the decryption is nothing else but evaluating this function on the secret key $\bm{s}$ and taking the result modulo 2. We can now define addition and multiplication using this function. Addition is straightforward, $f_{\bm{a}, b}$ is a linear function and so sum of two linear functions is still linear. Symbolically, $f_{\bm{a},b}(\bm{x}) + f_{\bm{a}',b'}(\bm{x}) = f_{(\bm{a}+\bm{a}',b+b')}(\bm{x})$ will represent the homomorphically added ciphertext $(\bm{a}+\bm{a}',b+b')$. Similarly, multiplying two such functions gives us:\krzys{i think ill get rid of eisenstein notation coz im not really consistent with it}
 \begin{equation}\label{mult}
   \begin{split}
   f_{\bm{a},b}(\bm{x}) \cdot f_{\bm{a}',b'}(\bm{x}) & = ( b - \bm{a}_i \bm{x}^i) \cdot ( b' - \bm{a}'_i \bm{x}^i ) \\
@@ -153,9 +180,57 @@ which is just a linear function in $\bm{t}$! The key take-away is that multiplyi
 \subsubsection{FHE from the ring-LWE}
 A step forward in losing the need for KDM security (or circular security) was presented by Z. Brakerski and V. Vaikuntanathan in \cite{fhe_rlwe}. There, they have used the ring-LWE assumptions to create a FHE scheme with provable security for KDM. The scheme is relatively simple thanks to the assumptions that guarantee security based on ring-LWE assumptions. We will begin the construction with the SH scheme and later prove the circular security.
 
-\subsubsection*{ring-LWE SHE scheme}
-The assumptions for this scheme are almost identical as for the ring-LWE, i.e. we take $a$ randomly from some ring that we call $R_q$ and the error term $e$ from some distribution $\chi$ (again, usually taken to be Gaussian). Since we will be basing our scheme on the decision version, we should take $q$ to be prime just like in the previous scheme. For the precise formulation of the parameters, we refer reader to the Section \ref{ring-lwe} on the hardness of ring-LWE. The only difference in assumptions is that we will take the secret $s$ also from the same distribution $\chi$ which will be useful for the circular security. Note that this choice does not affect the results presented for ring-LWE.
-Let us first introduce a simpler scheme that is only additively homomorphic. This is not difficult as shown couple of times above. 
+\subsubsection*{Ring-LWE SHE scheme}
+The assumptions for this scheme are almost identical as for the ring-LWE, i.e. we take $a$ randomly from some ring that we call $R_q$ and the error term $e$ from some distribution $\chi$ (again, usually taken to be Gaussian). Since we will be basing our scheme on the decision version, we should take $q$ to be prime just like in the previous scheme. For compactness we avoid a precise formulation of the parameters, we refer the reader to the Section \ref{ring-lwe} on the hardness of ring-LWE. The only difference in assumptions is that we will take the secret $s$ also from the same distribution $\chi$ which will be useful for the circular security. Note that this choice does not affect the results presented for ring-LWE. 
 
+Let us first introduce a simpler (symmetric) scheme that is only additively homomorphic. This is not difficult as shown couple of times above. We first take $a$ uniform and sample $s,e \leftarrow \chi$ both from the same error distribution $\chi$. Now, to encrypt a message $m \in R_2 = \Z[x]/(x^n +1)$ that lives in the set of polynomials with binary coefficients, we set 
+\[ \bm{c} = (c_0, c_1) = (as +2e +m, -a). \]
+To decrypt the message $\bm{c} = (c_0, c_1)$ we compute
+\[(c_0 +c_1s) \mod 2 = as+2e+m -as \mod 2 = m. \]
+Let us now check the claimed additive homomorphism of the scheme. Assuming $\bm{c'}, \bm{c}$ encrypt messages $m, m'$ respectively using the same secret key, compute
+\begin{align*}
+	\bm{c'+c} = & (c_0 +c_0', c_1+c_1') = (as +2e +m + a's +2e' +m', -a - a') = \\ & ((a + a')s +2(e+e') +(m+m'), -a - a')
+\end{align*}
+and see that it decrypts correctly as long as the error is not too big.
+
+It should not come as a surprise that it is the multiplication we should pay most attention to. Let us then compute what a product of the first term $c_0 \cdot c_0'$ will look like
+\begin{align*}
+	c_0 \cdot c_0' = & (as +2e+m)(a's+2e'+m')\\
+	= & \; \; aa's^2 + 2(2ee'+em'+e'm) +mm' \\
+	  & + s(a'(2e+m) + a(2e'+m')) \\
+	= & \; \; aa's^2 + 2(2ee'+em'+e'm) +mm' \\
+	  & + s(a'c_0+ac_0' - 2aa's) \\
+	= & \; \; -aa's^2 + s(a'c_0 + ac_0') + 2(2ee'+em'+e'm) +mm'.
+\end{align*}
+This almost looks like a valid ciphertext for $c_0 \cdot c_0'$ if not for the $-aa's^2$ term. We can fix that by adding one more value to our ciphertext to make it look like $\bm{c}_{mult} = (c_{mult, 0}, c_{mult, 1}, c_{mult, 2})$ where $c_{mult, 2} = c_1c_1'$, $c_{mult, 1} = c_0c_1' + c_0'c_1$ and $c_{mult, 0} = c_0c_0'$. To now decrypt the 3 element ciphertext, compute $c_0 + c_1s +c_2s^2 \mod 2$. It is important to note that we can still add and multiply the ciphertexts of all lengths -- the addition yields the ciphertext of the bigger size of the operands and multiplication yields the ciphertext of size equal to the sum of operands minus one. 
+
+\paragraph{Parameters}
+We will skip most of the parameter choices as they often depend on the implementation. Most of them are just like in the standard case presented in the Section \ref{ring-lwe}, i.e. $q$ is prime and $R_q$ is the ring of integers of some cyclotomic field of degree $2^k$. Additionally, instead of taking our messages to be only binary, we shall widen our scope to any element of $R_t$ where $t \in \Z_q^*$ is also prime -- this will be also useful for the KDM security. If we assume that the greatest ``depth'' we can evaluate our polynomial functions at is $D$, we define the general scheme as follows.
+
+\begin{table}
+\begin{mdframed}
+	$\alg{KeyGen}$\\
+	Sample a ring element $s \leftarrow \chi$ and set the secret key vector as $(1, s, s^2, \ldots, s^D)~\in~R_q^{D+1}$. \\
+	$\alg{Encrypt}$\\
+	Recall that the plaintext space is $R_t$. To encrypt, sample $(a, as +te) \in R_q^2$ where $a$ was uniform and $e \leftarrow \chi$ taken from some distribution $\chi$. Output the $\bm{c} = (c_0, c_1) \in R_q^2$ computed as
+	\[c_0 = b +m \in R_q; \; \; \; c_1 = -a.  \]
+	While the encryption of a single element lives in $R_q^2$, homomorphic operations might add more elements as seen above. Thus, a more generic form for the ciphertext is $\bm{c} = (c_0, c_1, \ldots, c_D)$ and we can represent any ciphertext like that because padding with zeros does not influence the ciphertext.
+	\\
+	$\alg{Decrypt}$\\
+	Since the general form of the ciphertext is $\bm{c} = (c_0, c_1, \ldots, c_D) \in R_q^{D+1}$, the decryption is a simple $\langle \bm{c, s} \rangle \mod t = \sum_{i = 0}^D c_i s^i \mod t \in R_q$ \\
+	$\alg{Evaluate}$\\
+	The sum of two ciphertexts $\bm{c, c'}$ is simply the coordinate-wise addition (note that we assume that they are the same length here, for example by padding). For the multiplication, denote $\bm{c} = (c_0, \ldots, c_d)$ and $\bm{c'} = (c_0', \ldots, c_{d'})$ and use $x$ as a \textit{symbolic} variable to compute
+	\[ \bigg( \sum_{i = 0}^d c_ix^i \bigg) \cdot \bigg(\sum_{i = 0}^{d'} c_i'x^i \bigg) =
+	\bigg( \sum_{i = 0}^{d+d'} \hat{c_i}x^i \bigg) \]
+	where the $\hat{c_i}$'s are the result of multiplication modulo $R_q$. The output ciphertext is $\bm{c}_{mult} = (\hat{c_0}, \ldots, \hat{c}_{d+d'})$.
+
+\end{mdframed}
+\end{table}
+
+\paragraph{KDM security}
+Let us now briefly motivate how this scheme is circularly secure for a linear function. For a more rigorous presentation, see \cite{fhe_rlwe}.
+
+Consider the ciphertext $\bm{c}= (as +2e +s, -a)$ which ``looks like'' and encryption of the secret key $s$. If we now define $a' = a +1$ we have $\bm{c} = (a's +2e, -a'+1)$ we notice that the part $a's+2e$ is exactly a RLWE sample which (by previous section) is completely indistinguishable from an uniform sample -- call it $u$. Therefore, $\bm{c} \approx (u, -a'+1)$ which is a completely uniform pair and so, we cannot tell what the $s$ was.
 
 \subsubsection{Other works}
+

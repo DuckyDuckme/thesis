@@ -74,13 +74,11 @@ Let $K = \Q(\alpha)$ be a number field of degree $n$ for a root $\alpha$ of some
 	\[ a + b\sqrt{5} \mapsto (a + b\sqrt{5},\, a - b\sqrt{5}). \]
 \end{example}
 
-One last thing we will need to introduce are the \textit{trace} and \textit{norm} of some field $K$. \pinar{They will be helpful in generalizing the concept of a lattice to an arbitrary number field.}
+One last thing we will need to introduce are the \textit{trace} of some field $K$.
 
 \begin{definition}
 	Let $K$ be a number field with $n = [K:\Q]$ and let $\sigma_1, \sigma_2, \ldots, \sigma_n$ denote the embeddings of $K$ in $\C$ just like above. For $\alpha \in K$ we define the \textit{trace} as
-	\[ \Tr_{K/\Q}(\alpha) = \sum_{i \in [n]} \sigma_i(\alpha) \]
-	and the \textit{norm}
-	\[ \text{N}_{K/\Q}(\alpha) = \prod_{i \in [n]} \sigma_i(\alpha). \]
+	\[ \Tr_{K/\Q}(\alpha) = \sum_{i \in [n]} \sigma_i(\alpha). \]
 \end{definition}
 
 
@@ -94,7 +92,7 @@ It is also true that all $\zeta^k$ for $1 \leq k < n$ and $\gcd(k,n) = 1$ are co
 \begin{proposition}[p. 13 in \cite{algebra}]\label{galois}
 	The Galois group of $K = \Q(\zeta_n)$ over $\Q$ is isomorphic to the multiplicative group of integers$\mod n$
 	\[ \Z_n^* = \{ k : 1 \leq k < n, \; \gcd(k,n) = 1 \}. \]
-	For each $k \in \Z_n^*$ the corresponding automorphism in Gal$(K/\Q)$ sends $\zeta$ to $\zeta^k$. \pinar{Remove? In particular, for any $g \in \Z[x]$ we have $g(x) \mapsto g(x^k)$.}
+	For each $k \in \Z_n^*$ the corresponding automorphism in Gal$(K/\Q)$ sends $\zeta$ to $\zeta^k$.
 \end{proposition}
 
 The minimal polynomial $\Phi_n$ of $\zeta$ over $\Q$ is called the $n$-th cyclotomic polynomial. Formally we define it as 
@@ -107,9 +105,9 @@ The following equality is very useful for computing the polynomial itself:
 \begin{example}
 	To find $\Phi_8(x)$, we can use equation \ref{comp_cycl} to first precompute:
   \begin{align*}
-	  \Phi_1(x) = & \hfill &  x - 1 \\
-	  \Phi_2(x) = & \hfill & x^2-1\Big/\Phi_1(x) = \frac{x^2 - 1}{x-1} = x+1 \\
-	  \Phi_4(x) = & \hfill & x^4-1\Big/\Phi_1(x)\cdot \Phi_2(x) = \frac{x^4-1}{(x-1)(x+1)} = x^2 + 1
+	  & \Phi_1(x) = x - 1 \\
+	  & \Phi_2(x) = x^2-1\Big/\Phi_1(x) = \frac{x^2 - 1}{x-1} = x+1 \\
+	  & \Phi_4(x) = x^4-1\Big/\Phi_1(x)\cdot \Phi_2(x) = \frac{x^4-1}{(x-1)(x+1)} = x^2 + 1
   \end{align*}
 	  And use it one more time to find:
 	  \begin{align*}
