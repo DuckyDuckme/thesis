@@ -66,36 +66,6 @@ One last question we have is, why do we even need the error? Cannot we create a 
 
 Let us now get back to why we need the error. For any \textit{deterministic} algorithm (like \alg{AES} or \alg{RSA}) that encrypts $m$ as $c$ every time it is run, any adversary can check if any $m_0$ encrypts as $c$ and compare the two. Thus, by definition, such scheme cannot be semantically secure. We thus need a \textit{probabilistic} algorithm that gives us different output every time it is run. This implies some sort of randomizing the ciphertext which can only be done (to our understanding) using some error to mask the message. Therefore we need some sort of ``bootstrapping'' (which is not necessarily the one mentioned above, this is only one way to achieve FHE but there could be more) to create a FHE.
 
-\iffalse
-\subsubsection{Simple lattice based scheme}
-The motivation for the choice of lattices as opposed to number theoretic constructions (like RSA or ElGamma for example, which are based on exponentiation), is that the former has few desirable properties. Firstly, the lattices have lower decryption complexity and are therefore more suitable as a bootstrappable encryption scheme. Next, one requires not only one supported homomorphism like addition but also the multiplication -- lattices as ideals poses both. Those factors among many others, (see \cite{gentry} for more details) have led to the choice of \textit{ideal lattices}.
-
-The idea behind the encryption is somewhat similar to the one of GGH. That is, we are going to fix a basis for a lattice (which is an ideal), publish the bad basis as the public key and keep the good basis as a secret key. The security of this scheme is based on the Ideal Coset Problem\footnote{Later, in 2010, Gentry showed that the scheme can be based on the worst-case \prob{BDD} problem -- \cite{worst-case}.} (\prob{ICP}) introduced below. Briefly stated, given an element of some ring $t \in R$, the \prob{ICP} asks us to distinguish between a representative of a coset taken from some distribution over an arbitrary ring and a uniform sample.
-
-For a ring $R$ and a basis\footnote{By the word ``basis'' we simply mean the set of generators for the ideal but we use that instead to highlight the connection between the ideals and lattices as well as keep it consistent with Gentry's work.} $\B_{\I}$ for an ideal $\I \subset R$, we use the notation $R \mod \B_{\I}$ to represent the set of $r + \I$ for $r \in R$.
-
-\begin{definition}[Ideal Coset Problem]
-	Fix a ring $R$ along with an ideal $\I \subseteq R$ and sample an element $r \in R$ given a sampling algorithm \alg{Samp}. Now pick a basis $\B_{\I}$ for the ideal $\I$. Given the basis $\B_{\I}$, the challenger is asked to distinguish between $t \equiv r \mod \B_{\I}$ and $t$ being chosen uniformly.
-\end{definition}
-Few remarks are in place now. Firstly, this definition hides few details in favour of clearer notation. As one, we actually fix some ideal $\J \subseteq R$ such that $\I$ and $\J$ are coprime (i.e. $\I + \J = R$) first, and then, with respect to such $\J$, we instantiate the $\I$. This will become evident later in this section why this is required. Secondly, the procedure somewhat depends on the efficiency of those choices. One example would be how to pick such coprime ideals (an issue addressed also in later sections) as well as how to sample the $r$ from the ring itself. The questions (partially) are answered in the paper \cite{gentry_phd} itself.
-
-From now on, let $R$ be an arbitrary ring, and set $\I, \J \subset R$ as two coprime ideals of $R$.  We will also be using a sampling algorithm which we call \alg{Samp}$(x, \B_{\I} , R, \B_{\J})$ that samples from the coset $x + \I$. Let us now introduce the scheme in terms of rings and ideals only.
-
-\begin{mdframed}
-	\textbf{KeyGen:} \\
-	Fix a basis $\B_{\I}$ for $\I$. Generate two basis for $\J$, $\B_{\J}^{sk}$ and $\B_{\J}^{pk}$. The \textbf{public key} $pk$ includes $R$, $\B_{\I}$, $\B_{\J}^{pk}$ and the sampling algorithm \alg{Samp}. The \textbf{secret key} $sk$  also includes the $\B_{\J}^{sk}$. We denote by $\mathcal{P}$ the plaintext space which is (a subset of) $R \mod \B_{\I}$.\\
-	\textbf{Encrypt:} \\
-	For a message $m \in \mathcal{P}$, set $c' \leftarrow$ \alg{Samp}$(m, \B_{\I}, R, \B_{\J}^{pk})$ and output $c \cong c' \mod \B_{\J}^{pk}$.\\
-	\textbf{Decrypt:} \\
-	For the ciphertext $c$, output $(c \mod \B_{\J}^{sk}) \mod \B_{\I}$.\\
-	\textbf{Evaluate:} \\
-	This algorithm takes a set of  ciphertexts $c$ -- denote it by 
-
-	
-
-\end{mdframed}
-\fi
-
 \paragraph{How to bootstrap}
 We will not present the precise idea behind \textit{bootstrapping}. To this end, recall that our generic homomorphic scheme $\E$ consists of four algorithms. These are:
 \begin{enumerate}
@@ -116,6 +86,32 @@ $\alg{Recrypt}_{\E}(\text{pk}_2, \alg{Decrypt}_{\E}, \bar{\text{sk}}_1, c_1)$:
 
 Here we use the encryption of our secret key to evaluate the decryption function homomorphically under a new public key. Now we can see why we need the assumption that the scheme is KDM secure. Since the encryption of sk$_1$ is public, we need to make sure it does not leak any information about it. The statement of the Theorem \ref{boot} should now be intuitively clear. As long as the scheme $\E$ can evaluate its own decryption function, and the $\alg{Recrypt}$ algorithm leaves the new message with less error than we began with, we can use $\E$ to construct a leveled FHE scheme. In order to now evaluate \textit{any} function on our data, we would also like our scheme to correctly evaluate a $\alg{NAND}$ gate (recall that we can create any gate using a finite combination of $\alg{NAND}$ gates) in order to make some progress before the error ``blows up''.
 
+\subsubsection{Simple lattice based scheme}
+The motivation for the choice of lattices as opposed to number theoretic constructions (like RSA or ElGamma for example, which are based on exponentiation), is that the former has few desirable properties. Firstly, the lattices have lower decryption complexity and are therefore more suitable as a bootstrappable encryption scheme. Next, one requires not only one supported homomorphism like addition but also the multiplication -- lattices as ideals poses both. Those factors among many others, (see \cite{gentry} for more details) have led to the choice of \textit{ideal lattices}.
+
+The idea behind the encryption is somewhat similar to the one of GGH. That is, we are going to fix a basis for a lattice (which is an ideal), publish the bad basis as the public key and keep the good basis as a secret key. The security of this scheme is based on the Ideal Coset Problem\footnote{Later, in 2010, Gentry showed that the scheme can be based on the worst-case \prob{BDD} problem -- \cite{worst-case}.} (\prob{ICP}) introduced below. Briefly stated, given an element of some ring $t \in R$, the \prob{ICP} asks us to distinguish between a representative of a coset taken from some distribution over an arbitrary ring and a uniform sample.
+
+For a ring $R$ and a basis\footnote{By the word ``basis'' we simply mean the set of generators for the ideal but we use that instead to highlight the connection between the ideals and lattices as well as keep it consistent with Gentry's work.} $\B_{\I}$ for an ideal $\I \subset R$, we use the notation $R \mod \B_{\I}$ to represent the set of $r + \I$ for $r \in R$.
+
+\begin{definition}[Ideal Coset Problem]
+	Fix a ring $R$ along with an ideal $\I \subseteq R$ and sample an element $r \in R$ given a sampling algorithm \alg{Samp}. Now pick a basis $\B_{\I}$ for the ideal $\I$. Given the basis $\B_{\I}$, the challenger is asked to distinguish between $t \equiv r \mod \B_{\I}$ and $t$ being chosen uniformly.
+\end{definition}
+Few remarks are in place now. Firstly, this definition hides few details in favour of clearer notation. As one, we actually fix some ideal $\J \subseteq R$ such that $\I$ and $\J$ are coprime (i.e. $\I + \J = R$) first, and then, with respect to such $\J$, we instantiate the $\I$. This will become evident later in this section why this is required. Secondly, the procedure somewhat depends on the efficiency of those choices. One example would be how to pick such coprime ideals as well as how to sample the $r$ from the ring itself. The questions (partially) are answered in the paper \cite{gentry_phd} itself.
+
+From now on, let $R$ be an arbitrary ring, and set $\I, \J \subset R$ as two coprime ideals of $R$.  We will also be using a sampling algorithm which we call \alg{Samp}$(x, \B_{\I} , R, \B_{\J})$ that samples from the coset $x + \I$. Let us now introduce the scheme in terms of rings and ideals only.
+
+\begin{mdframed}
+	$\alg{KeyGen}(\B_{\I}, R$) \\
+	Generate two basis for $\J$, $\B_{\J}^{sk}$ and $\B_{\J}^{pk}$. The \textbf{public key} $pk$ includes $R$, $\B_{\I}$, $\B_{\J}^{pk}$ and the sampling algorithm \alg{Samp}. The \textbf{secret key} $sk$  also includes the $\B_{\J}^{sk}$. We denote by $\mathcal{P}$ the plaintext space which is (a subset of) $R \mod \B_{\I}$.\\
+	$\alg{Encrypt}(\text{pk}, m)$ \\
+	For a message $m \in \mathcal{P}$, set $c' \leftarrow$ \alg{Samp}$(m, \B_{\I}, R, \B_{\J}^{pk})$ and output $c \cong c' \mod \B_{\J}^{pk}$.\\
+	$\alg{Decrypt}(\text{sk}, c)$ \\
+	For the ciphertext $c$, output $(c \mod \B_{\J}^{sk}) \mod \B_{\I}$.\\
+	$\alg{Evaluate}(\text{pk}, f, C)$ \\
+	This algorithm takes a set of ciphertexts $C = (c_1, \ldots, c_t)$ and applies the function $f \in \mathcal{F}_{\E}$ using the public key pk. It outputs $f(c_1, \ldots, c_t)$. Since we only support two operations from the ring, $f: R \rightarrow R$ needs to be a homomorphism.
+\end{mdframed}
+
+Having the bootstrapping in mind, we should pay close attention to the decryption algorithm
 \subsubsection{Limitations}
 KDM security assumption
 
@@ -123,7 +119,7 @@ KDM security assumption
 Since the inception of FHE, many new ideas have emerged as potential replacement for the details in the implementation in Gentry's work. In this section, we will briefly introduce some of such techniques and ideas. Finally the work we have done on LWE and its ring equivalent will pay off as we can rely on those results to abstractly create FHE scheme \krzys{i dont like this sentence but idk how to make it prettier}. 
 
 \subsubsection{FHE from the standard LWE}
- One of such ideas is to replace the ideal lattices (which poses more structure than regular lattices and are thus possibly more prone to new attacks) by an LWE sample instead.
+ One of such ideas is to replace the ideal lattices by an LWE sample instead.
 
 
  Let us now attempt to construct a SH scheme that is using the LWE assumption along the ideas presented in \cite{fhe-lwe}. Recall that a LWE$_{q, \chi}$ is specified by the odd modulus $q > 2$ and error distribution $\chi$. It provides us with the LWE distribution that we called $A_{s, \chi}$ where $\bm{s}$ was a random vector representing the secret key outputting us samples of the form
