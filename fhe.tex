@@ -129,21 +129,20 @@ Aditionally, we say the $\hat{c}$ a \textit{valid ciphertext} if it equals $\alg
 \begin{proof}
 	For $C = \{c_1, \ldots, c_t\}, c_k = m_k +i_k +j_k$, where $m_k \in \mathcal{P}, i_k \in \I, j_k \in \J$ and $m_k +i_k \in X_{Enc}$, we have
 	\begin{align*}
-		\alg{Evaluate}(\text{pk}, f, C) = & f(C) \mod \B_{\J}^{\text{sk}} \\
-		= & f(m_1 +i_1 +j_1, \ldots, m_t+i_t+j_t) \mod \B_{\J}^{\text{sk}} \\	
+		\alg{Evaluate}(\text{pk}, f, C) = & f(C) \mod \B_{\J}^{\text{pk}} \\
+		= & f(m_1 +i_1 +j_1, \ldots, m_t+i_t+j_t) \mod \B_{\J}^{\text{pk}} \\	
 		\in & f(m_1 +i_1, \ldots, m_t +i_t) + \J.
 	\end{align*}
 	If $f \in \mathcal{F}_{\E}$, then we have $f(X_{Enc}, \ldots, X_{Enc}) \in X_{Dec}$ and so
 	\begin{align*}
 		\alg{Decrypt} & (\text{sk}, \alg{Evaluate}(\text{pk}, C)) \\
 		& = f(m_1+i_1, \ldots, m_t +i_t) \mod \B_{\I} \\
-		& = f(m_1, \ldots, m_t) \mod \B_{\I} \\
 		& = f(m_1, \ldots, m_t)
 	\end{align*}
 	as required.
 \end{proof}
 
-Once we have the correctness, we can focus on the actual implementations of any fully homomorphic schemes. This in turn implies that we should pay very close attention to the size of $X_{Enc}$ and $X_{Dec}$. Namely, we want to maximize $X_{Dec}$ and minimize $X_{Enc}$ (while still retaining security). \krzys{finish the geometric interpretation of $X_{Enc}$ and $X_{Dec}$ if there is time}.
+Once we have the correctness, we can focus on the actual implementations of any fully homomorphic schemes. This in turn implies that we should pay very close attention to the size of $X_{Enc}$ and $X_{Dec}$. Namely, we want to maximize $X_{Dec}$ and minimize $X_{Enc}$ (while still retaining security). This is where we introduce the lattices.
 
 \subsection{Further developments in FHE}
 Since the inception of FHE, many new ideas have emerged as potential replacement for the details in the implementation in Gentry's work. In this section, we will briefly introduce some of such techniques and ideas. Finally the work we have done on LWE and its ring equivalent will pay off as we can rely on those results to abstractly create FHE scheme \krzys{i dont like this sentence but idk how to make it prettier}. 

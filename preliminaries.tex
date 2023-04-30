@@ -150,28 +150,73 @@ Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension. One ca
 \input{ant}
 
 \subsection{Complexity Theory and Hard Problems} \label{hardness}
-When talking about cryptography, we cannot avoid talking about algorithms since an encryption scheme is simply a instruction on how to encode sensitive data. We will thus require some terminology from computational complexity theory -- a field on the overlap of computer science and mathematics. The problems the field is concerned are those of the time and space required for solving computational problems. Most of the time, the goal of the study is to prove the lower bound on the resources required to solve a problem using the best know algorithm. For example, how long does it take to find a factorization of a large composite number. The goal of this section is to give an overview of few parts of the field that we will be using throughout the paper. 
+When talking about cryptography, we cannot avoid talking about algorithms since an encryption scheme is simply that, an instruction on how to encode sensitive data. We will thus require some terminology from computational complexity theory -- a field on the overlap of computer science and mathematics. The problems the field is concerned are those of the time and space required for solving computational problems. Most of the time, the goal of the study is to prove the lower bound on the resources required to solve a problem using the best know algorithm. For example, how long does it take to find a factorization of a large composite number. The goal of this section is to give an overview of few parts of the field that we will be using throughout the paper. 
 
 \subsubsection*{Complexity theory}
-We begin with necessary terminology. Throughout this section, $n$ shall denote the ``size'' of the input to the algorithm. Here the word size could mean many things like for example the bit-length of a number or its value in the base 10 representation.
+We begin with necessary terminology. Throughout this section, $n$ shall denote the ``size'' of the input to the algorithm. Here the word ``size'' could mean many things like for example the bit-length of a number or its value in the base 10 representation.
 
-In order to represent the time or space required to solve the problem, most of the time we will use the ``big-O'' notation. For any function $f$ and $g$ of some variable $x$, we say that $f(x) \in O(g(x))$ if there exists some constant $M > 0$ and $x_0$ such that $f(x) \leq Mg(x)$ for all $x \geq x_0$. Roughly speaking, the function $g$ will eventually ``grows faster'' than $f$.
+In order to represent the time or space required to solve the problem, most of the time we will use the asymptotic notation of which the ``big-O'' is the most common one. For any function $f$ and $g$ of some variable $n$, we say that $f(x) \in O(g(n))$ if there exists some constant $M > 0$ and $n_0$ such that $f(n) \leq Mg(n)$ for all $n \geq n_0$. Roughly speaking, the function $g$ will eventually ``grows faster'' than $f$. Variations on this notations include:
 
-\pinar{will wait}
-mention "efficient", "negligible", "hard" and define reductions. show some problems like svp, cvp, bdd
-In this section we will briefly introduce what it means for a problem to be considered \textit{hard} and provide couple of examples
-We define a \prob{negligible} amount in $n$ as an amount that is asymptotically smaller than $n^{-c}$ for any constant $c > 0$. More precisely, 
+\begin{itemize}
+	\item $f \in o(g)$ -- just like $O(g)$ but the inequality holds for all constants $M$. This provides more strict bounds as for example $2n = o(n^2)$ but $2n^2 \neq o(n^2)$ contrary to $2n^2 = O(n^2)$ (as well as $2n = O(n^2)$).
+	\item The ``inverse'' of the small $o$ is $\omega$. Formally $f \in \omega(g)$ if for any $M$ there exists $n_0$ such that $f(n) \geq Mg(n)$ for all $n > n_0$. We call it inverse of $o$ because $f(n) = o(g(n))$ if and only if $g(n) = \omega(f(n))$.
+	\item $\tilde{O}(n) = O(n \ln n)$. That is, $\tilde{O}$ hides the logarithmic factors. For example, the FFT (Fast Fourier Transform) computes the discrete Fourier transform in time $O(n \ln n) = \tilde{O}(n)$ for a sequence of length $n$ and Shor's algorithm computes factorization of $n$-bit integer in time $O(n^2 \ln(n) \ln(\ln(n))) = \tilde{O}(n^2)$.
+\end{itemize}
+
+We will very often be talking about the ``efficiency'' of an algorithm. Intuitively, we want our procedure to run in a time reasonably proportional to the size of input. The consensus in the academia is to define ``efficient'' as running in polynomial time ($\alg{poly}(n)$)\footnote{As elegantly stated by Christos Papadimitiou: \textit{``It should not come as a surprise that our choice of polynomial algorithms as the mathematical concept that is supposed to capture the informal notion of ‘practically efficient computation’ is open to criticism from all sides. [$\ldots$] Ultimately, our argument for our choice must be this: Adopting polynomial worst-case performance as our criterion of efficiency results in an elegant and useful theory that says something meaningful about practical computation, and would be impossible without this simplification.''}}. More precisely, 
+\begin{definition}
+	An algorithm $A(n)$ is \prob{efficient} if there exists a polynomial $p(\cdot)$ such that the computation of $A(n)$ terminates within at most $p(n)$ steps.
+\end{definition}
+To encapsulate the notion of ``small'' or ``insignificant'', we define a \prob{negligible} amount in $n$ as an amount that is asymptotically smaller than $n^{-c}$ for any constant $c > 0$. More precisely, 
 \begin{definition}\label{negl}
     $f (n)$ is a \prob{negligible} function in $n$ if $\lim_{n \to \infty}n^{-c} f (n) = 0$ for any $c > 0$.
 \end{definition}
-\subsubsection{Hard problems}
-\begin{definition}[FACTORIZE]
-\end{definition}
-\begin{definition}[SVP]
-\end{definition}
-\begin{definition}[BDD]
-\end{definition}
-\subsubsection*{Basic cryptographic concepts}
-One-way function\\
-semantic security
 
+\subsubsection*{Hard problems}
+The basis for modern day cryptography are so called ``hard problems'' of which usage was first formally introduced by S. Goldwasser and S.Micali in \cite{prob-cryp}. These are computational problems for which we do not know any efficient algorithm for so far. The current approach to cryptography is to assume that some given problem is ``difficult'' to solve and then to prove that the scheme is secure given this assumption. The approach for the proof is to \textit{reduce} our scheme to the one we assume is hard. We proceed by showing how an adversary, which is able to efficiently solve (or break) our scheme, is able to solve the underlying problem. We call such procedure a \textit{reduction} algorithm. For example, the basis for $\alg{RSA}$ is our inability to efficiently solve the factorization problem.
+\begin{definition}[\prob{FACTORIZE}]
+	Given a composite integer $n$ and $l < n$, find a non-trivial factor of $n$ less than $l$.
+\end{definition}
+In their paper \cite{rsa}, Rivest et. al. showed that ``\textit{$\ldots$ breaking our system is at least as difficult as factoring $n$.''} which is precisely the idea behind a reduction algorithm.
+
+Another fundamental hard problem is the \textit{discrete logarithm problem} on which the Diffie-Helman key exchange protocol is based. Our schemes need to change soon however. In 1997, Peter Shor published a paper -- \cite{shor} -- showing a quantum algorithm that solves the above problem in polynomial time which, by our definition, is efficient. There are even more examples. As pointed out by Bernstein in \cite{bernstein} it turns out that number theoretic problems seem to be the place where quantum computers improve our algorithms the most. These include Pell's equation or computing the unit group and class group of a number field [17, 37]. \krzys{fix those citations}
+
+Fortunately for us the best quantum computers are still in their infancy. The greatest integer factored using Shor's algorithm was 21 \cite{21} and it was done in 2012, eleven years after the famous Vandersypen et. al. experiment at IBM \cite{15} in which they factored the number 15. Nonetheless, we shouldn't wait until last minute and should therefore develop new schemes on problems for which we do not have any good (quantum) algorithms. One of the alternatives to number theoretic problems are lattices (among others like code-based or hash-based). Below we present few, most commonly used problems for lattices which will serve as a basis to prove hardness of our schemes.
+\begin{definition}[$\gamma$-Shortest Vector Problem (\prob{SVP})]
+	Given a basis for a lattice $\Ll$ of dimension $n$, find a nonzero vector $v \in \Ll$ of length at most $\gamma \cdot \lambda_1(\Ll)$.
+\end{definition}
+
+\begin{definition}[$\gamma$-Shortest Independent Vector Problem (\prob{SIVP})]
+	Like the SVP, except one outputs linearly independent $v_1,\ldots , v_n\in \Ll$, all of length at most $\gamma \cdot \lambda_n(\Ll)$.
+\end{definition}
+\begin{definition}[$\gamma$-Closest Vector Problem \prob{(CVP)}]
+	Given a basis for a lattice $\Ll$ of dimension $n$ and a vector $t \in \R^n$, output a nonzero vector $v \in \Ll$ such that $||t - v|| \leq \gamma \cdot \text{dist}(\Ll, t)$.
+\end{definition}
+
+\begin{definition}[$\gamma$-Bounded Distance Decoding Problem (\prob{BDD})]
+	Same as $\gamma-\alg{CVP}$, but with the promise that there is a unique solution -- i.e., $(\gamma +1) \cdot \text{dist}(\Ll, t) < \lambda_1(\Ll)$.
+\end{definition}
+
+We know that these problems are in fact NP-hard (for very small approximation factors) -- . The best know algorithms are variations of LLL lattice reduction algorithm by Lenstra et. al. \cite{lenstra} or Babai's nearest plain algorithm \cite{babai}.
+
+\begin{remark}
+	We are still faced with a problem that is inherent to all of modern-day cryptography. That is, we are assuming the hardness of the problem based on our inability to efficiently solve it. As correctly trivialized by Daniel J. Bernstein \cite{bernstein}: ``\textit{nobody has figured out an attack so we conjecture that no attack exists}''. It might so happen that tomorrow someone finds an efficient (polynomial time) algorithm to find the shortest vector in a given lattice and our secrets are compromised. This is exactly what happened in the case of $\alg{RSA}$ cryptosystem when Shor found such efficient algorithm for integer factorization. There is not much we can do about it at least with our current approach to cryptography which is based on very precise complex-theoretic assumptions. This is because complexity theory does not provide any tools to prove that an efficient algorithm does not exist for any given problem.
+\end{remark}
+
+We will also sometimes use an \textit{oracle} in a reduction. An \textit{oracle} is an entity (we often treat is as a black box) capable of solving a problem (even undecidable ones can be used). An oracle appears automatically when we want to prove that a problem reduces to another. When we assume we are capable of solving some underlying problem, we name such algorithm an oracle and do not investigate what the actual implementation is.
+
+\subsubsection*{Basic cryptographic concepts}
+As the last part of this section, we will introduce few basic concepts that are often used in cryptography and that we mention at some point in this paper. The notions introduced here are very vague in order to keep this introduction compact. For more precise definitions see for example \cite{katz} Chapter 3.
+
+The most fundamental of cryptographic concepts is what is called a \textit{one-way function}. This is a function $f$ that is relatively easy to compute for any input but near impossible to invert (i.e., find $m$ given $c = f(m)$). Almost all other constructions are based on such function and this is also how lattice-based cryptography emerged. In 1996 M.Ajtai presented \cite{ajtai} a one way function based on the problem of solving Short Integer Problems (SIS) which sparked interest of other researchers to work on what we call today the lattice-based cryptography.
+
+\paragraph{Security}
+When we talk about (quantum) \textit{security} of a scheme, we roughly mean that no one (not even quantum computer) is able to break the scheme in a polynomial-time with a non-negligible probability. By ``break'' we mean that they are not able to obtain a message $m$ from the ciphertext $c \leftarrow \alg{Encrypt}(m)$. This, most of the times, boils down to reducing the scheme to an underlying hard problem. Here we present few basic security notions that we mention along the way.
+
+The most common type of security is the \textit{semantic security}. First formally introduced in \cite{prob-cryp}, was informally defined as ``\textit{[$\ldots$] whatever an eavesdropper can compute about the cleartext given the cyphertext, he can also compute without the cyphertext.''}. This means that whenever we are given a ciphertext $c$, that encrypts either $m_0$ or $m_1$ we are unable to tell which one it was, even if we were to chose between the two. More on that will appear in the chapter on fully homomorphic encryption.
+
+\begin{figure}[hb]
+	\centering
+	\includegraphics[width=0.3\textwidth]{pythia.jpg}
+	\caption{Priestess of Delphi (1891) by John Collier.}
+\end{figure}
