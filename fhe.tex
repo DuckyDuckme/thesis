@@ -206,7 +206,6 @@ This almost looks like a valid ciphertext for $c_0 \cdot c_0'$ if not for the $-
 \paragraph{Parameters}
 We will skip most of the parameter choices as they often depend on the implementation. Most of them are just like in the standard case presented in the Section \ref{ring-lwe}, i.e. $q$ is prime and $R_q$ is the ring of integers of some cyclotomic field of degree $2^k$. Additionally, instead of taking our messages to be only binary, we shall widen our scope to any element of $R_t$ where $t \in \Z_q^*$ is also prime -- this will be also useful for the KDM security. If we assume that the greatest ``depth'' we can evaluate our polynomial functions at is $D$, we define the general scheme as follows.
 
-\begin{table}
 \begin{mdframed}
 	$\alg{KeyGen}$\\
 	Sample a ring element $s \leftarrow \chi$ and set the secret key vector as $(1, s, s^2, \ldots, s^D)~\in~R_q^{D+1}$. \\
@@ -224,7 +223,6 @@ We will skip most of the parameter choices as they often depend on the implement
 	where the $\hat{c_i}$'s are the result of multiplication modulo $R_q$. The output ciphertext is $\bm{c}_{mult} = (\hat{c_0}, \ldots, \hat{c}_{d+d'})$.
 
 \end{mdframed}
-\end{table}
 
 \paragraph{KDM security}
 Let us now briefly motivate how this scheme is circularly secure for a linear function. For a more rigorous presentation, see \cite{fhe_rlwe}.
