@@ -18,11 +18,14 @@ Before we introduce the solution on to how to construct such FHE presented by Ge
 \subsubsection*{Symmetric Key Scheme}
 We begin with the symmetric key scheme. We take our message to be a bit $m \in \{0,1\}$. The private key is an odd integer $p$ (no necessarily prime). To encrypt our message $m$, we choose integers $q$ and $r$ at random (such that the magnitude of $2r$ is smaller than $p/2$). We obtain the ciphertext $c$ by computing: 
 \begin{equation}c = pq + 2r + m.\end{equation}
-If we now want to decrypt our message, simply compute $(c \mod p) \mod 2$. \\
-Let's say we have two messages $c_1$ and $c_2$. Then we can compute:
-$$ c_1 + c_2 = m_1 + m_2 + 2(r_1 + r_2) + p(q_1 + q_2),$$
-$$ c_1 * c_2 = m_1 * m_2 + 2(m_1r_2 + m_2r_1 + 2r_1r_2) + p(m_1q_2 + m_2q_1 + 2(r_1q_2 + r_2q_1) + pq_1q_2)$$
-where we can see that the noise grows with each operation and the message becomes impossible to decrypt after we do too many of them. If we can assure that $2(m_1r_2 + m_2r_1 + 2r_1r_2)$ is small enough - i.e. smaller than $p$\footnote{When $2r > p$ then it might be the case that $2r = 1 \mod p$ and so $pq + 2r + m \mod p = 1 + m \neq m$.} - then we can assure that $\alg{Decrypt}(c_1 * c_2)$ evaluates correctly to the starting $m_1 * m_2$. Notice that $\alg{Decrypt}$ removes all the noise. This will be useful later for ``bootstrapping'' - a term introduced later on.
+If we now want to decrypt our message, simply compute $(c \mod p) \mod 2$. Let's say we have two messages $c_1$ and $c_2$. Then we can compute:
+\[ c_1 + c_2 = m_1 + m_2 + 2(r_1 + r_2) + p(q_1 + q_2), \]
+\[ c_1 * c_2 = m_1 * m_2 + 2(m_1r_2 + m_2r_1 + 2r_1r_2) + p(m_1q_2 + m_2q_1 + 2(r_1q_2 + r_2q_1) + pq_1q_2)\]
+where we can see that the noise grows with each operation and the message becomes impossible to decrypt after we do too many of them. If we can assure that $2(m_1r_2 + m_2r_1 + 2r_1r_2)$ is small enough -- i.e. smaller than $p$\footnote{When $2r > p$ then it might be the case that $2r = 1 \mod p$ and so $pq + 2r + m \mod p = 1 + m \neq m$.} -- then we can assure that $\alg{Decrypt}(c_1 * c_2)$ evaluates correctly to the starting $m_1 * m_2$. Notice that $\alg{Decrypt}$ removes all the noise. This will be useful later for ``bootstrapping'' -- a concept we will introduce later on.
+
+\begin{example}
+	Let's say you want to secretely tell your friend how many times Poland has won the football world cup and compute the square of that number because this makes it somehow meaningful for you. You pick $p=5$, $q=7$ and $r = 2 < p/2$ and compute $c = pq +2r + m = 5 \cdot 7 +2 \cdot 2 +0 = 39$. Now, since you do not have a calculator at home and your phone is an old Nokia, you ask him to square it for you. So the friend takes the encryption of $m = 0$ being $c = 39$ and computes $39^2 = 1521$. He sends it back to you via a secret channel and you recieve the ciphertext $1521$. You decrypt it with your secret key $p$ and see $(1521 \mod 5) \mod 2 = 1 \mod 2 = 1$. But this is not the correct answer. You (wrongfully) celebrate because you know that squaring the number makes it magically meaningful and so Poland (eventually) will become world champion. Unfortunately for 39 million people, it was an error due to the encryption scheme being not Fully Homomorphic. You happily sit down on your chair and turn on the TV instead of reading Gentry's paper on Fully Homomorphic Encryption.
+\end{example}
 
 This simple encryption scheme is thus somewhat homomorphic as per definition by Gentry in \cite{gentry_phd} – namely, it can be used to evaluate low-degree polynomials over encrypted data. Further on in the Section 6 of \cite{int_scheme}, van Dijk et al. use the techniques (called bootstrapping and squashing) to lift it to a Fully Homomorphic Scheme.
 \subsubsection*{Public Key Scheme}

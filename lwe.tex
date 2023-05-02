@@ -1,7 +1,7 @@
 \subsubsection*{LWE problem}
 There are multiple equivalent definitions of this problem. We adopt the notation and approach introduced in the original paper by Regev. In this section, we will mainly focus on the parts that are the most relevant for our study of ring-LWE such as \ref{classical} and \ref{s-to-d}. 
 
-The problem is parametrized by positive integers $n$, $m$\footnote{As will be seen later, $m$ plays virtually no role in the problem definition and is usually omitted.} and prime $q$, as well as a discrete error distibution $\chi$ over $\Z_q$. It is now defined as follows. We are given $m$ equations of the form $(\bm{a}_i, b_i = \langle \bm{a}_i, \bm{s} \rangle + e_i)$ and are asked to find the vector $\bm{s} \in \Z_q^n$. Here, $\bm{a}_i$ are chosen uniformly and independently from $\Z_q^n$, $b_i \in \Z_q$ and $\langle \cdot, \cdot \rangle$ denotes the usual dot product. The errors $e_i$ are obtained by sampling independently from the probability distribution $\chi : \Z_q \rightarrow \R_{> 0}$ on $\Z_q$. We will denote the problem of recovering $\bm{s}$ from such equations, by $\text{LWE}_{q, \chi}$ (learning with errors).
+The problem is parametrized by positive integers $n$, $m$\footnote{As will be seen later, $m$ plays virtually no role in the problem definition and is usually omitted.} and prime $q$, as well as an error distibution $\chi$ over $\Z_q$. It is now defined as follows. We are given $m$ equations of the form $(\bm{a}_i, b_i = \langle \bm{a}_i, \bm{s} \rangle + e_i)$ and are asked to find the vector $\bm{s} \in \Z_q^n$. Here, $\bm{a}_i$ are chosen uniformly and independently from $\Z_q^n$, $b_i \in \Z_q$ and $\langle \cdot, \cdot \rangle$ denotes the usual dot product. The errors $e_i$ are obtained by sampling independently from the probability distribution $\chi : \Z_q \rightarrow \R_{> 0}$ on $\Z_q$. We will denote the problem of recovering $\bm{s}$ from such equations, by $\text{LWE}_{q, \chi}$ (learning with errors).
 
 \begin{example}\label{lwe_ex}
         Given as input this set of equations, LWE asks us to recover the vector $\bm{s} = (s_1, s_2, s_3, s_4) \in \Z_{17}^4$. In this case $n = 4$, $q=17$ and the error distribution is giving us $e_i < 1$ for each $i \in [m]$. 
@@ -30,18 +30,20 @@ Here we will define essential and convenient definitions and lemmas concerning G
 The ideas presented here heavily rely on the distribution of errors. The most important distribution we will be using is the \textit{Gaussian distribution} (also called the normal distribution). For some vector $\bm{x}$ and $r>0$, we define the Gaussian function as
 \[ \rho_r (\bm{x}) := \text{exp}(- \pi ||\bm{x}/r||^2) \]
 where exp($y$) stands for $e^y$. We will also denote $\rho_1$ by $\rho$. By normalizing it, we obtain the $n$-dimensional Gaussian distribution
-\[\D_r = \rho_r \Big/ \Big( \int_{\bm{s} \in \R^n} \rho_r(\bm{s}) d\bm{s} \Big) = \rho_r \cdot r^{-n}. \]
+\[\Psi_{\alpha} = \rho_{\alpha} \Big/ \Big( \int_{\bm{s} \in \R^n} \rho_{\alpha}(\bm{s}) d\bm{s} \Big) = \rho_{\alpha} \cdot \alpha^{-n}. \]
 We can also define the \textit{discrete Gaussian distribution} $\D_{\Ll, r}$ over a lattice $\Ll$ (or any countable set $A$ for that matter) by
 \begin{equation} \D_{\Ll, r}(\bm{x}) = \frac{\rho_r(\bm{x})}{\rho_r(\Ll)} \end{equation}
 where $\rho_{A, r}(\bm{x}) = \sum_{\bm{x} \in A} \rho_r(\bm{x})$ is an extension of $\rho_r$ to a countable set.
 
+\iffalse
 \krzys{i dont think ill include this part about Psi beta at all}
 In order to avoid making our proofs depend on the specific choice of modulus $q$, we now define the family of Gaussian distributions over $\T = \R/\Z = [0,1)$ - a periodization of the normal distribution. More specifically, following \cite{regev}, for $\beta \in \R_{> 0}$ define $\Psi_{\beta}$ as the distribution on $\T$ obtained by sampling from a normal variable with mean 0 and standard deviation $\frac{\beta}{\sqrt{2\pi}}$ and reducing the result modulo 1,
 \begin{equation} \forall r \in [0,1), \Psi_{\beta}(r) := \sum_{k = -\infty}^{\infty} \frac{1}{\beta} \cdot \text{exp} \bigg(- \pi \Big(\frac{r-k}{\beta}\Big)^2\bigg). \end{equation}
 \krzys{also, it turns out, that for whatever value of $r$ we pick, the result of that sum is always $|\beta|/\beta = 1$?????}
 We will, for the sake of clearer notation, be a bit vague about the doman of $\Psi_{\beta}$. This is because sampling from $\Psi_{\beta}$ with parameter $\beta$, that is defined over $\T = [0,1)$ is equivalent to sampling from $\Psi_{q \beta}$ over $\Z_q$. \krzys{i am very hesitant about this statement - need to check if thats true}
+\fi
 
-We also need to define \textit{distretization} of a probability density function for our cryptosystem introduced later. For an arbitrary probability density function $\phi~:~\T~\to~\R_{>0}$ and an integer $q \geq 2$, we define its discretization $\bar{\phi} : \Z_q \rightarrow R_{>0}$ as the discrete probability distribution obtained by sampling from $\Psi$, multiplying by $q$, and rounding to the closest integer modulo $q$. More formally,
+We also need to define \textit{distretization} of a probability density function for our cryptosystem introduced later. For an arbitrary probability density function $\phi~:~\R~\to~\R_{>0}$ and an integer $q \geq 2$, we define its discretization $\bar{\phi} : \Z_q \rightarrow R_{>0}$ as the discrete probability distribution obtained by sampling from $\Psi$, multiplying by $q$, and rounding to the closest integer modulo $q$. More formally,
 \begin{equation} \bar{\phi}(i) = \int_{(i -1/2)/q}^{(i + 1/2)/q} \phi(x) dx \end{equation}
 
 Lastly, following the definition given in \cite{lbc}, we define the \textit{statistical distance} as follows.
@@ -110,9 +112,13 @@ There are two types of problems we can define over LWE - the \textit{search} and
 \begin{definition}[Decision-LWE]\label{dlwe}
         Given access to arbitrarily many samples from the $A_{\bm{s}, \chi}$ and the same amount of samples from the uniform distribution, distinguish (with non-negligible advantage) between them.
 \end{definition}
-The following is used as an intermediate step in our reduction to \prob{SIVP}. The acronym \prob{DGS} stands for \textit{discrete Gaussian sampling} problem and is concerned exactly with that - to find a sample from the normal distribution over our lattice. Formally:
+The following are used as an intermediate step in our reduction to \prob{SIVP}. The acronym \prob{DGS} stands for \textit{discrete Gaussian sampling} problem and is concerned exactly with that -- to find a sample from the normal distribution over our lattice. Formally:
 \begin{definition}[\prob{DGS}]\label{dgs}
-        Given an $n$-dimensional lattice $\Ll$ and a number $r \geq \sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha$, output a sample from $\D_{\Ll,r}$
+        Given an $n$-dimensional lattice $\Ll$ and a number $r \geq \sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha$, output a sample from $\D_{\Ll,r}$.
+\end{definition}
+Along with the decision version of the \prob{SVP} problem:
+\begin{definition}
+	An instance of \prob{GapSVP}$_{\gamma}$ is given by an $n$-dimensional lattice $\Ll$ and a number $d > 0$. In YES instances, $\lambda_1(\Ll) \leq d$ whereas in NO instances $\lambda_1(\Ll) > \gamma(n) \cdot d$.
 \end{definition}
 
 \subsubsection{Hardness of search LWE}
@@ -266,7 +272,7 @@ In other words, if we have an oracle (called procedure in this theorem) that sol
                                 \item Or $k \neq s_1$ in which case the sample is mapped to a uniform distribution and oracle tells us we picked wrong. Note that this requires our $q$ to be prime because otherwise it might happen that $a_1 \cdot k = a_1 \cdot s_1$ as either of the three could be a zero divisor. We have therefore picked wrong $k$ and we need to pick another one.
                         \end{enumerate}
         \end{enumerate}
-        Note that by the choice of our $q \leq \alg{poly}(n)$, we can try all of them.
+        Note that by the choice of our $q \leq \alg{poly}(n)$, we can try all possible $k$ in polynomial time.
 \end{proof}
 
 %There are two other results that, when combined with the previous lemma, give us hardness of decision LWE based on \textit{worst-case} lattice problems like \prob{SIVP} and the \prob{GapSVP}. These results are:

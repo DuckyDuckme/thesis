@@ -185,18 +185,18 @@ Our schemes need to change soon however. In 1997, Peter Shor published a paper \
 
 Fortunately for us the best quantum computers are still in their infancy. The greatest integer factored using Shor's algorithm was 21 \cite{21} and it was done in 2012, eleven years after the famous Vandersypen et. al. experiment at IBM \cite{15} in which they factored the number 15. Nonetheless, we shouldn't wait until last minute and should therefore develop new schemes on problems for which we do not have any good (quantum) algorithms. One of the alternatives to number theoretic problems are lattices (among others like code-based or hash-based). Below we present few, most commonly used problems for lattices which will serve as a basis to prove hardness of our schemes.
 \begin{definition}[$\gamma$-Shortest Vector Problem (\prob{SVP})]
-	Given a basis for a lattice $\Ll$ of dimension $n$, find a nonzero vector $v \in \Ll$ of length at most $\gamma \cdot \lambda_1(\Ll)$.
+	Given a basis for a lattice $\Ll$ of dimension $n$, find a nonzero vector $\bm{v} \in \Ll$ of length at most $\gamma \cdot \lambda_1(\Ll)$.
 \end{definition}
 
 \begin{definition}[$\gamma$-Shortest Independent Vector Problem (\prob{SIVP})]
-	Like the SVP, except one outputs linearly independent $v_1,\ldots , v_n\in \Ll$, all of length at most $\gamma \cdot \lambda_n(\Ll)$.
+	Like the SVP, except one outputs linearly independent $\bm{v}_1,\ldots , \bm{v}_n\in \Ll$, all of length at most $\gamma \cdot \lambda_n(\Ll)$.
 \end{definition}
 \begin{definition}[$\gamma$-Closest Vector Problem \prob{(CVP)}]
-	Given a basis for a lattice $\Ll$ of dimension $n$ and a vector $t \in \R^n$, output a nonzero vector $v \in \Ll$ such that $||t - v|| \leq \gamma \cdot \text{dist}(\Ll, t)$.
+	Given a basis for a lattice $\Ll$ of dimension $n$ and a vector $\bm{t} \in \R^n$, output a nonzero vector $\bm{v} \in \Ll$ such that $\text{dist}(\bm{t,v}) \leq \gamma \cdot \text{dist}(\Ll, \bm{t})$.
 \end{definition}
 
 \begin{definition}[$\gamma$-Bounded Distance Decoding Problem (\prob{BDD})]
-	Same as $\gamma$-$\alg{CVP}$, but with the promise that there is a unique solution -- i.e., $(\gamma +1) \cdot \text{dist}(\Ll, t) < \lambda_1(\Ll)$.
+	Same as $\gamma$-$\alg{CVP}$, but with the promise that there is a unique solution -- i.e., we are given a lattice $\Ll$ and a vector $\bm{t} \in R^n$  (within distance $\gamma \cdot \lambda_1(\Ll)$ from the lattice), and we are asked to find a lattice point $\bm{v} \in \Ll$ within distance $\gamma \cdot \lambda_1(\Ll)$ from the target.
 \end{definition}
 
 We know that these problems are in fact NP-hard (for very small approximation factors) \cite{gentry}, \cite{bdd}. The best know algorithms are variations of LLL lattice reduction algorithm by Lenstra et. al. \cite{lenstra} or Babai's nearest plain algorithm \cite{babai}.
