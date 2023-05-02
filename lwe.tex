@@ -257,7 +257,7 @@ In general, the decision version is considered more suitable for cryptographic p
 
 The statement can be phrased as follows.
 \begin{theorem}[\cite{regev}, 4.2 - Decision to Search]\label{s-to-d}
-        Let $n \geq 1$ be some integer, $2 \leq q\leq \alg{poly}(n)$ be a prime, and $\chi$ be some distribution on $\Z_q$. Assume that we have access to procedure \prob{W} that for all $\bm{s}$ accepts with probability exponentially close to 1 on inputs from $A_{\bm{s},\chi}$ and rejects with probability exponentially close to 1 on inputs from U. Then, there exists an efficient algorithm \prob{W'} that, given samples from $A_{\bm{s},\chi}$ for some $s$, outputs $\bm{s}$ with probability exponentially close to 1.
+        Let $n \geq 1$ be some integer, $2 \leq q\leq \alg{poly}(n)$ be a prime, and $\chi$ be some distribution on $\Z_q$. Assume that we have access to procedure \prob{W} that for all $\bm{s}$ accepts with probability exponentially close to 1 on inputs from $A_{\bm{s},\chi}$ (an oracle for decision-LWE) and rejects with probability exponentially close to 1 on inputs from U. Then, there exists an efficient algorithm \prob{W'} that, given samples from $A_{\bm{s},\chi}$ for some $s$, outputs $\bm{s}$ with probability exponentially close to 1.
 \end{theorem}
 
 In other words, if we have an oracle (called procedure in this theorem) that solves the decision-LWE, then there is an efficient (running in polynomial time) algorithm that outputs us the secret $\bm{s}$ used for the generation of the sample (if the sample was indeed taken from $A_{\bm{s}, \chi}$).
