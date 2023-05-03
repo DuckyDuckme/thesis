@@ -33,7 +33,7 @@ where exp($y$) stands for $e^y$. We will also denote $\rho_1$ by $\rho$. By norm
 \[\Psi_{\alpha} = \rho_{\alpha} \Big/ \Big( \int_{\bm{s} \in \R^n} \rho_{\alpha}(\bm{s}) d\bm{s} \Big) = \rho_{\alpha} \cdot \alpha^{-n}. \]
 We can also define the \textit{discrete Gaussian distribution} $\D_{\Ll, r}$ over a lattice $\Ll$ (or any countable set $A$ for that matter) by
 \begin{equation} \D_{\Ll, r}(\bm{x}) = \frac{\rho_r(\bm{x})}{\rho_r(\Ll)} \end{equation}
-where $\rho_{A, r}(\bm{x}) = \sum_{\bm{x} \in A} \rho_r(\bm{x})$ is an extension of $\rho_r$ to a countable set.
+where $\rho_r(A) = \sum_{\bm{x} \in A} \rho_r(\bm{x})$ is an extension of $\rho_r$ to a countable set.
 
 \iffalse
 \krzys{i dont think ill include this part about Psi beta at all}
@@ -90,7 +90,7 @@ In the Figure \ref{smoothing-1}, there are plotted four Gaussians. The first one
                 \includegraphics[scale=0.5]{gaussian-4.png}
                 \caption{$r = 20$}
         \end{subfigure}
-        \caption{2-dimensional Gaussian with standard deviation $r$. The $z$-axis represents the probability.}
+        \caption{2-dimensional Gaussian with standard deviation $r$. The $z$-axis represents the PDF.}
         \label{smoothing-1}
 \end{figure}
 \begin{proposition}[Sum of Gaussians]\label{gauss_sum}

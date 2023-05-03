@@ -7,7 +7,7 @@ from scipy.stats import multivariate_normal
 
 # Define mean vector and covariance matrix
 mean = [0, 0]
-cov = [[4, 0], [0, 0.5]]
+cov = [[20, 0], [0, 20]]
 
 # Create a grid of x and y values
 x, y = np.meshgrid(np.linspace(-3, 3, 30), np.linspace(-3, 3, 30))
@@ -43,10 +43,10 @@ ax.set_zticklabels([])
 
 
 # Set the axis labels and title
-ax.set_xlabel('x')
-ax.set_ylabel('y')
-ax.set_zlabel('PDF')
+#ax.set_xlabel('x')
+#ax.set_ylabel('y')
+#ax.set_zlabel('PDF')
 #ax.set_title('2D Gaussian Distribution')
 
-plt.show()
-#plt.savefig('../images/gaussian-3.png', dpi=200, format='png', transparent=True)
+#plt.show()
+plt.savefig('../images/gaussian-4.png', dpi=200, format='png', transparent=True)
