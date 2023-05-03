@@ -241,7 +241,7 @@ since $\Ll^{-1} = (\Lld)^T$.
 To finish the proof we need to show that the remaining term $\langle \bm{e}, \bm{v} \rangle + e'$ is distributed within negligible statistical distance of $\Psi_{\leq \alpha}$. This is obtained by noting that summing two normal distributions with the standard deviation less than the smoothing parameter, gives us a distribution that is indeed close enough to $\Psi_{\beta}$ for some $\beta \leq \alpha$ as desired. This is Claim 3.10 in the original paper by Regev.
 \end{proof}
 \begin{proposition}[Step 2 - quantum]\label{quantum}
-        There exists an efficient quantum algorithm that, given any $n$-dimensional lattice $\Ll$, a number $d < \lambda_n (\Lld)/2$, and an oracle that solves \prob{CVP}$_{\Lld,d}$, outputs a sample from D$_{\Ll,\sqrt{n}/(\sqrt{2}d)}$.
+        There exists an efficient quantum algorithm that, given any $n$-dimensional lattice $\Ll$, a number $d < \lambda_n (\Lld)/2$, and an oracle that solves \prob{CVP}$_{\Lld,d}$, outputs a sample from $\D_{\Ll,\sqrt{n}/(\sqrt{2}d)}$.
 \end{proposition}
 
 Lastly, we can finish the proof of Theorem \ref{main} by presenting the following proposition that provides reduction from \prob{SIVP} and \prob{GapSVP} to \prob{DGS}.
