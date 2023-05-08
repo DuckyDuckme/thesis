@@ -2,14 +2,18 @@
 In recent years, the topic of lattice based cryptography (LBC) has seen many developments towards an efficient and quantumly secure basis for cryptographic constructions. Starting with Ajtai's seminal work \cite{ajtai} on one-way functions that can be reduced to  as one of the main contenders for an efficient and resistant to quantum computers scheme.
 \subsection{Motivation}
 include the table from page 16 of \cite{bernstein} of systems broken by quantum computers\\
-quote from \cite{bernstein}: ``As it turns out, number theoretic problems are also the main place where quantum computers have been shown to have exponential speedups. Examples of such problems include factoring and discrete log [38], Pell’s equation [18], and computing the unit group and class group of a number field [17, 37]. The existence of these algorithms implies that a quantum computer could break RSA, Diffie-Hellman and elliptic curve cryptography, which are currently used''.\\
 On the $18^{th}$ of November 2022, a \href{https://www.whitehouse.gov/wp-content/uploads/2022/11/M-23-02-M-Memo-on-Migrating-to-Post-Quantum-Cryptography.pdf}{document} was issued on migrating to post-quantum cryptography.
-\subsection{Main results}
+
+\iffalse
 This bachelor thesis can be seen as a survey on the recent developments in the LBC and improvements in fully homomorphic cryptographic schemes. Nonetheless, there are few minor contributions that we note here.
 
 Firstly, and most importantly, the introduction of many examples that we hope will be of great help for anyone trying to learn and understand LBC schemes. These include comptutations as well as images and tables that help visualize some key concepts related to Gaussian samples or lattices.
 
 Secondly, we present and explicitly state few results that are otherwise left simply as claims or propositions. These mostly include parts on the algebraic number theory for the Section \ref{ring-lwe} on ring-LWE.
-\subsection{Outline of the paper}
+\fi
+
+\subsection{Outline}
 The sections in this paper are to be read consecutively with one exception. The Section \ref{ant} on algebraic number theory is mostly useful to prove concepts for ring-LWE from Section \ref{ring-lwe}. If one is not interested in the proofs from this section, it is possible to skip those two since the idea behind ring-LWE is almost identical to the LWE with just minor changes that are not crucial to understand other parts of this paper.
 
+\subsection*{Acknowledgements}
+I would like to thank my supervisors, Pınar Kılıçer, for her time and guidance through the areas of algebra and algebraic number theory, as well as Marcello Seri for the project idea and various work-aiding tools. Lastly, I would like to thank my parents and in particular my dad who, long time ago, said ``\textit{You will be thanking me for that later.}'' when urging me to do my mathematics homework. I think this is the right place to say, thank you dad.
