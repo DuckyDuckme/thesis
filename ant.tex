@@ -43,17 +43,20 @@ For example for $K = \Q(\sqrt{5})$ its ring of integers is $\Oo_K = \Z[(1 + \sqr
 	What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\alpha \in \oQ$, the ring of integers is not necessarily the $\Z[\alpha]$. Instead, $\Z[\alpha]$ is what's called an \textit{order} in $\Oo_K$. We will not consider them in general here because they are not relevant for our study as motivated in the next subsection. In general, a field $K = \Q(\alpha)$ such that $\Oo_K = \Z[\alpha]$ is called a \textit{monogenic} field or a \textit{simple algebraic extension}. For more details on orders, look at for example Chapter 5 of \cite{stein}.
 \end{remark}
 
-Recall that an ideal $\I$ of some ring $R$ is an additive subgroup of $R$ (if $x,y \in \I$ then $x-y \in \I$) and closed under multiplication of the elements in $R$ ($x \in \I$ implies $r \cdot x \in \I$ for any $r \in R$). We call an ideal in a ring of integers by \textit{integral ideal}.
+Recall that an ideal $\I$ of some ring $R$ is an additive subgroup of $R$ (if $x,y \in \I$ then $x-y \in \I$) and closed under multiplication of the elements in $R$ ($x \in \I$ implies $r \cdot x \in \I$ for any $r \in R$). We call an ideal in a ring of integers an \textit{integral ideal}.
 
 One useful property of the integers we would like to preserve is the unique prime decomposition of its elements as stated in the Fundamental Theorem of Algebra. As the name might suggest\footnote{As stated on p.34 in \cite{stein} ``\textit{...it is this unique factorization that initially motivated the introduction of rings of integers of number fields over a century ago''}.}, the ring of integers has a property analogous to such decompositions. Namely, that every nonzero proper ideal factors uniquely into prime ideals. Such ring in general is called a \textit{Dedekind domain}.
 
 More precisely, take $D$ to be a Dedekind domain (for example $\Oo_K$) and $\I \subset D$ a nonzero ideal (and also not an empty set). Then $\I$ factorizes uniquely (up to ordering) into prime ideals $\I = \p_1^{e_1} \p_2^{e_2} \ldots \p_r^{e_r}$ where each $e_i$ is an integer and each $\p_i$ is prime. Additionally it can be shown that in a Dedekind domain, every prime ideal $\p$ is also \textit{maximal}. This in turn implies that $D/\p$ is a finite field of order equal to the index of $|D /\p|$ as an additive subgroup of $D$.
 
-As mentioned before, it is not in general true that $\Oo_K$ is a principal ideal domain. To mimic the notion of divisibility we will associate the elements of $\Oo_K$ with fractional ideals.
+As mentioned before, it is not in general true that $\Oo_K$ is a principal ideal domain. To mimic the notion of divisibility we will associate the elements of $\Oo_K$ with \textit{fractional ideals}.
 \begin{definition}[Fractional ideal]
-	We say that $\I$ is \textit{fractional}, when there exists an element $\alpha \in \Oo_K$, $\alpha \neq 0$, such that $\alpha \cdot \I \subseteq \Oo_K$.
+	A \textit{fractional} ideal of $\Oo_K$ is an ideal $\I$ of $K$ such that there exists some $\alpha \in \Oo_K$ such that $\alpha \cdot \I \subseteq \Oo_K$.
 \end{definition}
-The set of nonzero fractional ideals of $\Oo_K$ forms a group under multiplication with multiplication defined as $(\alpha \I)(\beta \J) := \alpha \beta \, \I \J$ and $\Oo_K$ iteself acting as the identity element. %Since any (fractional) ideal $\I$ factorizes uniquely into prime ideals
+The fractional ideals are genuine ideals of the field $K$ that were ``divided by something'', hence the name \textit{fractional}. We can also define their inverses as the set
+\[ \I^{-1} = \{ \alpha \in K : \alpha \cdot \I \subset \Oo_K \}. \]
+
+Therefore, the set of nonzero fractional ideals of $\Oo_K$ forms a group under multiplication with multiplication defined as $(\alpha \I)(\beta \J) := \alpha \beta \, \I \J$ and $\Oo_K$ itself acting as the identity element. %Since any (fractional) ideal $\I$ factorizes uniquely into prime ideals
 
 \subsubsection*{Embeddings in $\C$} 
 Let $K = \Q(\alpha)$ be a number field of degree $n$ for a root $\alpha$ of some irreducible $f \in \Q[x]$. It can be shown, that there are exactly $n$ embeddings (injective ring homomorphisms) of $K$ in $\C$. This can be shown noting that since $\Q$ has characteristic 0, all of the roots of $f$ over $K$ must be distinct. Therefore $\alpha$ can only be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates.
@@ -179,17 +182,28 @@ Let us now get back to the topic of lattices for a moment and try to connect tho
 \begin{definition}
 	In a number field $K$ of degree $n$, a lattice in $K$ is the $\Z$-span of a $\Q$-basis of~$K$.
 \end{definition}
-Examples of lattices in $K$ include the ring of integers $\Oo_K$, fractional ideals of $\Oo_K$ and orders in $K$. By the unique decomposition, for any (fractional) ideal in $\Oo_K$, it can be shown that any such ideal is a free abelian group and is spanned by some $\Z$-basis $\{\beta_1, \beta_2, \ldots, \beta_n \}$. Therefore, under the canonical embedding $\sigma$, the ideal yields a rank-$n$ \textit{ideal lattice} with basis $\{\sigma(\beta_1), \ldots \sigma(\beta_n) \} \subset \C^n$.
+Examples of lattices in $K$ include the ring of integers $\Oo_K$, fractional ideals of $\Oo_K$ and orders in $K$. By the unique decomposition, for any (fractional) ideal in $\Oo_K$, it can be shown that any such ideal is a free abelian group and is spanned by some $\Z$-basis $\{\beta_1, \beta_2, \ldots, \beta_n \}$. Therefore, under the canonical embedding $\sigma$, the ideal yields a rank-$n$ \textit{ideal lattice} with basis $\{\sigma(\beta_1), \ldots \sigma(\beta_n) \} \subset \C^n$. For convenience, we will often associate $\I$ with its embedding in $\C^n$ and talk for example about the shortest vector $\lambda_1(\I)$ of an ideal.
 
 Analogously to the lattices in $\R^n$, we can define duals of lattices in $K$.
 \begin{definition}
 	Let $\Ll$ be a lattice in $K$. Its \textit{dual lattice} is
 	\[\Lld = \{ \alpha \in K : \Tr_{K/\Q}(\alpha \Ll) \subset \Z \}.\]
 \end{definition}
-
 Imagine now, that we have some basis $\{1, \alpha, \ldots, \alpha^{n-1} \}$ for a number field $K = \Q(\alpha)$. If, in addition, $\alpha \in \Oo_K$ then the dual basis is characterized by the following proposition (this is special case of Theorem 3.7 in \cite{conrad}).
 \begin{proposition}\label{d-basis}
 	Let $K = \Q(\alpha)$ and let $f(x)$ be the minimal polynomial of $\alpha$ in $\Q[x]$. Then the dual basis to $\{1, \alpha, \ldots, \alpha^{n-1} \}$ (relative to the trace) is given by:
 \[\biggl\{ \frac{1}{f'(\alpha)}, \frac{\alpha}{f'(\alpha)}, \ldots, \frac{\alpha^{n-1}}{f'(\alpha)} \biggr\} . \]
 \end{proposition}
+The lattice we will be most interested with is the ring of integers $\Oo_K$ itself. What can we say about $\Ood_K = \{ \alpha \in K : \Tr_{K/\Q}(\alpha \Oo_K) \subset \Z \}$? Firstly, it is the largest fractional ideal in $K$ whose elements all have trace in $\Z$ -- \cite{conrad}. The most important result for us however is how the dual of ring of integers ``controls'' every other fractional ideal $\I$.
+\begin{proposition}
+	For a fractional ideal $\I$ in K, $\I^{\vee}$ is a fractional ideal and $\I^{\vee} = \I^{-1} \Ood_K$.
+\end{proposition}
+\begin{remark}
+The inverse of $\Ood_K$ is called the \textit{different ideal} and was first introduced by Dedekind in 1882 \cite{dedekind}. It has many interesting properties and we refer the curious reader to \cite{conrad} for more details about it as we will not mention anything else about it here.
+\end{remark}
+
+
+
+
+
 
