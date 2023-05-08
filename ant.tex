@@ -24,8 +24,8 @@ $$
 	The ring of Gaussian integers $\Z[\sqrt{-1}] = \{a+b\sqrt{-1}\, : \, a,b \in \Z \}$ is the ring of integers of $K = \Q(\sqrt{-1}) = \{a + b\sqrt{-1} \, : \, a,b\in \Q\}$ which has degree 2 since $x^2+1$ is the minimal (and irreducible) polynomial of $\sqrt{-1}$ over $\Q$. Note that $\Oo_K$ is spanned by $\{1, \sqrt{-1} \}$.
 \end{example}
 
-As another example, we can make a following statement about the ring of integers of a quadratic extension of rationals (real quadratic field).
-\begin{lemma}
+As another example, we can make a following statement about the ring of integers of a quadratic extension of rationals (real quadratic field) of which the proof can be found as the Corollary 2 on page 11 in \cite{algebra}.
+\begin{proposition}
      Let $d \in \Z$ be a square-free integer. For the field $K = \Q(\sqrt{d})$, its ring of integers is 
      \[ \Oo_K = 
 	 \begin{cases} 
@@ -33,11 +33,8 @@ As another example, we can make a following statement about the ring of integers
 	     \Z[(1 + \sqrt{d})/2] & \text{otherwise}.
      	 \end{cases}
      \]
-\end{lemma}
+\end{proposition}
 
-\begin{proof}
-	Take $d \equiv 1 \mod 4$ square-free. \pinar{if you dont have time to finish the proof give a reference.}
-\end{proof}
 For example for $K = \Q(\sqrt{5})$ its ring of integers is $\Oo_K = \Z[(1 + \sqrt{5})/2]$. 
 \begin{remark}\label{monogenic}
 	What is worth noting here, is that for a number field $\Q(\alpha)$ for some $\alpha \in \oQ$, the ring of integers is not necessarily the $\Z[\alpha]$. Instead, $\Z[\alpha]$ is what's called an \textit{order} in $\Oo_K$. We will not consider them in general here because they are not relevant for our study as motivated in the next subsection. In general, a field $K = \Q(\alpha)$ such that $\Oo_K = \Z[\alpha]$ is called a \textit{monogenic} field or a \textit{simple algebraic extension}. For more details on orders, look at for example Chapter 5 of \cite{stein}.
@@ -160,16 +157,18 @@ As mentioned in Remark \ref{monogenic}, rings of integers are usually not genera
 		a + b\zeta^2 + c\zeta^4 + d\zeta \\ 
 		a + b\zeta^3 + c\zeta + d\zeta^4 \\
 		a + b\zeta^4 + c\zeta^3 + d\zeta^2
-		\end{pmatrix} = \\
+		\end{pmatrix} =
 		\begin{pmatrix}
 		a + b\zeta + c\zeta^2 + d\zeta^3 \\
 		a + d\zeta + b\zeta^2 + e\zeta^3 \\
 		a + c\zeta + e\zeta^2 + b\zeta^3  \\
 		a + e\zeta + d\zeta^2 + c\zeta^3 
-		\end{pmatrix} = \begin{pmatrix} sth here
-	\end{pmatrix}
+		\end{pmatrix} \\
+		= a \begin{pmatrix} 1\\1\\1\\1 \end{pmatrix}
+		+ b \begin{pmatrix} z \\z^2\\z^3\\-z^3-z^2-z-1 \end{pmatrix}
+		+ c \begin{pmatrix} z^2 \\-z^3-z^2-z-1\\z\\z^3 \end{pmatrix}
+		+ d \begin{pmatrix} z^3 \\z\\-z^3-z^2-z-1\\z^2 \end{pmatrix}
 	\end{align*}
-	\krzys{i feel like i should get something nice but cant figure it our, its probs the $\zeta^4$}
 \end{example}
 
 In order to make $\sigma$ a ring homomorphism, we define the addition and multiplication in $\C^n$ to be coordinate-wise (all the conditions for a ring structure are immediate to see when written down because the $\C$ itself is a ring).

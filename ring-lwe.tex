@@ -146,12 +146,12 @@ From now on, denote by $\zeta = \zeta_m$ the $m$-th root of unity. $K = \Q(\zeta
 
 The main theorem presents as follows.
 \begin{theorem}\label{d-to-s-rlwe}
-	Let $R$ and $q$ be as above and let $\alpha q \geq \eta_{\epsilon}(\Rd)$ for some negligible $\epsilon = \epsilon(n)$. Then there is a reduction from $R$-LWE$_{q,\Psi_{\leq \alpha}}$ to $R$-DLWE$_{q,\Psi_{\leq \alpha}}$.
+	Let $R$ and $q$ be as above and let $\alpha q \geq \eta_{\epsilon}(\Rd)$ for some negligible $\epsilon = \epsilon(n)$. Then there is a reduction from $R$-LWE$_{q,\Psi_{\leq \alpha}}$ to $R$-DLWE$^i_{q,\Psi_{\leq \alpha}}$.
 \end{theorem}
 The reduction follows from search-$R$-LWE to decision-$R$-LWE and in high-level (in our case), it consists of 2 steps presented in Figure \ref{fig:4reds} and described in more detail below. The idea behind the reduction is quite similar to the one for standard LWE but we need to pay attention to details of our construction.
 \begin{enumerate}
 	\item LWE$_{q, \Psi}$ to $\q_i$-LWE$_{q, \Psi}$. Due to each of the coefficients of $a \in R_q$ being dependent on every other. This is very beneficial to the efficiency but poses a problem to us. Namely, if we apply the same transformation as in Lemma \ref{s-to-d}, altering one coefficient alters all of the other ones as well. We can resolve this issue by looking at the problem relative to only one coordinate which is in turn possible thanks to the automorphisms of $R_q$ for our choice of parameters as explained in the next paragraph. This is why we reduce the LWE to the so called $\q_i$-LWE$_{q, \Psi}$ of which the definition will follow.
-	\item $\q_i$-LWE$_{q,\Psi}$ to DLWE$_{q, \Psi_{\leq \alpha}}$. Having the way to reduce our problem to only one coordinate, we can apply something alike the transformation from Lemma \ref{s-to-d}. This requires introducing a bit more notation and careful handling of the samples, but if one understands what happens in the precursor, this should be a straight-away translation to the $R_q$ setting. We note that this reduction is only for the worst-case choice of $s$ and we will not present the reduction to the average-case.
+	\item $\q_i$-LWE$_{q,\Psi}$ to DLWE$^i_{q, \Psi_{\leq \alpha}}$. Having the way to reduce our problem to only one coordinate, we can apply something alike the transformation from Lemma \ref{s-to-d}. This requires introducing a bit more notation and careful handling of the samples, but if one understands what happens in the precursor, this should be a straight-away translation to the $R_q$ setting. We note that this reduction is only for the worst-case choice of $s$ and we will not present the reduction to the average-case.
 \end{enumerate}
 
 \begin{figure}[ht]
@@ -170,7 +170,7 @@ The reduction follows from search-$R$-LWE to decision-$R$-LWE and in high-level 
 	%\node[draw, rounded corners=1mm, minimum width=2cm, minimum height=1cm] (D) at (9,0) {DLWE$^i_{q, \D_{\xi}}$};
 
 % Define the fifth acronym
-\node [draw, rounded corners=1mm, minimum width=2cm, minimum height=1cm] (E) at (12,0) {DLWE$_{q, \Psi_{\leq \alpha}}$};
+\node [draw, rounded corners=1mm, minimum width=2cm, minimum height=1cm] (E) at (12,0) {DLWE$^i_{q, \Psi_{\leq \alpha}}$};
 
 % Draw the arrows between the acronyms
 	\draw[->, very thick] (A.east) -- node [above] {Automorphisms} (B.west);
@@ -200,7 +200,7 @@ By the CRT (Proposition \ref{crt}), there is an isomorphism
 
 Since our underlying ring is a Dedeking domain (it is a ring of integers) and each $\q_r = (x-z^r)$ is prime (for $a,b$ odd, if $z^a \cdot z^b \in (z^r)$ then either $a$ or $b$ must thus be in $(z^r)$ because a sum of two odd integers is even) for all odd $r < 2n$, they are actually maximal. Therefore, we have $\Z_q[x]/(x-z^r) \cong \Z_q$ -- the field of integers modulo a prime $q$. 
 
-Finally tying those two concepts together, the Galois group and $\Z_q$, notice that each $\tau_i \in \Z_m^*$ will map $z \mapsto z^i$ therefore permuting the corresponding elements in $R_q = \Z_q[x] \Big/\prod_{r \in \Z_m^*}\q_r$ mapping it to $\tau_i(R_q) = \Z_q[x] \Big/\prod_{r \in \Z_m^*}\q_{r\cdot i}$ where the multiplication is performed modulo $q$.
+Finally tying those two concepts together (the Galois group and $\Z_q$) notice that each $\tau_i \in \Z_m^*$ will map $z \mapsto z^i$ therefore permuting the corresponding elements in $R_q = \Z_q[x] \Big/\prod_{r \in \Z_m^*}\q_r$ mapping each $\q_r$ to $\tau_i(\q_r) = \q_{r\cdot i^{-1}}$ where the multiplication is performed modulo $q$.
 
 \paragraph{Search to Worst-Case Decision}
 We begin with the reduction of the LWE to $\q_i$-LWE distribution relative to only one $\q_i$ arbitrary prime ideal.
@@ -227,19 +227,19 @@ We ilustrate how the automorphisms act on the ring with the following example.
 \begin{example}
 	Take $n = 2$ and $q = 2n+1 = 5$. The ring now looks like $R_q := \Z_q[x]/\Phi_{2n}(x) = \Z_5[x]/(x^2+1)$. Since $z = 2$ is the primitive root modulo 5, our polynomial splits as $x^2+1 \mod 5 \equiv (x-2)(x-2^3) \equiv (x-2)(x-3)$. So our ideals are $\q_1 = (x-2)$ and $\q_2 = (x-3)$.
 
-	Just like in the proof, we are given access to an oracle -- call it $\orc$ (in this case we will act as one because we already know the secret $s$, in principle, we need the $\orc$ to be efficient for the reduction to work) -- that yields $s(x)$ modulo only one ideal, say it will be $\q_1$ in this example.
+	Just like in the proof, we are given access to an oracle -- call it $\orc$ (in this case we will act as one because we already know the secret $s$, in principle, we need $\orc$ to be efficient for the reduction to work) -- that yields $s(x)$ modulo only one ideal, say it will be $\q_1$ in this example.
 
 	Let us now take $s(x), a(x) \in \Z_5[x]/(x^2+1)$ to be $s(x) = 1 + 4x$ and $a(x) = 2x$. Since the oracle $\orc$ will return us the correct result for any input, it will also return us the correct input when the error $e$ is 0. Let us then take it as such.
 
 	So we now encounter a sample $(a,b) \leftarrow A_{s, \psi}$ that looks like 
 	\[ (a, a\cdot s + e) = (2x, 2x(1+4x)) = (2x, 2x +8x^2) = (2x, 2+2x). \]
-	Let us give this sample to the $\orc$ which will tell us what is $s(x) \mod \q_1 R_q$. Since we are the oracle, we need to do the computation, and so
+	Let us give this sample to $\orc$ which will tell us what is $s(x) \mod \q_1 R_q$. Since we are the oracle, we need to do the computation, and so
 	\[ s(x) \mod (x-2)R_q = 4 \]
 	is the answer.
 
-	Compute now $b \mod \q_3 R_q = 2 +2x \mod (x-3)R_q = 3$ so that we can use the automorphism $\tau_k = \tau_{j/i} = \tau_3$ to map it to the result modulo $\q_1$ for which we can obtain the answer. Note that we in fact can compute this because the $q$ is know to everyone. Only the secret $s$ and the distribution $\psi$ are unknown, all the other variables are public. We therefore have
+	Compute now $b \mod \q_3 R_q = 2 +2x \mod (x-3)R_q = 3$ so that we can use the automorphism $\tau_k = \tau_{j/i} = \tau_3$ to map it to the result modulo $\q_1$ for which we can obtain the answer. Note that we in fact can compute this because the $q$ is known to everyone. Only the secret $s$ and the distribution $\psi$ are unknown, all the other variables are public. We therefore have
 	\[ \tau_3(2+2x) = 2 +2x^3 = 2 -2x = 2+3x \]
-	and the oracle responds with $2+3x \mod q_1 R_q = 3$. We now map $3(x-3)$ using $\tau_3^{-1} = \tau_{3^{-1}} = \tau_2$:
+	and $\orc$ responds with $2+3x \mod q_1 R_q = 3$. We now map $3(x-3)$ using $\tau_3^{-1} = \tau_{3^{-1}} = \tau_2$:
 	\[ \tau_2(3(x-3)) = \tau(3x-9) = \tau_2(3x+1) = 3x^2 + 1 = -3 +1 = 3. \]
 
 	Since we exhausted all the automorphisms (there are only 2), we can finally use the Chinese Remainder Theorem on the following system of equations where we set $s(x) = \alpha x + \beta$ as the intermediate values:
@@ -280,13 +280,30 @@ The last step left for us is the reduction to the decision-RLWE. We will define 
 	For $i \in \Z_m^*, s \in R_q$, and a distribution $\Psi$ over $R_q$, the
 	distribution $A^i_{s,\Psi}$ over $R_q \cross R_q$ is defined as follows: choose $(a, b) \leftarrow A_{s, \Psi}$ and output $(a, b + h/q)$ where $h \in R_q$ is uniformly random and independent$\mod \q_j R_q$ for all $j \leq i$, and is $0 \mod$ all the remaining $\q_j R_q$. Also define $A^0_{s,\Psi}$ simply as $A_{s,\Psi}$.
 \end{definition}
-\begin{lemma}[$\q_i$-LWE to DLWE]
+\begin{definition}
+  For $i \in \Z_m^*$ and a family of distributions $\Psi$, the DLWE$^i_{q,\Psi}$ problem is defined as follows: given access to $A^j_{s,\Psi}$ for arbitrary $s \in \R_q$, $\psi \in \Psi$, and $j \in \{i$-$, i\}$, find $j$.
+\end{definition}
+\begin{lemma}[$\q_i$-LWE to DLWE$^i$]
+  For any $i \in \Z_m^*$, there is a reduction from $\q_i$-LWE$_{q, \Psi}$ to DLWE$^{\text{ }i}_{q, \Psi}$.
 \end{lemma}
 \begin{proof}
+  Let us present a transformation alike the one given in Lemma \ref{s-to-d}. When given some $g \in R_q$, we will map it to either $A^{i\text{-}}_{s, \psi}$ or $A^i_{s, \psi}$ depending on whether or not $f = s \mod \q_i$ (note that thanks to our definition the values modulo the other $\q_jR$ are irrelevant). The transformation works as follows: given a sample $(a, b) \leftarrow A_{s, \psi}$, output a sample
+  \[ (a', b') = (a +v, b+h+vg) \in R_q \cross R_q \]
+  where $v \in R_q$ is uniformly random$\mod \q_i$ and is 0 modulo the other $\q_j$'s, and $h \in \R_q$ is uniformly random and independent$\mod \q_j R$ for all $j < i$, and is 0$\mod$ all the other remaining $\q_j R$. We first note that since both $a$ and $v$ are uniformly random, so is $a'$. Next, we fix the $a'$ and consider what happens with $b'$ which can be written as
+  \[ \begin{split}b' \; = \; b + h+vg \; \; = & \; \; as +h +vg +e \\
+    & \; \; a's +h +v(g-s) +e
+  \end{split}\]
+  where the $e$ is taken from our distribution $\psi$.
+
+  Let us consider two cases.
+  \begin{enumerate}
+    \item $g$ is in fact equal to $s \mod \q_i R$. Then by the CRT, $v(g-s) = 0 \in R_q$ and so the distribution of $(a', b')$ is precisely $A^{i-}_{s, \psi}$.
+    \item $g \neq s \mod \q_i R$. Since $\q_i$ is a maximal ideal, $R/\q_i$ is a field and so the $v(g-s) \in R_q$ is distributed uniformly$\mod \q_i R$ for all $j \leq i$, and is 0 modulo all the other remaining $\q_j R$. Therefore the distribution of $(a', b')$ is exactly $A^i_{s, \psi}$ as required.
+  \end{enumerate}
 \end{proof}
 
 \paragraph{Alternative proof}
-There is great disparity between required assumptions for the search and the decision version of the problem. The former holds for any number ring, (not even cyclotomic) whereas we need to make many assumptions about the structure of the ring from which we sample our variables from. It would be very practical if we could attain the same results but for more general structure. For one, the Galois fields are rare to encouter and the application might require us to consider something more modest. Secondly, from the cryptoanalytical point of view, usually the more assumptions we make, the less secure our problem is in the sence that one could abuse the additional structure for a specified attack.
+There is great disparity between required assumptions for the search and the decision version of the problem. The former holds for any number ring, (not even cyclotomic) whereas we need to make many assumptions about the structure of the ring from which we sample our variables from. It would be very practical if we could attain the same results but for more general structure. For one, the Galois fields are rare to encouter and the application might require us to consider something more modest. Secondly, from the cryptoanalytical point of view, usually the more assumptions we make, the less secure our problem is in the sense that one could abuse the additional structure for a specified attack.
 
 One of the solutions was presented by C.Peikert O. Regev and N. Stephens-Davidowitz in their 2020 paper \textit{Pseudorandomness of Ring-LWE for Any Ring and Modulus} -- \cite{oracle}. The approach they use differs greately from the one we introduced here. Firstly, the reduction is from the decision-RLWE to the \prob{BDD} (which was replaced by \prob{CVP} in our case) directly, without invoking an oracle for the search version at all. Secondly, as mentioned, this reduction works for any number field $K$, not only cyclotomic, as well as for any modulus $q$, not only prime.
 

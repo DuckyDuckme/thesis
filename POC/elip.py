@@ -43,10 +43,10 @@ ax.set_zticklabels([])
 
 
 # Set the axis labels and title
-ax.set_xlabel('x')
-ax.set_ylabel('y')
-ax.set_zlabel('PDF')
+#ax.set_xlabel('x')
+#ax.set_ylabel('y')
+#ax.set_zlabel('PDF')
 #ax.set_title('2D Gaussian Distribution')
 
-#plt.show()
-plt.savefig('../images/elip.png', dpi=200, format='png', transparent=True)
+plt.show()
+#plt.savefig('../images/elip.png', dpi=200, format='png', transparent=True)

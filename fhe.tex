@@ -1,4 +1,4 @@
-Fully Homomorphic Encryption (FHE) has been referred as the ``holy grail'' of modern cryptography as it was one of the most sought goals for the past couple of decades. First formally introduced by Rivest, Adleman and Dertouzos in \cite{primal} (at the time called ``privacy homomorphism''), shortly after the discovery of public key cryptography, it has been an open and elusive problem. Only ``recently'', in~2009, Craig Gentry proposed first FHE in his PhD thesis \cite{gentry_phd}. Since then, there has been a lot of development in the area like for example \krzys{TODO: finish developments of fhe}.
+Fully Homomorphic Encryption (FHE) has been referred as the ``holy grail'' of modern cryptography as it was one of the most sought goals for the past couple of decades. First formally introduced by Rivest, Adleman and Dertouzos in \cite{primal} (at the time called ``privacy homomorphism''), shortly after the discovery of public key cryptography, it has been an open and elusive problem. Only ``recently'', in~2009, Craig Gentry proposed first FHE in his PhD thesis \cite{gentry_phd}. Since then, there has been a lot of development in the area like for example \cite{worst-case, fhe-lwe, 6108154}.
 
 Simply stated, in homomorphic encryption we want our data to be secure but we also want to perform calculations on it. This is useful when we need a third party (e.g. someone with more computational power) to perform operations on our data while still retaining privacy. Alice can store her data somewhere on external server (for example the cloud) and ask to perform computations on it. We can for example query searches without the engine knowing what is actually being searched for.
 
@@ -77,13 +77,13 @@ We will not present the precise idea behind \textit{bootstrapping}. To this end,
 	\item $\alg{Decrypt}_{\E}(\text{sk}, c)$ which decrypts the ciphertext $c$ using the secret key $\text{sk}$.
 	\item $\alg{Evaluate}_{\E}(\text{pk}, f, c_1, \ldots, c_t)$ which evaluates the function $f \in \mathcal{F}_{\E}$ from the set of permitted functions on the ciphertexts $c_1, \ldots, c_t$ using the public key pk.
 \end{enumerate}
-We shall now construct a new algorithm which we will call $\alg{Recrypt}_{\E}$ using only those four above. For simplicity, we assume that our plaintext space is just $\{0,1\}$. Imagine we have a valid ciphertext $c_1$ that encrypts $m_1$ under the public key pk$_1$. In order to decrypt it homomorphically, assume additionally that we have the secret key sk$_1$ encrypted under another public key pk$_2$ -- denote this encryption by $\hat{\text{sk}}_1$ (\krzys{idk how to make it span the whole variable}). Define now the following algorithm:\\
-$\alg{Recrypt}_{\E}(\text{pk}_2, \alg{Decrypt}_{\E}, \bar{\text{sk}}_1, c_1)$:
+We shall now construct a new algorithm which we will call $\alg{Recrypt}_{\E}$ using only those four above. For simplicity, we assume that our plaintext space is just $\{0,1\}$. Imagine we have a valid ciphertext $c_1$ that encrypts $m_1$ under the public key pk$_1$. In order to decrypt it homomorphically, assume additionally that we have the secret key sk$_1$ encrypted under another public key pk$_2$ -- denote this encryption by $\widehat{\text{sk}}_1$. Define now the following algorithm:\\
+$\alg{Recrypt}_{\E}(\text{pk}_2, \alg{Decrypt}_{\E}, \widehat{\text{sk}}_1, c_1)$:
 
 
 \begin{align*}
-	\text{Set } \hat{c}_1 & \leftarrow \alg{Encrypt}_{\E} (\text{pk}_2, c_1) \\
-	\text{Set } c_2 & \leftarrow \alg{Evaluate}_{\E} (\text{pk}_2, \alg{Decrypt}_{\E}, \hat{\text{sk}}_1, \hat{c}_1) \\
+	\text{Set } \widehat{c}_1 & \leftarrow \alg{Encrypt}_{\E} (\text{pk}_2, c_1) \\
+	\text{Set } c_2 & \leftarrow \alg{Evaluate}_{\E} (\text{pk}_2, \alg{Decrypt}_{\E}, \widehat{\text{sk}}_1, \widehat{c}_1) \\
 	\text{Return } c_2 &
 \end{align*}
 
@@ -145,10 +145,10 @@ Aditionally, we say the $\hat{c}$ a \textit{valid ciphertext} if it equals $\alg
 	as required.
 \end{proof}
 
-Once we have the correctness, we can focus on the actual implementations of any fully homomorphic schemes. This in turn implies that we should pay very close attention to the size of $X_{Enc}$ and $X_{Dec}$. Namely, we want to maximize $X_{Dec}$ and minimize $X_{Enc}$ (while still retaining security). This is where we introduce the lattices.
+Once we have the correctness, we can focus on the actual implementations of any fully homomorphic schemes. This in turn implies that we should pay very close attention to the size of $X_{Enc}$ and $X_{Dec}$. Namely, we want to maximize $X_{Dec}$ and minimize $X_{Enc}$ (while still retaining security). This is a geometric problem ones the lattices are introduced. More precisely, the question steers towards maximizing the ``radius'' of decryption and minimizing the ``radius'' of encryption. For a simple answer on how to do that, we refer the reader to \cite{gentry} and for a full answer, to \cite{gentry_phd}. %This is where we introduce the lattices.
 
 \subsection{Further developments in FHE}
-Since the inception of FHE, many new ideas have emerged as potential replacement for the details in the implementation in Gentry's work. In this section, we will briefly introduce some of such techniques and ideas. Finally the work we have done on LWE and its ring equivalent will pay off as we can rely on those results to abstractly create FHE scheme \krzys{i dont like this sentence but idk how to make it prettier}. 
+Since the inception of FHE, many new ideas have emerged as potential replacement for the details in the implementation in Gentry's work. In this section, we will briefly introduce some of such techniques and ideas. Finally the work we have done on LWE and its ring equivalent will pay off as we can rely on those results to abstractly create FHE scheme.
 
 \subsubsection{FHE from the standard LWE}
  One of such ideas is to replace the ideal lattices by an LWE sample instead. Let us now attempt to construct a SH scheme that is using the LWE assumption along the ideas presented in \cite{fhe-lwe}. Recall that a LWE$_{q, \chi}$ is specified by the odd modulus $q > 2$ and error distribution $\chi$. It provides us with the LWE distribution that we called $A_{s, \chi}$ where $\bm{s}$ was a random vector representing the secret key outputting us samples of the form
@@ -160,12 +160,12 @@ Note that we have replaced the error $e$ with its two-times multiple in contrast
 The scheme is clearly additively homomorphic. The issue arises when we try to multiply two ciphertexts. As shown in \cite{one-mult}, the (slight variation of) this scheme supports only a \textit{single} homomorphic multiplication with the expense of huge blowup in the ciphertext size.
 
 To see how this is the case, consider a symbolic function $f_{\bm{a},b} : \Z_q^n \rightarrow \Z_q$ defined as:
-\[f_{\bm{a}, b}(\bm{x}) = b - \langle \bm{a, x} \rangle \mod q = b - \bm{a}_i \bm{x}^i \; \; \; \in \Z_q \]
-where we are using Eisenstein notation to represent elements $\bm{x} \in \Z_q^n$ (the transpose of the first element is implicit). Note now that the decryption is nothing else but evaluating this function on the secret key $\bm{s}$ and taking the result modulo 2. We can now define addition and multiplication using this function. Addition is straightforward, $f_{\bm{a}, b}$ is a linear function and so sum of two linear functions is still linear. Symbolically, $f_{\bm{a},b}(\bm{x}) + f_{\bm{a}',b'}(\bm{x}) = f_{(\bm{a}+\bm{a}',b+b')}(\bm{x})$ will represent the homomorphically added ciphertext $(\bm{a}+\bm{a}',b+b')$. Similarly, multiplying two such functions gives us:\krzys{i think ill get rid of eisenstein notation coz im not really consistent with it}
+\[f_{\bm{a}, b}(\bm{x}) = b - \langle \bm{a, x} \rangle \mod q = b - \sum_{i \in [n]} \bm{a}_i \bm{x}_i \; \; \; \in \Z_q. \]
+Note now that the decryption is nothing else but evaluating this function on the secret key $\bm{s}$ and taking the result modulo 2. We can now define addition and multiplication using this function. Addition is straightforward, $f_{\bm{a}, b}$ is a linear function and so sum of two linear functions is still linear. Symbolically, $f_{\bm{a},b}(\bm{x}) + f_{\bm{a}',b'}(\bm{x}) = f_{(\bm{a}+\bm{a}',b+b')}(\bm{x})$ will represent the homomorphically added ciphertext $(\bm{a}+\bm{a}',b+b')$. Similarly, multiplying two such functions gives us:
 \begin{equation}\label{mult}
   \begin{split}
-  f_{\bm{a},b}(\bm{x}) \cdot f_{\bm{a}',b'}(\bm{x}) & = ( b - \bm{a}_i \bm{x}^i) \cdot ( b' - \bm{a}'_i \bm{x}^i ) \\
-						    & = h_0 + h_i \cdot \bm{x}^i + h_{i,j} \cdot \bm{x}^i \bm{x}^j,
+    f_{\bm{a},b}(\bm{x}) \cdot f_{\bm{a}',b'}(\bm{x}) & = ( b - \sum_{i \in [n]}\bm{a}_i \bm{x}_i) \cdot ( b' - \sum_{i \in [n]}\bm{a}'_i \bm{x}_i ) \\
+						      & = h_0 + \sum_{i \in [n]}h_i \cdot \bm{x}_i + \sum_{i \in [n]} \sum_{j \in [n]} h_{i,j} \cdot \bm{x}_i \bm{x}_j,
 \end{split}
 \end{equation}
 which yields us a second degree polynomial with coefficients $h_{i,j}$ that can be computed by expanding the parenthesis of the upper equation. The decryption is as before, that is evaluating at $\bm{s}$ and reducing modulo 2. Hence, the scheme is trully homomorphic. Unfortunately, nothing in life comes for free and indeed, the multiplication which took a ciphertexts of size $n+1$, expanded it to the one of size approximately $n^2/2$. As one might imagine this is completely unacceptable from an efficiency point of view and surely not enough for bootstrapping. This is where the main contribution of \cite{fhe-lwe} comes in -- the \textit{re-linearization} technique.
@@ -174,8 +174,8 @@ The goal is to reduce the ciphertext blow-up for multiplication. As turns out we
 \begin{align*}
   %b^i = \langle \bm{a}^i, \bm{t} \rangle + 2e^i +\bm{s}^i \approx \langle \bm{a}^i, \bm{t} \rangle + \bm{s}^i \\
   %b^{i,j} = \langle \bm{a}^{i,j}, \bm{t} \rangle + 2e^{i,j} +\bm{s}^{i,j} \approx \langle \bm{a}^{i,j}, \bm{t} \rangle + \bm{s}^{i,j} \\
-  & h_0 + h_i \cdot \bm{s}^i + h_{i,j} \cdot \bm{s}^i \bm{s}^j\\
-  = \; \; & h_0 + h_i \cdot (b^i - \langle \bm{a}^i, \bm{t} \rangle) + h_{i,j} \cdot (b^{i,j} - \langle \bm{a}^{i,j}, \bm{t} \rangle), 
+  & h_0 + \sum_{i \in [n]} h_i \cdot \bm{s}_i + \sum_{i \in [n]} \sum_{j \in [n]} h_{i,j} \cdot \bm{s}_i \bm{s}_j\\
+  = \; \; & h_0 + \sum_{i \in [n]} h_i \cdot (b_i - \langle \bm{a}_i, \bm{t} \rangle) + \sum_{i \in [n]} \sum_{j \in [n]}  h_{i,j} \cdot (b_{i,j} - \langle \bm{a}_{i,j}, \bm{t} \rangle), 
 \end{align*}
 which is just a linear function in $\bm{t}$! The key take-away is that multiplying the two linear functions and later re-linearizing, gives us another linear function that, when evaluated in $\bm{t}$, outputs the product of the original messages.
 
@@ -231,6 +231,4 @@ We will skip most of the parameter choices as they often depend on the implement
 Let us now briefly motivate how this scheme is circularly secure for a linear function. For a more rigorous presentation, see \cite{fhe_rlwe}.
 
 Consider the ciphertext $\bm{c}= (as +2e +s, -a)$ which ``looks like'' and encryption of the secret key $s$. If we now define $a' = a +1$ we have $\bm{c} = (a's +2e, -a'+1)$ we notice that the part $a's+2e$ is exactly a RLWE sample which (by previous section) is completely indistinguishable from an uniform sample -- call it $u$. Therefore, $\bm{c} \approx (u, -a'+1)$ which is a completely uniform pair and so, we cannot tell what the $s$ was.
-
-\subsubsection{Other works}
 

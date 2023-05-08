@@ -1,8 +1,12 @@
-\subsection{Actual introduction here with some funny name}
-In recent years, the topic of lattice based cryptography (LBC) has seen many developments towards an efficient and quantumly secure basis for cryptographic constructions. Starting with Ajtai's seminal work \cite{ajtai} on one-way functions that can be reduced to  as one of the main contenders for an efficient and resistant to quantum computers scheme.
+\subsection{Why lattices?}
+In recent years, the topic of lattice based cryptography (LBC) has seen many developments as an efficient and quantumly secure basis for cryptographic constructions. Starting with Ajtai's seminal work in 1996 \cite{ajtai} on one-way functions that can be reduced to the worst-case problems on lattices we have seen a plethora of new instances like for example NTRU \cite{ntru} or (presented in this paper) LWE \cite{regev} and its ring equivalent \cite{ring-lwe}. We regard them as quantum-resistant because no efficient algorithm is known for solving the underlying hard problems. As the replacement for number-theoretic approaches, lattices have seen the most interest among for example hash-based, code-based or multivariate-quadratic-based implementations. In this paper we focus on the lattice-based approach. We first present some of the older schemes (that have already been broken) and proceed to prove hardness of two other problems. These are the LWE problem and its ring equivalent -- the ring-LWE. Both of them can be reduced to worst-case lattice problems. We present the worst-case reducion for LWE and average-case reduction for ring-LWE.
+
+We build those schemes along another cryptographic construction. This is the fully homomorphic encryption (FHE) which is concerned with performing operations on encrypted data. FHE has been an active area of research since the idea called ``privacy homomorphism'' was presented in \cite{primal} by Rivest, Shamir and Adleman soon after the inception of public-key cryptography. The solution to the problem presented by C. Gentry in his PhD thesis has already seen uses (in its evolved form since 2009) like in for example TNO's implementation for a Zuyderland hospital in their \href{https://eprint.iacr.org/2019/1136.pdf}{Paillier implementation}. In this bachelor thesis we introduce in mathematical terms what FHE is and how we can implement it with the aforementioned (ring-)LWE schemes.
+\iffalse
 \subsection{Motivation}
 include the table from page 16 of \cite{bernstein} of systems broken by quantum computers\\
 On the $18^{th}$ of November 2022, a \href{https://www.whitehouse.gov/wp-content/uploads/2022/11/M-23-02-M-Memo-on-Migrating-to-Post-Quantum-Cryptography.pdf}{document} was issued on migrating to post-quantum cryptography.
+\fi
 
 \iffalse
 This bachelor thesis can be seen as a survey on the recent developments in the LBC and improvements in fully homomorphic cryptographic schemes. Nonetheless, there are few minor contributions that we note here.
