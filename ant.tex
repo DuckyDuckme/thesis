@@ -47,13 +47,13 @@ Recall that an ideal $\I$ of some ring $R$ is an additive subgroup of $R$ (if $x
 
 One useful property of the integers we would like to preserve is the unique prime decomposition of its elements as stated in the Fundamental Theorem of Algebra. As the name might suggest\footnote{As stated on p.34 in \cite{stein} ``\textit{...it is this unique factorization that initially motivated the introduction of rings of integers of number fields over a century ago''}.}, the ring of integers has a property analogous to such decompositions. Namely, that every nonzero proper ideal factors uniquely into prime ideals. Such ring in general is called a \textit{Dedekind domain}.
 
-More precisely, take $D$ to be a Dedekind \pinar{Dedekind} domain (for example $\Oo_K$) and $\I \subset D$ a nonzero ideal (and also not an empty set). Then $\I$ factorizes uniquely (up to ordering) into prime ideals $\I = \p_1^{e_1} \p_2^{e_2} \ldots \p_r^{e_r}$ where each $e_i$ is an integer and each $\p_i$ is prime. Additionally it can be shown that in a Dedekind domain, every prime ideal $\p$ is also \textit{maximal} (the only superideal \pinar{superideal?} of $\p$ is the $D$ itself). This in turn implies that $D/\p$ is a finite field of order equal to the index of $|\Oo_K /\I|$ as an additive subgroup of $\Oo_K$. \pinar{$D$ or $\Oo_K$? Mixing notation. Not $|\Oo_K /\I|$ but $|\Oo_K /\p|$}
+More precisely, take $D$ to be a Dedekind domain (for example $\Oo_K$) and $\I \subset D$ a nonzero ideal (and also not an empty set). Then $\I$ factorizes uniquely (up to ordering) into prime ideals $\I = \p_1^{e_1} \p_2^{e_2} \ldots \p_r^{e_r}$ where each $e_i$ is an integer and each $\p_i$ is prime. Additionally it can be shown that in a Dedekind domain, every prime ideal $\p$ is also \textit{maximal}. This in turn implies that $D/\p$ is a finite field of order equal to the index of $|D /\p|$ as an additive subgroup of $D$.
 
-\begin{definition}
-	In a number field $K$ of degree $n$, a lattice in $K$ is the $\Z$-span of a $\Q$-basis of~$K$.
+As mentioned before, it is not in general true that $\Oo_K$ is a principal ideal domain. To mimic the notion of divisibility we will associate the elements of $\Oo_K$ with fractional ideals.
+\begin{definition}[Fractional ideal]
+	We say that $\I$ is \textit{fractional}, when there exists an element $\alpha \in \Oo_K$, $\alpha \neq 0$, such that $\alpha \cdot \I \subseteq \Oo_K$.
 \end{definition}
-Examples of lattices in $K$ include the ring of integers $\Oo_K$, fractional ideals of $\Oo_K$ (introduced in the section on ring-LWE), and aforementioned orders in $K$.
-
+The set of nonzero fractional ideals of $\Oo_K$ forms a group under multiplication with multiplication defined as $(\alpha \I)(\beta \J) := \alpha \beta \, \I \J$ and $\Oo_K$ iteself acting as the identity element. %Since any (fractional) ideal $\I$ factorizes uniquely into prime ideals
 
 \subsubsection*{Embeddings in $\C$} 
 Let $K = \Q(\alpha)$ be a number field of degree $n$ for a root $\alpha$ of some irreducible $f \in \Q[x]$. It can be shown, that there are exactly $n$ embeddings (injective ring homomorphisms) of $K$ in $\C$. This can be shown noting that since $\Q$ has characteristic 0, all of the roots of $f$ over $K$ must be distinct. Therefore $\alpha$ can only be sent to any one of its $n$ conjugates over $\Q$. Each conjugate $\beta$ determines a unique embedding $\sigma_i: K \rightarrow \C$ and every embedding must arise in this way since $\alpha$ must be sent to one of its conjugates.
@@ -123,7 +123,7 @@ As a useful corollary of the equation \ref{comp_cycl}, we can prove that for $n$
   Let $n= 2^k$ for some $k \in \Z_{> 0}$. Then $\Phi_n(x) = x^{2^{k-1}} + 1$.
 \end{corollary}
 \begin{proof}
-	Attempting to prove it by induction, we first check that indeed $\Phi_2(x) = x+1$. For the step, assume that we have $\Phi_n(x) = x^{2^{k-1}} + 1$ for some $n = 2^k$. Then it is not difficult to see that $x^{2^k} -1$ ``splits'' as 
+	We prove this by induction. We first check that indeed $\Phi_2(x) = x+1$. For the inductive step, assume that we have $\Phi_n(x) = x^{2^{k-1}} + 1$ for some $n = 2^k$. Then it is not difficult to see that $x^{2^k} -1$ ``splits'' as 
 	\begin{align*}
 		x^{2^k} = & (x^{2^{k-1}} + 1)(x^{2^{k-1}} - 1) \\
 		= & (x^{2^{k-1}} + 1)(x^{2^{k-2}} + 1) \cdot \ldots \cdot (x+1)(x-1) \\
@@ -171,10 +171,25 @@ As mentioned in Remark \ref{monogenic}, rings of integers are usually not genera
 
 In order to make $\sigma$ a ring homomorphism, we define the addition and multiplication in $\C^n$ to be coordinate-wise (all the conditions for a ring structure are immediate to see when written down because the $\C$ itself is a ring).
 
-Another very handy property of the cyclotomic fields is that for $n > 3$, the $n$-th cyclotomic field has $\varphi(n)$ embeddings in $\C$. These are precisely the $\varphi(n)$ automorphisms where $\sigma_i(\zeta) = \zeta^i$ is simply the conjugation of the generator. Therefore $K$ has only complex embeddings and we call such field a CM-field. Since the $\Q$-automorphisms map $\zeta$ to one of its conjugates, it is easy to see that any automorphism $\tau_k : K \rightarrow K$ mapping $\tau_k(\zeta) = \zeta^k$ simply permutes the coordinates of the canonical embedding. More precisely, $\sigma_i(\tau_k(\zeta)) = \sigma_i(\zeta^k) = \zeta^{ik}$ for all $i,k \in \Z_{\varphi(n)}^*$. Hence $\sigma \o \tau_k$ is just a permutation of the coordinates.
+Another very handy property of the cyclotomic fields is that for $n > 3$, the $n$-th cyclotomic field has $\varphi(n)$ embeddings in $\C$. These are precisely the $\varphi(n)$ automorphisms where $\sigma_i(\zeta) = \zeta^i$ is simply the conjugation of the generator. Therefore $K$ has only complex embeddings and we call such field a CM-field. Since the $\Q$-automorphisms map $\zeta$ to one of its conjugates, it is easy to see that any automorphism $\tau_k : K \rightarrow K$ mapping $\tau_k(\zeta) = \zeta^k$ simply permutes the coordinates of the canonical embedding. More precisely, $\sigma_i(\tau_k(\zeta)) = \sigma_i(\zeta^k) = \zeta^{ik}$ for all $i,k \in \Z_{\varphi(n)}^*$. Hence $\sigma \circ \tau_k$ is just a permutation of the coordinates.
 
 \subsubsection*{Ideal lattices}
-Let us now get back to the topic of lattices for a moment and try to connect those two subjects a bit. Although not shown in this paper, we note that each element of $\Oo_K$ can be expressed as an integer linear combination of some basis $\bm{\mathcal{B}} = \{\beta_1, \beta_2, \ldots, \beta_n \} \subset \Oo_K$ (see the Exercise \ref{z-basis} as a simple case.). The set $\bm{\mathcal{B}}$ is also called the \textit{integral basis} of $\Oo_K$ and is also a basis for $K$ as $\Q$-vector space. Now recall from the beginning of the previous section that any lattice can be defined as the $\Z$-span of some specific basis $\B \subset \R^n$. Analogously, we can define a lattice for any number field $K$.
+Let us now get back to the topic of lattices for a moment and try to connect those two subjects a bit. Although not shown in this paper, we note that each element of $\Oo_K$ can be expressed as an integer linear combination of some basis $\bm{\mathcal{B}} = \{\beta_1, \beta_2, \ldots, \beta_n \} \subset \Oo_K$ (see the Exercise \ref{z-basis} as a simple case.). The set $\bm{\mathcal{B}}$ is also called the \textit{integral basis} of $\Oo_K$ and is also a basis for $K$ as $\Q$-vector space. Now recall from the beginning of the previous section that any lattice can be defined as the $\Z$-span of some specific basis $\mathcal{\bm{B}} \subset \R^n$. Analogously, we can define a lattice for any number field $K$.
 
-\pinar{Define duals, embedding of ideals in $\C$.}
+\begin{definition}
+	In a number field $K$ of degree $n$, a lattice in $K$ is the $\Z$-span of a $\Q$-basis of~$K$.
+\end{definition}
+Examples of lattices in $K$ include the ring of integers $\Oo_K$, fractional ideals of $\Oo_K$ and orders in $K$. By the unique decomposition, for any (fractional) ideal in $\Oo_K$, it can be shown that any such ideal is a free abelian group and is spanned by some $\Z$-basis $\{\beta_1, \beta_2, \ldots, \beta_n \}$. Therefore, under the canonical embedding $\sigma$, the ideal yields a rank-$n$ \textit{ideal lattice} with basis $\{\sigma(\beta_1), \ldots \sigma(\beta_n) \} \subset \C^n$.
+
+Analogously to the lattices in $\R^n$, we can define duals of lattices in $K$.
+\begin{definition}
+	Let $\Ll$ be a lattice in $K$. Its \textit{dual lattice} is
+	\[\Lld = \{ \alpha \in K : \Tr_{K/\Q}(\alpha \Ll) \subset \Z \}.\]
+\end{definition}
+
+Imagine now, that we have some basis $\{1, \alpha, \ldots, \alpha^{n-1} \}$ for a number field $K = \Q(\alpha)$. If, in addition, $\alpha \in \Oo_K$ then the dual basis is characterized by the following proposition (this is special case of Theorem 3.7 in \cite{conrad}).
+\begin{proposition}\label{d-basis}
+	Let $K = \Q(\alpha)$ and let $f(x)$ be the minimal polynomial of $\alpha$ in $\Q[x]$. Then the dual basis to $\{1, \alpha, \ldots, \alpha^{n-1} \}$ (relative to the trace) is given by:
+\[\biggl\{ \frac{1}{f'(\alpha)}, \frac{\alpha}{f'(\alpha)}, \ldots, \frac{\alpha^{n-1}}{f'(\alpha)} \biggr\} . \]
+\end{proposition}
 

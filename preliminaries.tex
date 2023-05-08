@@ -64,7 +64,13 @@ We define the \textit{volume} of $\mathcal{F}(\bm{B})$ as the volume of the corr
 	\[ \det (\mathcal{L}) = \VF{\bm{B}} = |\det (\bm{B}) | \]
 \end{definition}
 
-The next two propositions are arguably the two most fundamental resuls for lattice based cryptography. The first one, states that the $\det (\mathcal{L})$ does not depend on the choice of the basis for that lattice. The second, that our whole ambient space $\R^n$ can be described using only vectors from the lattice and the fundamental domain. We will only give an outline of the proofs for the sake of keeping this section compact. Full proofs, however, can be found in \cite{book}, chapter 6.4.
+We can now make sense of what characterizes a ``good'' and a ``bad'' basis. Roughly speaking, we say a basis $\bm{\mathcal{B}} = \{\bm{b}_1, \ldots \bm{b}_n\}$ for $\Ll$ is good if the vectors are reasonably short and orthogonal. In fact, for every matrix $\Ll$ it holds that $\prod_{i \in [n]} ||\bm{b}_i || \geq |\det(\Ll)|$ with the equality holding for the standard basis. The closer a basis is to the equality, the ``better'' it is. We call
+\begin{equation}\label{hadamard}
+\mathcal{H}(\bm{\mathcal{B}}) = \Big(|\det(\Ll) | \Big/ \prod_{i \in [n]} ||\bm{b}_i || \Big)^{1/n}
+\end{equation}
+the \textit{Hadamard} ratio. Note that $0 < \mathcal{H}(\bm{\mathcal{B}}) \leq 1$ and so the closer that value is to 1, the more orthogonal are the vectors in the basis and the ``better'' the basis is.
+
+The next two propositions are arguably the two most fundamental resuls for lattice based cryptography. The first one, states that the $\det (\mathcal{L})$ does not depend on the choice of the basis for that lattice. The second, that our whole ambient space $\R^n$ can be described using only vectors from the lattice and the fundamental domain. We will only give an outline of the proofs for the sake of keeping this section compact. Full proofs, however, can be found in \cite{book}, Chapter 6.4.
 
 \begin{lemma}
     The $\det (\mathcal{L})$ of an $n$-dimensional lattice is invariant under the choice of the basis.
@@ -79,12 +85,12 @@ From now on we will write $\mathcal{F}$ to denote the fundamental domain of the 
 
 \begin{proposition}
     Let $\mathcal{L} \subset \R^n$ be a lattice of dimension $n$ and let $\mathcal{F}$ be a fundamental domain for $\mathcal{L}$. Then every vector $\bm{v} \in \R^n$ can be written in the form 
-    $$\bm{v} = \bm{f} + \bm{t}$$
+	\[\bm{v} = \bm{f} + \bm{t}\]
     for $\bm{f} \in \mathcal{F}$ and $\bm{t} \in \mathcal{L}$ both unique and associated to the original $\bm{v}$.
 \end{proposition}
 
-Equivalently, the space $\R^n$ is spanned exactly (without overlap) by shifting the fundamental domain by the vectors from our lattice.
-$$ \R^n = \bigcup_{\bm{t} \in \mathcal{L}} \{\bm{f + t} : \bm{f} \in \mathcal{F} \}$$
+Equivalently, the space $\R^n$ is spanned exactly (without overlap) by shifting the fundamental domain by the vectors from our lattice
+\[ \R^n = \bigcup_{\bm{t} \in \mathcal{L}} \{\bm{f + t} : \bm{f} \in \mathcal{F} \}.\]
 
 \begin{remark}
     Sometimes the \textit{fundamental domain} is refered to as a parallelepiped or parallelotope and denoted by caligraphic $\mathcal{P}$. If we take a matrix $\bm{B}$ to represent our lattice $\mathcal{L}$, then $\mathcal{P}_{1/2}(\bm{B}) = \{\bm{x}\bm{B}, \bm{x} \in [-1/2, 1/2]^n \}$ can also represent the (shifted by a half) fundamental domain of $\mathcal{L}$ (like for example in \cite{gentry}).
@@ -98,7 +104,7 @@ We will now present two results that give us an upper bound on the length of the
 \end{theorem}
 \krzys{add minkowski's theorem}\\
 \fi
-We can also need some notion of the shortest possible vector of a lattice. These will be very useful in the study of the hardness of a given problem.
+We also need some notion of the shortest possible vector of a lattice. These will be very useful in the study of the hardness of a given problem.
 \begin{definition}
 	For a $n$-dimensional lattice $\Ll$, we denote its shortest nonzero vector (also called the \textit{minimum distance}) by $\lambda_1(\Ll)$. Formally
 	\[ \lambda_1(\Ll) := \min_{0 \neq \bm{v} \in \Ll} ||\bm{v}|| \]
@@ -109,10 +115,9 @@ For example, in order to be able to go ``away'' from the lattice $\Ll$ ``out'' i
 
 Aditionally, most of the problems used in this paper are the \textit{approximate} versions to some varying constant usually called $\gamma$. As we will see later, $\gamma$ very often depends on $\lambda_1(\Ll)$ which roughly measures how ``strict'' or ``precise'' we can make our problem. This will be made explicing in the Section \ref{hardness} on the hardness and complexity theory.
 
-\paragraph{Dual}
 \begin{definition}[Dual]
     For a lattice $\Ll \subset \R^n$ its $\Z$\textit{-dual} is
-    \[ \Lld = \{ y \in \R^n : \langle y,\Ll \rangle \subseteq \Z \}.\]
+	\[ \Lld = \{ \bm{y} \in \R^n : \langle y,\Ll \rangle \subseteq \Z \}.\]
 \end{definition}
 
 We simply require that the elements of the dual to be precisely those vectors, that yield an integer when ``multiplied'' with an element of our lattice. Note that this is different from our standard definition of a dual. Namely, it is not the orthogonal compliment of our starting space, i.e. not all of the elements of the dual have 0 dot product against the vectors of the lattice.
@@ -120,19 +125,19 @@ We simply require that the elements of the dual to be precisely those vectors, t
 \begin{example}\label{ld-ex}
     Take $\mathcal{L}= \Z 
         \big(\begin{smallmatrix} 1\\2 \end{smallmatrix}\big) + 
-        \Z \big(\begin{smallmatrix} 0\\ 1 \end{smallmatrix}\big)$.
+        \Z \big(\begin{smallmatrix} 1\\ 0 \end{smallmatrix}\big)$.
         To calculate the dual of $\mathcal{L}$ we need our $y = \big(\begin{smallmatrix}
-          a\\b\end{smallmatrix}\big)$ elements to satisfy $a +2b \in \Z$ and $b \in \Z$ which is equivalent to asking $a \in (1/2)\Z$ and so $\mathcal{L}^{\vee} = \big(\begin{smallmatrix}
-          1/2\\0
+          a\\b\end{smallmatrix}\big)$ elements to satisfy $a +2b \in \Z$ and $a \in \Z$ which is equivalent to asking $b \in (1/2)\Z$ and so $\mathcal{L}^{\vee} = \big(\begin{smallmatrix}
+          1\\0
         \end{smallmatrix}\big)\Z + \big(\begin{smallmatrix}
-          0\\1
+          0\\1/2
         \end{smallmatrix}\big) \Z$
         See Figure \ref{lattices} where the red vectors represent the basis.
 \end{example}
 
 Note that $\mathcal{L}^{\vee}$ is itself a lattice of the same dimension. One can imagine the dual as the original lattice ``flipped'' in the sence that the shortes element becomes the longest and vice versa.
 \begin{figure}[ht]
-    \caption{Lattice $\Ll$ from example \ref{ld-ex} and its dual.}
+    \caption{Lattice $\Ll$ from Example \ref{ld-ex} and its dual.}
         \label{lattices}
         \centering
         \begin{subfigure}{.5\textwidth} 
@@ -163,7 +168,7 @@ In order to represent the time or space required to solve the problem, most of t
 	\item $\tilde{O}(n) = O(n \ln n)$. That is, $\tilde{O}$ hides the logarithmic factors. For example, the FFT (Fast Fourier Transform) computes the discrete Fourier transform in time $O(n \ln n) = \tilde{O}(n)$ for a sequence of length $n$ and Shor's algorithm computes factorization of $n$-bit integer in time $O(n^2 \ln(n) \ln(\ln(n))) = \tilde{O}(n^2)$.
 \end{itemize}
 
-We will very often be talking about the ``efficiency'' of an algorithm. Intuitively, we want our procedure to run in a time reasonably proportional to the size of input. The consensus in the academia is to define ``efficient'' as running in polynomial time $\alg{poly}(n)$\footnote{As elegantly stated by Christos Papadimitiou: \textit{``It should not come as a surprise that our choice of polynomial algorithms as the mathematical concept that is supposed to capture the informal notion of ‘practically efficient computation’ is open to criticism from all sides. [$\ldots$] Ultimately, our argument for our choice must be this: Adopting polynomial worst-case performance as our criterion of efficiency results in an elegant and useful theory that says something meaningful about practical computation, and would be impossible without this simplification.''}}. More precisely, 
+We will very often be talking about the ``efficiency'' of an algorithm. Intuitively, we want our procedure to run in a time reasonably proportional to the size of input. The consensus in the academia is to define ``efficient'' as running in polynomial time $\alg{poly}(n)$\footnote{As elegantly stated by Christos Papadimitiou: \textit{``It should not come as a surprise that our choice of polynomial algorithms as the mathematical concept that is supposed to capture the informal notion of ‘practically efficient computation’ is open to criticism from all sides. [$\ldots$] Ultimately, our argument for our choice must be this: Adopting polynomial worst-case performance as our criterion of efficiency results in an elegant and useful theory that says something meaningful about practical computation, and would be impossible without this simplification.''}}. In more mathematical terms we say the following. 
 \begin{definition}
 	An algorithm $A(n)$ is \prob{efficient} if there exists a polynomial $p(\cdot)$ such that the computation of $A(n)$ terminates within at most $p(n)$ steps.
 \end{definition}
@@ -175,7 +180,7 @@ To encapsulate the notion of ``small'' or ``insignificant'', we define a \prob{n
 \end{definition}
 
 \subsubsection*{Hard problems}
-The basis for modern day cryptography are so called ``hard problems'' of which usage was first formally introduced by S. Goldwasser and S.Micali in \cite{prob-cryp}. These are computational problems for which we do not know any efficient algorithm for (so far). The current approach to cryptography is to assume that some given problem is ``difficult'' to solve and then to prove that the scheme is secure given this assumption. The approach for the proof is to \textit{reduce} our scheme to the one we assume is hard. We proceed by showing how, an adversary, which is able to efficiently solve (or break) our scheme, is able to solve the underlying problem. We call such procedure a \textit{reduction} algorithm. For example, the basis for $\alg{RSA}$ is our inability to efficiently solve the factorization problem.
+The basis for modern day cryptography are so called ``hard problems'' of which usage was first formally introduced by S. Goldwasser and S. Micali in \cite{prob-cryp}. These are computational problems for which we do not know any efficient algorithm for (so far). The current approach to cryptography is to assume that some given problem is ``difficult'' to solve and then to prove that the scheme is secure given this assumption. The approach for the proof is to \textit{reduce} our scheme to the one we assume is hard. We proceed by showing how, an adversary, which is able to efficiently solve (or break) our scheme, is able to solve the underlying problem. We call such procedure a \textit{reduction} algorithm. For example, the basis for $\alg{RSA}$ is our inability to efficiently solve the factorization problem.
 \begin{definition}[\prob{FACTORIZE}]
 	Given a composite integer $n$ and $l < n$, find a non-trivial factor of $n$ less than $l$.
 \end{definition}

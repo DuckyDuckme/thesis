@@ -4,14 +4,14 @@ There are multiple equivalent definitions of this problem. We adopt the notation
 The problem is parametrized by positive integers $n$, $m$\footnote{As will be seen later, $m$ plays virtually no role in the problem definition and is usually omitted.} and prime $q$, as well as an error distibution $\chi$ over $\Z_q$. It is now defined as follows. We are given $m$ equations of the form $(\bm{a}_i, b_i = \langle \bm{a}_i, \bm{s} \rangle + e_i)$ and are asked to find the vector $\bm{s} \in \Z_q^n$. Here, $\bm{a}_i$ are chosen uniformly and independently from $\Z_q^n$, $b_i \in \Z_q$ and $\langle \cdot, \cdot \rangle$ denotes the usual dot product. The errors $e_i$ are obtained by sampling independently from the probability distribution $\chi : \Z_q \rightarrow \R_{> 0}$ on $\Z_q$. We will denote the problem of recovering $\bm{s}$ from such equations, by $\text{LWE}_{q, \chi}$ (learning with errors).
 
 \begin{example}\label{lwe_ex}
-        Given as input this set of equations, LWE asks us to recover the vector $\bm{s} = (s_1, s_2, s_3, s_4) \in \Z_{17}^4$. In this case $n = 4$, $q=17$ and the error distribution is giving us $e_i < 1$ for each $i \in [m]$. 
+        Given as input this set of equations, LWE asks us to recover the vector $\bm{s} = (s_1, s_2, s_3, s_4) \in \Z_{17}^4$. In this case $n = 4$, $q=17$ and the error distribution is giving us $|e_i| \leq 4$ for each $i \in [m]$. 
 \begin{align*}
         0s_1 + 11s_2 +8s_3 + 2s_4 & \approx_{e_1} 3 \, \mod 17\\
         9s_1 +  3s_2 + 7s_3 + 0s_4 & \approx_{e_2} 16 \, \mod 17\\
         1s_1 +  15s_2 + 9s_3 + 5s_4 & \approx_{e_3} 16 \, \mod 17\\
         0s_1 +  0s_2 + 13s_3 + 5s_4 & \approx_{e_4} 1 \, \mod 17\\
 \end{align*}
-In this case, $\bm{s} = (7, 13, 12, 16)$. Note that if not for the error, the secret would be very easy to find. Given about $n$ equations, we could recover $\bm{s}$ in an efficient way using Gaussian elimination. Inducing the error is what seems to render the problem untraceable for modern day algorithms.
+In this case, $\bm{s} = (7, 13, 12, 16)$. Note that if not for the error, the secret would be very easy to find. Given about $n$ equations, we could recover $\bm{s}$ in an efficient way using Gaussian elimination. Inducing the error is what seems to render the problem untraceable for modern day algorithms. The choice of error might seem arbitrary but as shown in Section \ref{lwe-crypt}, it needs to be an integer less than $q/4 = 4.25$.
 \end{example}
 The central part of \cite{regev} revolves around proving the hardness of LWE. Specifically, that for appropriately chosen $q$ and $\chi$, a \textit{quantum}\footnote{In fact, quantum reduction is used only in the small part of the whole proof.} reduction algorithm exists that approximates worst-case lattice problems. The following is the main result presented in the paper. 
 
@@ -19,7 +19,7 @@ The central part of \cite{regev} revolves around proving the hardness of LWE. Sp
         Let $n$, $q$ be positive integers and $\alpha \in (0, 1)$ be such that $\alpha q > 2 \sqrt{n}$. If there exists an efficient algorithm that solves $\text{LWE}_{q, \Psi_{\alpha}}$, then there exists an efficient quantum algorithm that approximates the decision version of the shortest vector problem (\prob{GapSVP}$_{\gamma}$) and the shortest independent vectors problem (\prob{SIVP}$_{\gamma}$) to within $\gamma = \tilde{O}(n/\alpha)$ in the worst case on any lattice of dimension $n$. 
 \end{theorem}
 
-Let us unwrap this statement. As said before, we need an appropriate choice of paramenters to obtain our results and $\alpha > 2\sqrt{n}/q$ is one of those choices (and requirements). It specifies the shape of the $\Psi_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$. It will be used to sample the errors with some nice and predictable properties. Later, by the end of this section, we will also show that in fact, there is sort of an equivalence between drawing them from continuous and discrete distributions.
+Let us unwrap this statement. As said before, we need an appropriate choice of parameters to obtain our results and $\alpha > 2\sqrt{n}/q$ is one of those choices (and requirements). It specifies the shape of the $\Psi_{\alpha}$ distribution. This one is almost identical to the discrete Gaussian distribution over $\Z_q$ that is centered around 0 with standard deviation $\alpha q$. It will be used to sample the errors with some nice and predictable properties. Later, by the end of this section, we will also show that in fact, there is sort of an equivalence between drawing them from continuous and discrete distributions.
 
 The theorem can be rephrased as follows. Imagine that we have an efficient algorithm that solves the $\text{LWE}_{q, \Psi_{\alpha}}$. Then, there exists a quantum solution to worst-case lattice problems, namely \prob{GapSVP} and \prob{SIVP}. Since we strongly believe that \prob{GapSVP} and \prob{SIVP} are difficult to solve (\cite{svp-hard}, \cite{reductions}, \cite{cvp-hard}, \cite{lbc}) we are left with a difficult, yet efficient way to share secrets. Oded Regev proceeds to prove this using various lemmas and results from few areas of mathematics like probability, lattice theory and quantum computing. We will now present selected proofs and outline of the whole the approach.
 
@@ -29,7 +29,7 @@ Here we will define essential and convenient definitions and lemmas concerning G
 \paragraph{Gaussians}
 The ideas presented here heavily rely on the distribution of errors. The most important distribution we will be using is the \textit{Gaussian distribution} (also called the normal distribution). For some vector $\bm{x}$ and $r>0$, we define the Gaussian function as
 \[ \rho_r (\bm{x}) := \text{exp}(- \pi ||\bm{x}/r||^2) \]
-where exp($y$) stands for $e^y$. We will also denote $\rho_1$ by $\rho$. By normalizing it, we obtain the $n$-dimensional Gaussian distribution
+where exp($y$) stands for $e^y$. By normalizing it, we obtain the $n$-dimensional Gaussian distribution
 \[\Psi_{\alpha} = \rho_{\alpha} \Big/ \Big( \int_{\bm{s} \in \R^n} \rho_{\alpha}(\bm{s}) d\bm{s} \Big) = \rho_{\alpha} \cdot \alpha^{-n}. \]
 We can also define the \textit{discrete Gaussian distribution} $\D_{\Ll, r}$ over a lattice $\Ll$ (or any countable set $A$ for that matter) by
 \begin{equation} \D_{\Ll, r}(\bm{x}) = \frac{\rho_r(\bm{x})}{\rho_r(\Ll)} \end{equation}
@@ -43,7 +43,7 @@ In order to avoid making our proofs depend on the specific choice of modulus $q$
 We will, for the sake of clearer notation, be a bit vague about the doman of $\Psi_{\beta}$. This is because sampling from $\Psi_{\beta}$ with parameter $\beta$, that is defined over $\T = [0,1)$ is equivalent to sampling from $\Psi_{q \beta}$ over $\Z_q$. \krzys{i am very hesitant about this statement - need to check if thats true}
 \fi
 
-We also need to define \textit{distretization} of a probability density function for our cryptosystem introduced later. For an arbitrary probability density function $\phi~:~\R~\to~\R_{>0}$ and an integer $q \geq 2$, we define its discretization $\bar{\phi} : \Z_q \rightarrow R_{>0}$ as the discrete probability distribution obtained by sampling from $\Psi$, multiplying by $q$, and rounding to the closest integer modulo $q$. More formally,
+We also need to define \textit{discretization} of a probability density function for our cryptosystem introduced later. For an arbitrary probability density function $\phi~:~\R~\to~\R_{>0}$ and an integer $q \geq 2$, we define its discretization $\bar{\phi} : \Z_q \rightarrow R_{>0}$ as the discrete probability distribution obtained by sampling from $\Psi$, multiplying by $q$, and rounding to the closest integer modulo $q$. More formally,
 \begin{equation} \bar{\phi}(i) = \int_{(i -1/2)/q}^{(i + 1/2)/q} \phi(x) dx \end{equation}
 
 Lastly, following the definition given in \cite{lbc}, we define the \textit{statistical distance} as follows.
@@ -60,9 +60,9 @@ One of the most important concepts invoked in the paper is the so called \textit
 \begin{definition}[Smoothing parameter]\label{smoothing}
         For an $n$-dimensional lattice $\Ll$ and positive real $\epsilon > 0$, we define the smoothing parameter $\eta_{\epsilon}(\Ll)$ to be the smallest $s$ such that $\rho_{1/s}(\Lld \backslash \{\bm{0}\}) \leq \epsilon$.
 \end{definition}
-In other words, $\eta_{\epsilon}(\Ll)$ is the smallest $s$ such that a Gaussian measure scaled by $1/s$ on the dual lattice $\Lld$ gives all but $\epsilon/(1+\epsilon)$ of its weight to the origin - \cite{regev}. Note that we need to use the dual in the definition because we cannot really make sense of the ``longest'' element of the lattice $\Ll$ as there is none. Instead, we look at the shortest element of the dual $\Lld$ which we know exists. $\epsilon$ is our desired tolerance and as the name suggests, it is usually taken to be very small (in our cases, a negligible function of $n$). It is also worth noting that $\eta_{\epsilon}(\Ll)$ is a continuous function of $\epsilon$. 
+In other words, $\eta_{\epsilon}(\Ll)$ is the smallest $s$ such that a Gaussian measure scaled by $1/s$ on the dual lattice $\Lld$ gives all but $\epsilon/(1+\epsilon)$ of its weight to the origin - \cite{regev}. Note that we need to use the dual in the definition because we cannot really make sense of the ``longest'' element of the lattice $\Ll$ as there is none. Instead, we look at the shortest element of the dual $\Lld$ which we know exists. The $\epsilon$ is our desired tolerance and as the name suggests, it is usually taken to be very small (in our cases, a negligible function of $n$). It is also worth noting that $\eta_{\epsilon}(\Ll)$ is a continuous function of $\epsilon$. 
 
-In the Figure \ref{smoothing-1}, there are plotted four Gaussians. The first one has very small deviation and assigns most of its values to the origin. The second one, with the deviation $\sqrt{10}$ times the size of the first one, looks a bit more \textit{smooth} and continuous. Finally, the last distribution is almost uniform or ``flat''. For an appropriate choice of $\epsilon$, the smoothing parameter will lay somewhere between those four values of $r$.
+In Figure \ref{smoothing-1}, there are plotted four Gaussians. The first one has very small deviation and assigns most of its values to the origin. The second one, with the deviation $\sqrt{10}$ times the size of the first one, looks a bit more \textit{smooth} and continuous. Finally, the last distribution is almost uniform or ``flat''. For an appropriate choice of $\epsilon$, the smoothing parameter will lay somewhere between those four values of $r$.
 
 \begin{figure}[ht]
         \centering
@@ -105,7 +105,7 @@ We will now define problems related specifically to the LWE. First, let us defin
         Let $q \geq 2$ be some integer, and let $\chi : \Z_q \rightarrow \R_{>0}$ be some probability distribution on $\Z_q$. Let $n$ be an integer and let $\bm{s} \in \Z_n^q$ be a vector. We define $A_{\bm{s},\chi}$ as the distribution on $\Z_n^q \cross \Z_q$ obtained by choosing a vector $\bm{a} \in \Z_q^n$ uniformly at random, choosing $e \in \Z_q$ according to $\chi$, and outputting $(\bm{a}, \langle \bm{a}, \bm{s} \rangle + e)$, where additions are performed in $\Z_q$, i.e., modulo $q$. In parallel, we define $U$ as the uniform distribution on $\Z_q^n \cross \Z_q$.
 \end{definition}
 
-There are two types of problems we can define over LWE - the \textit{search} and \textit{decision}. We will prove at the end of this section that they are in fact equivalent, i.e. there exists a reduction between them. Search-LWE is asking us to find $\bm{s}$ from a list of samples distributed according to $A_{\bm{s}, \chi}$ for some unknown $\chi$. Similarly, the \textit{decision} asks us to distinguish samples $(\bm{a}, b)$ that were draw from either $A_{\bm{s}, \chi}$ or the uniform distribution. Although not present in the original paper, we define them formally here.
+There are two types of problems we can define over LWE -- the \textit{search} and \textit{decision}. We will prove at the end of this section that they are in fact equivalent, i.e. there exists a reduction between them. Search-LWE is asking us to find $\bm{s}$ from a list of samples distributed according to $A_{\bm{s}, \chi}$ for some unknown $\chi$. Similarly, the \textit{decision} asks us to distinguish samples $(\bm{a}, b)$ that were draw from either $A_{\bm{s}, \chi}$ or the uniform distribution. Although not present in the original paper, we define them formally here.
 \begin{definition}[Search-LWE]\label{slwe}
         Given access to arbitrarily many samples from the $A_{\bm{s}, \chi}$, find $\bm{s}$.
 \end{definition}
@@ -174,7 +174,7 @@ The following statement (Theorem 3.1 in \cite{regev}) is the core of the hardnes
         Let $\epsilon = \epsilon(n)$ be some negligible function of $n$. Also, let $q = q(n)$ be some integer and $\alpha = \alpha(n) \in (0, 1)$ be such that $\alpha q > 2\sqrt{n}$. Assume that we have access to an oracle W that solves $\text{LWE}_{q,\Psi_{\alpha}}$ given a polynomial number of samples. Then there exists an efficient quantum algorithm for $\text{DGS}_{\sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha}$.
 \end{theorem}
 \begin{proof}
-        The proof follows in a straight-forward manner by the Lemma \ref{is}. We sample a polynomial amount of elements from the $\D_{\Ll, r}$ for $r$ large enough\footnote{By Claim 2.13 and Lemma 3.2 of \cite{regev}, we can efficiently draw samples that are exponentially close to $\D_{\Ll, r}$ if $r > 2^{2n} \lambda_n(\Ll)$.}. We then apply the IS to obtain D$_{\Ll, r'}$ for $r' \leq r/2$. Applying this procedure enough times (turns out only about $3n$ iterations are needed). At the end of the loop, we are left with the same amount of samples but each within sufficient distance $d \leq \sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha$ and we complete the algorithm by simply outputting the first one.
+        The proof follows in a straight-forward manner by the Lemma \ref{is}. We sample a polynomial amount of elements from the $\D_{\Ll, r}$ for $r$ large enough\footnote{By Claim 2.13 and Lemma 3.2 of \cite{regev}, we can efficiently draw samples that are exponentially close to $\D_{\Ll, r}$ if $r > 2^{2n} \lambda_n(\Ll)$.}. We then apply the IS to obtain $\D_{\Ll, r'}$ for $r' \leq r/2$. Applying this procedure enough times (turns out only about $3n$ iterations are needed). At the end of the loop, we are left with the same amount of samples but each within sufficient distance $d \leq \sqrt{2}n \cdot \eta_{\epsilon}(\Ll)/\alpha$ and we complete the algorithm by simply outputting the first one.
 \end{proof}
 
 \paragraph{The iterative step}
@@ -284,7 +284,7 @@ In other words, if we have an oracle (called procedure in this theorem) that sol
 
 %All those results combined, give us the following lemma
 
-\subsubsection{LWE cryptosystem}
+\subsubsection{LWE cryptosystem}\label{lwe-crypt}
 Now that we have a solid hardness assumptions, we can attempt to construct a cryptosystem that employs those results. The following public key cryptosystem was presented in the same paper. To keep the notation consistent with previous section, we will slightly deviate from the original.
 
 We begin by specifying our parameters. Let us denote by $n$ our security parameter. As before, the scheme is characterized by two integers $m$ and $q$ and a probability distribution $\chi$ over $\Z_q$. To now make the scheme secure and correct, we should choose $q$ prime between $n^2$ and $2n^2$, $m = (1 + \epsilon)(n + 1) \log q$ for some arbitrary constant $\epsilon > 0$. We define the distribution $\chi$ to be $\bar{\Psi}_{\alpha (n)}$ (the discretized Gaussian distribution $\Psi_{\alpha}$) where $\alpha (n) = o(1/(\sqrt{n} \log n))$ (recall from Section \ref{hardness} that it means $\lim_{n\to\infty} \alpha (n) \cdot \sqrt{n} \log n = 0$). The scheme is presented in Table \ref{lwe-enc}.
@@ -344,7 +344,7 @@ Now, that we have finally defined a cryptographic scheme we need to verify it. T
     for some negligible function $\delta(n)$.
 \end{lemma}
 \begin{proof}
-        Note that if not for the error term, the decryption would always be correct. Hence we need to pay attention to the case where the error term is greater than $q/4$. Since there are $m$ such terms, each with standard deviation of $\sigma^2 = \alpha q$, we can use Proposition \ref{gauss_sum} to show that if $X_i \sim \mathcal{N}(0, \alpha q)$ are i.i.d. for $i \in [m]$, then the sum
+        Note that if not for the error term, the decryption would always be correct. Hence we need to pay attention to the case where the error term is greater than $q/4$. Since there are $m$ such terms, each with standard deviation of $\sigma^2 = \alpha q$, we can use Proposition \ref{gauss_sum} to show that if $X_i \sim \mathcal{N}(0, \alpha q)$ are identical independently distributed for $i \in [m]$, then the sum
         \[ \sum_{i \in [m]} X_i \sim \mathcal{N}(0, \sum_{i \in [m]} \sigma^2) = \mathcal{N}(0, m \cdot \sigma^2)\]
         is distributed with standard deviation equal to $\sqrt{m} \alpha q < q / \log(n)$ and the probability that such sample is greater than $q/4$ is negligible.
 \end{proof}
@@ -368,7 +368,7 @@ An example of a normal distribution with standard deviation $\sigma^2 = q/\log n
 
 This, in turn, implies that (this is Lemma 5.1)
 \begin{lemma}
-    The decryption is correct with probability $1 - \delta(n)$ where the $\delta(n)$ is some negligible function.
+    The decryption is correct with probability $1 - \delta(n)$ where $\delta(n)$ is some negligible function.
 \end{lemma}
 
 \begin{proof}
@@ -382,10 +382,11 @@ Note that it seems almost trivial that we decrypt correctly, the scheme was desi
 \end{proposition}
 Note that this closely relates to the last lemma from the previous section on the hardness of LWE. For a thorough and less technical analysis than the one given in the original paper, the reader is encouraged to look into section 5.4 in \cite{Micci2009}.
 
+
+\iffalse
 \subsubsection*{Epilogue}
 \krzys{do last if theres time}
 Until the day of writing this paper, LWE is one of the most influential schemes that can be used for post-quantum cryptographic schemes. It was used as a basis for schemes like the one introduced in \cite{ot-lwe} (along with an oblivious transfer protocol), \cite{lwe-scheme1} or \cite{lwe-scheme2}. However, arguably the most important contribution, was that of laying groundwork for the \textit{ring}-LWE scheme introduced in the next section. We will now present few alternatives to the results and proofs presented here.\\
 
-\iffalse
 Let us begin with the proof of the main theorem, namely, the quantum part. At some point, we would like to find entirely \textit{classical} and efficient reduction algorithm that proves the hardness of the problem. This is because we understand classical computation in much more detail than its quantum equivalent. Using classical computers we have cracked Enigma and landed on the moon. In the meantime, only recently a factorization of the integer 15 was achieved on a quantum computer using Shor's algorithm - see \krzys{find source of that statement}. Returning to the reduction problem, Chris Peikert in his paper \cite{peikert_classical} from 2009 has done exactly this. However, it was done in a somewhat ``inefficient'' way. That is, exponentially many samples are needed in the classical reduction compared to polynomial amount in the quantum version. For more details see the paper by Peikert and compare it with the original approach from Regev. It remains an important open question \krzys{also not sure about that} till this day, if the reduction can be made efficiently fully classical.
 \fi
