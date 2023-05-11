@@ -1,7 +1,9 @@
-\subsection{Why lattices?}
+\subsection{Motivation}
+\iffalse
 In recent years, the topic of lattice based cryptography (LBC) has seen many developments as an efficient and quantumly secure basis for cryptographic constructions. Starting with Ajtai's seminal work in 1996 \cite{ajtai} on one-way functions that can be reduced to the worst-case problems on lattices we have seen a plethora of new instances like for example NTRU \cite{ntru} or (presented in this paper) LWE \cite{regev} and its ring equivalent \cite{ring-lwe}. We regard them as quantum-resistant because no efficient algorithm is known for solving the underlying hard problems. As the replacement for number-theoretic approaches, lattices have seen the most interest among for example hash-based, code-based or multivariate-quadratic-based implementations. In this paper we focus on the lattice-based approach. We first present some of the older schemes (that have already been broken) and proceed to prove hardness of two other problems. These are the LWE problem and its ring equivalent -- the ring-LWE. Both of them can be reduced to worst-case lattice problems. We present the worst-case reducion for LWE and average-case reduction for ring-LWE.
 
 We build those schemes along another cryptographic construction. This is the fully homomorphic encryption (FHE) which is concerned with performing operations on encrypted data. FHE has been an active area of research since the idea called ``privacy homomorphism'' was presented in \cite{primal} by Rivest, Shamir and Adleman soon after the inception of public-key cryptography. The solution to the problem presented by C. Gentry in his PhD thesis has already seen uses (in its evolved form since 2009) like in for example TNO's implementation for a Zuyderland hospital in their \href{https://eprint.iacr.org/2019/1136.pdf}{Paillier implementation}. In this bachelor thesis we introduce in mathematical terms what FHE is and how we can implement it with the aforementioned (ring-)LWE schemes.
+\fi
 \iffalse
 \subsection{Motivation}
 include the table from page 16 of \cite{bernstein} of systems broken by quantum computers\\
@@ -15,6 +17,16 @@ Firstly, and most importantly, the introduction of many examples that we hope wi
 
 Secondly, we present and explicitly state few results that are otherwise left simply as claims or propositions. These mostly include parts on the algebraic number theory for the Section \ref{ring-lwe} on ring-LWE.
 \fi
+
+%\iffalse
+%refactored
+Lattice-based cryptography (LBC) has emerged as a promising approach for achieving efficient and quantum-resistant cryptographic constructions. This paper focuses on the usage of lattices in fully homomorphic encryption (FHE), which allows performing computations on encrypted data without revealing the plaintext. Since Ajtai's seminal work on one-way functions that can be reduced to worst-case problems on lattices \cite{ajtai}, various new instances such as NTRU \cite{ntru} and (ring-)LWE \cite{regev, ring-lwe} (presented in detail in this paper) have been developed. All of them are considered quantum-resistant due to the lack of efficient algorithms for solving the underlying hard problems.
+
+The paper focuses on the LWE problem and its ring equivalent, the ring-LWE, which can be reduced to worst-case lattice problems. We present the worst-case reduction for LWE and average-case reduction for ring-LWE. We also provide an overview of older lattice-based scheme, the GGH, that have already been broken, but the idea is still widely used in modern constructions like for example Gentry's initial implementation \cite{gentry_phd}.
+
+We then introduce FHE, dating back to the idea of ``privacy homomorphism'' proposed by Rivest, Shamir, and Adleman in \cite{primal} in 1977. We go on to discuss the solution to the problem presented by C. Gentry in his PhD thesis \cite{gentry_phd}, which has since evolved and seen use in various implementations. It can be (and has been) used for practical implementations as well as more theoretical developments. One practical example could be TNO's implementation for a Zuyderland hospital in their \href{https://eprint.iacr.org/2019/1136.pdf}{Paillier implementation}, as well as more theoretical developments like for example PhD theses currently ongoing at the Rijksuniversiteit Groningen. We present a mathematical explanation of FHE and how it can be implemented using the aforementioned (ring-)LWE schemes.
+
+%\fi
 
 \subsection{Outline}
 The sections in this paper are to be read consecutively with one exception. The Section \ref{ant} on algebraic number theory is mostly useful to prove concepts for ring-LWE from Section \ref{ring-lwe}. If one is not interested in the proofs from this section, it is possible to skip those two since the idea behind ring-LWE is almost identical to the LWE with just minor changes that are not crucial to understand other parts of this paper.

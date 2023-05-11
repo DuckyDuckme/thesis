@@ -1,1 +1,9 @@
+\iffalse
 In 2009 Craig Gentry presented in his PhD thesis the first fully homomorphic encryption (FHE) using ideal lattices. Since then, countless new works have been created implementing his ideas of  ``bootstrapping'' and ``squashing'' to obtain even more efficient homomorphic schemes. In this bachelor thesis we present what the FHE actually is and how we can achieve efficient implementations using two examples -- LWE and ring-LWE lattice-based schemes. To do that, we first present the actual hardness proofs for both of them and then proceed to FHE implementations.
+\fi
+%refactored
+Fully homomorphic encryption (FHE) is a powerful cryptographic primitive that allows computations to be performed on encrypted data without the need to decrypt it. It has numerous applications, ranging from cloud computing and data privacy to secure voting and machine learning. However, FHE is also a computationally intensive task, and efficient implementations are crucial for its practical use.
+
+In 2009, Craig Gentry introduced the first FHE scheme based on ideal lattices. The main idea behind lattice-based FHE is to use mathematical structures called lattices to construct encryption schemes that are secure against certain types of attacks. Another compelling reason to consider lattice-based cryptography is the conjured resistance to quantum algorithms, which, unlike previous, number-theoretic approaches, are not ``broken''by Shor's fast integer factorization algorithm.
+
+In this bachelor thesis, we present an introduction to lattice-based FHE, focusing on two examples: the Learning With Errors (LWE) scheme and the ring-LWE scheme. We first provide the necessary background in algebraic number theory and complexity theory, and then explain the hardness proofs for LWE and ring-LWE. Finally, we describe the bootstrapping and squashing techniques used to obtain efficient FHE schemes based on LWE and ring-LWE.
